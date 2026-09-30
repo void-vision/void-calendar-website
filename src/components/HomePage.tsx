@@ -3,6 +3,7 @@ import { motion } from 'motion/react'
 import { useDemo } from '../demo/useDemo'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
+const macDownloadUrl = 'https://void-calendar-1300838638.cos.ap-hongkong.myqcloud.com/Void%20Calendar.dmg'
 
 function Logo({ className = 'size-full object-contain' }: { className?: string }) {
   return <img src="/logo.png" alt="Void Calendar" width={256} height={256} decoding="async" className={className} />
@@ -47,7 +48,7 @@ export function HomePage() {
             <span>{v.langLabel}</span>
           </button>
           <motion.a
-            href="#download"
+            href={macDownloadUrl}
             whileTap={{ scale: 0.98 }}
             className="flex h-[38px] shrink-0 items-center rounded-[10px] bg-[#1c1c1e] px-4 text-sm font-medium whitespace-nowrap text-white hover:bg-[#3a3a3c] hover:text-white"
           >
@@ -68,7 +69,7 @@ export function HomePage() {
             AI、日历、任务、笔记与专注，在同一个地方。用时间盒安排每一天，用插件连接更多可能。
           </p>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
-            <motion.a href="#download" whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
+            <motion.a href={macDownloadUrl} whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
               下载 macOS 版
             </motion.a>
             <motion.a href="#flow" whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#f3f2ef] px-6 text-[15.5px] font-medium text-[#1c1c1e] hover:bg-[#e9e7e3] hover:text-[#1c1c1e]">
@@ -1039,7 +1040,7 @@ function Download() {
         </h2>
         <p className="m-0 text-[17px] text-[#6b6b70]">免费下载，接入现有日历账户即可使用。</p>
         <div className="mt-1 flex flex-wrap justify-center gap-3">
-          <motion.a href="#download" whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">下载 macOS 版</motion.a>
+          <motion.a href={macDownloadUrl} whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">下载 macOS 版</motion.a>
           <motion.a href="#flow" whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#f3f2ef] px-6 text-[15.5px] font-medium text-[#1c1c1e] hover:bg-[#e9e7e3]">再看一遍</motion.a>
         </div>
         <div className="text-[13px] text-[#8e8e93]">支持 macOS 13 及以上</div>
