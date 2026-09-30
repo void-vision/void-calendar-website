@@ -1071,7 +1071,7 @@ function Footer() {
             <div className="mb-1 text-[13px] text-[#8e8e93]">支持</div>
             <a href="mailto:support@voidvision.ai" className="text-[#3a3a3c] hover:text-[#1463d9]">support@voidvision.ai</a>
             <Link to="/privacy" className="text-[#3a3a3c] hover:text-[#1463d9]">隐私政策</Link>
-            <a href="#" className="text-[#3a3a3c] hover:text-[#1463d9]">服务条款</a>
+            <Link to="/terms" className="text-[#3a3a3c] hover:text-[#1463d9]">服务条款</Link>
           </div>
         </div>
         <div className="border-t border-[#f0efec] pt-6 text-[13px] text-[#8e8e93]">© 2026 VOID VISION PTY LTD</div>

@@ -38,8 +38,12 @@ export function PrivacyPage() {
           </h1>
           <p className="m-0 text-[#6b6b70]">
             {en
-              ? `Effective ${updatedEn}. This policy describes the Void Calendar macOS app and this website, operated by VOID VISION PTY LTD.`
-              : `生效日期：${updated}。本协议说明 VOID VISION PTY LTD 运营的 Void Calendar macOS 应用，以及这个网站如何处理信息。`}
+              ? `Effective ${updatedEn}. This policy describes the Void Calendar macOS app and this website, operated by VOID VISION PTY LTD. Product use is covered by the `
+              : `生效日期：${updated}。本协议说明 VOID VISION PTY LTD 运营的 Void Calendar macOS 应用，以及这个网站如何处理信息。使用产品的约定见`}
+            <Link to="/terms" className="text-[#1463d9] hover:text-[#0d4fb3]">
+              {en ? 'Terms of Service' : '服务条款'}
+            </Link>
+            {en ? '.' : '。'}
           </p>
         </div>
         {(en ? enSections : zhSections).map((section) => (

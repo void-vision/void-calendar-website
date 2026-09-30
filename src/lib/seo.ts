@@ -11,6 +11,10 @@ export const privacyTitle = '隐私协议 · Void Calendar'
 export const privacyDescription =
   'VOID VISION PTY LTD 对 Void Calendar macOS 应用和本网站的隐私说明：本地日程、日历授权、AI 密钥与可选使用统计。'
 
+export const termsTitle = '服务条款 · Void Calendar'
+export const termsDescription =
+  '使用 Void Calendar macOS 应用和本网站的条款：本地数据、日历连接、AI 排程，以及按现状提供的软件。'
+
 export function absoluteUrl(path: string) {
   return `${siteUrl}${path.startsWith('/') ? path : `/${path}`}`
 }
