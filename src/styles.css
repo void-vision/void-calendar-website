@@ -1,0 +1,105 @@
+@import 'tailwindcss';
+
+html,
+body {
+  margin: 0;
+  background: #fff;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC',
+    'Microsoft YaHei', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  color: #1c1c1e;
+}
+
+a {
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (max-width: 480px) {
+  [data-hive] {
+    transform: scale(0.74);
+    height: 330px !important;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid #1463d9;
+  outline-offset: 3px;
+}
+
+button:focus:not(:focus-visible) {
+  outline: none;
+}
+
+button[data-hex]:focus,
+button[data-hex]:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+button[data-hex]:focus-visible [data-hex-ring] {
+  background: #1463d9 !important;
+}
+
+button[data-hex]:focus-visible [data-hex-face] {
+  inset: 2px !important;
+}
+
+button[data-mb]:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(20, 99, 217, 0.45);
+}
+
+nav::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+@keyframes vc-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes vc-blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+.vc-in {
+  animation: vc-in 0.35s ease both;
+}
+
+.vc-blink {
+  animation: vc-blink 1s steps(1) infinite;
+}

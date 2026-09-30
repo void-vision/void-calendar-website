@@ -1,0 +1,133 @@
+/* Ported from OpenDesign 官网 v2.dc.html. Visual copy and demo data stay in sync with that prototype. */
+export type PluginRow = [string, string, string]
+export const MODES=[
+  {id:'shift',name:'自动顺延',desc:'没做完的顺延到下一个空档，事后告诉我'},
+  {id:'ask',name:'先问我',desc:'给出 2–3 个新时间让我选'},
+  {id:'split',name:'拆小一点',desc:'把剩下的拆成 25 分钟的小段，插进空档'}];
+export const P='#ede7f8',PF='#5a3ea0',PD='#7c5cc9';
+export const BOX={
+  shift:[{top:50,h:37.5,title:'PRD v2 · 第二段',time:'11:00 – 12:30'}],
+  ask:[{top:50,h:37.5,title:'PRD v2 · 第二段',time:'建议 11:00 – 12:30',dash:true}],
+  split:[{top:50,h:10.4,title:'PRD · 1/3',time:'11:00 – 11:25'},{top:64.6,h:10.4,title:'PRD · 2/3',time:'11:35 – 12:00'},{top:79.2,h:10.4,title:'PRD · 3/3',time:'12:10 – 12:35'}]};
+export const NOTE={shift:'已把「PRD v2 · 第二段」顺延到 11:00，其余安排不变。',ask:'「PRD v2 · 第二段」和临时会议冲突了，挪到哪个时间？',split:'剩下的拆成 3 段 25 分钟，中间留 10 分钟休息。'};
+export const PLUGINS=[
+  ['番茄钟','效率','把时间盒变成专注计时，完成后自动记录。'],
+  ['微循环','效率','把任务切成一个个小循环：先想清楚目标，再专注，最后复盘。'],
+  ['Claude Code','开发','把任务交给 Claude Code，进度和结果回写到关联的时间盒。'],
+  ['Codex','开发','把编码任务排队给 Codex，按时间盒开始执行。'],
+  ['Terminal','开发','内置终端，用 @ 引用日历任务作为上下文再执行。'],
+  ['GitHub','开发','分配给你的 PR 与 Issue 自动生成待排期任务。'],
+  ['Linear','开发','同步分配给你的 issue 和截止日期。'],
+  ['习惯打卡','生活','每天重复的小目标，连续天数一目了然。'],
+  ['时间感知器','生活','把一生画成点阵，每个点是一周。'],
+  ['记账','生活','把消费记录挂在当天的日程旁边。'],
+  ['读书','阅读','记录读书进度，在每一章写下感受。'],
+  ['便签打印','效率','把今天的时间盒打印成一张便签。']];
+export const HPAL={gray:{bg:'#efeeeb',fg:'#3a3a3c',dot:'#aeaeb2'},blue:{bg:'#e4ecfb',fg:'#1d4ea3',dot:'#2f6fe0'},purple:{bg:'#ede7f8',fg:'#5a3ea0',dot:'#7c5cc9'},green:{bg:'#e2f1e6',fg:'#2c6a3f',dot:'#3a9a5b'},orange:{bg:'#fbe8db',fg:'#8b4a1c',dot:'#e0782f'}};
+export const EVS=[
+ {id:'a1',d:0,s:9,e:10.5,t:'邮件与计划',c:'gray'},{id:'prd1',d:0,s:10.5,e:12,t:'PRD v2 · 第一段',c:'purple',ai:1,k:0},{id:'a2',d:0,s:14,e:15,t:'产品周会',c:'blue'},{id:'fit1',d:0,s:18,e:19,t:'健身',c:'green',ai:1,k:5},
+ {id:'a3',d:1,s:9,e:11,t:'深度工作：插件系统原型',c:'blue'},{id:'a4',d:1,s:13,e:14,t:'1:1 沟通',c:'orange'},{id:'prd2',d:1,s:15,e:16.5,t:'PRD v2 · 第二段',c:'purple',ai:1,k:1},
+ {id:'a5',d:2,s:9.5,e:10,t:'站会',c:'blue'},{id:'prd3',d:2,s:10,e:12,t:'PRD v2 · 收尾与评审',c:'purple',ai:1,k:2},{id:'meet',d:2,s:10,e:11,t:'临时会议',c:'orange'},{id:'deck',d:2,s:14,e:16,t:'周五分享：做演示稿',c:'orange',ai:1,k:3},{id:'fit2',d:2,s:18,e:19,t:'健身',c:'green',ai:1,k:6},
+ {id:'a6',d:3,s:9,e:10.5,t:'整理读书笔记',c:'green'},{id:'a7',d:3,s:11,e:11.5,t:'体检预约',c:'green'},{id:'idea',d:3,s:11.5,e:12.5,t:'给周五分享找 3 个案例',c:'orange',ai:1},{id:'reh',d:3,s:14,e:15.5,t:'分享彩排',c:'orange',ai:1,k:4},{id:'fit3',d:3,s:18,e:19,t:'健身',c:'green',ai:1,k:7},
+ {id:'a8',d:4,s:10,e:11,t:'周五分享',c:'orange'},{id:'a9',d:4,s:13,e:15,t:'竞品调研',c:'blue'},{id:'fit4',d:4,s:18,e:19,t:'健身',c:'green',ai:1,k:8}];
+export const Q='这周把 PRD v2 写完，周五前准备好分享，健身 4 次',IDEA='给周五分享找 3 个案例';
+export const TABS=[{label:'排程',title:'说一句，排好一周。',sub:'AI 读取你已有的日程，把任务放进真正空着的时间。'},{label:'顺延',title:'计划被打乱，日历自己重排。',sub:'新日程和时间盒冲突时，按你选的方式处理。'},{label:'捕获',title:'想到就记，稍后再排。',sub:'在任何应用里按快捷键，想法先进 Inbox。'},{label:'专注',title:'不切换应用，也知道现在该做什么。',sub:'菜单栏显示当前时间盒，一键开始专注。'}];
+export const ICONS={'番茄钟':'M10 5a6 6 0 1 0 0 12a6 6 0 0 0 0-12zM10 8v3l2 1.5M8 2.5h4','微循环':'M4 10a6 6 0 0 1 10.2-4.2M16 10a6 6 0 0 1-10.2 4.2M14.5 3v3h-3M5.5 17v-3h3','Claude Code':'M7 6l-4 4 4 4M13 6l4 4-4 4M11 4.5l-2 11','Codex':'M4 5h12v10H4zM7 9l2 1.5L7 12M11 12h2.5','Terminal':'M3.5 4.5h13v11h-13zM6 8.5l2.5 2L6 12.5M10 12.5h4','GitHub':'M6 3.5v13M14 5.5a1.8 1.8 0 1 0 0 .01M14 7.5c0 3.5-8 2.5-8 7','Linear':'M4 11l5 5M4 7.5l8.5 8.5M5.5 5.5l9 9M8 4l8 8','习惯打卡':'M4 10.5l3.5 3.5L16 6','时间感知器':'M5 5h.01M10 5h.01M15 5h.01M5 10h.01M10 10h.01M15 10h.01M5 15h.01M10 15h.01M15 15h.01','记账':'M4 5h12v10H4zM4 8.5h12M7 12h3','读书':'M3 5c3-1 5-1 7 1v10c-2-2-4-2-7-1zM17 5c-3-1-5-1-7 1v10c2-2 4-2 7-1z','便签打印':'M6 3.5h8v4H6zM4 7.5h12v6H4zM6 11.5h8v5H6z'};
+export const SHORT={'番茄钟':'专注计时自动记录','微循环':'目标 · 专注 · 复盘','Claude Code':'交给 Claude 执行','Codex':'编码任务排队','Terminal':'引用任务再执行','GitHub':'Issue 变成任务','Linear':'同步 issue','习惯打卡':'每天的小目标','时间感知器':'把一生画成点阵','记账':'消费挂在日程旁','读书':'读书进度与感受','便签打印':'打印今天的便签'};
+export const PTINT={'效率':['#e4ecfb','#1d4ea3'],'开发':['#ede7f8','#5a3ea0'],'生活':['#e2f1e6','#2c6a3f'],'阅读':['#fbe8db','#8b4a1c']};
+export const TPLS=[
+ {name:'ADHD 友好',author:'小满',ic:[[1,6,5,8,1],[8,6,5,8,.4],[15,6,5,8,1],[22,6,5,8,.4],[29,6,4,8,1]],path:'',desc:'短时间盒、多缓冲，计划被打乱时拆小重排，不催促',icon:'M3 8h3M8.5 8h3M14 8h3M3 12.5h3M8.5 12.5h3M14 12.5h3',b:[[9,9.75,'F','专注'],[9.75,10,'R',''],[10,10.75,'F','专注'],[11,11.5,'L','杂事'],[12,13,'R','午休'],[13.5,14.25,'F','专注'],[14.5,15,'M','会议'],[15.25,16,'F','专注'],[16,16.5,'R','休息'],[19,19.5,'L','复盘']]},
+ {name:'夜猫子',author:'林间',ic:[[3,4,2.4,2.4,.55],[8,12,2,2,.35]],path:'M21 2.5a7.5 7.5 0 1 0 7.2 11.4A6.1 6.1 0 0 1 21 2.5z',desc:'把深度工作放在晚上，上午只放轻量事务',icon:'M13.8 3.6a6.8 6.8 0 1 0 3 11.2 5.6 5.6 0 0 1-3-11.2z',b:[[10.5,11.5,'L','邮件'],[11.5,12,'L',''],[13,14,'R','午饭'],[14,15,'M','会议'],[15.5,16.5,'L','杂事'],[18,19,'R','晚饭'],[20,22,'F','深度专注'],[22.25,23.75,'F','专注'],[23.75,24,'R',''],[24,24,'R','']]},
+ {name:'INTJ · 深度工作',author:'阿Ken',ic:[[1,5,21,10,1],[24.5,5,8.5,10,.35]],path:'',desc:'上午整块专注，会议集中到下午，严格保护专注时间',icon:'M3 7h14v6H3zM3 16h6',b:[[8.5,11.5,'F','整块专注'],[11.5,12,'L','邮件'],[12,13,'R','午饭'],[13.5,14.5,'M','会议'],[14.5,15.5,'M','会议'],[15.5,16,'L','杂事'],[16,18,'F','专注'],[18.5,19.5,'R','运动'],[21,21.5,'L','复盘'],[21.5,21.5,'R','']]},
+ {name:'考试周',author:'周末读书人',ic:[[1,5,7,10,1],[9.5,5,7,10,.6],[18,5,7,10,.32],[26.5,5,6.5,10,1]],path:'',desc:'按科目轮换，每 50 分钟休息，睡眠优先',icon:'M3 5.5c2.5-1 4.8-.8 7 1v9c-2.2-1.8-4.5-2-7-1zM17 5.5c-2.5-1-4.8-.8-7 1v9c2.2-1.8 4.5-2 7-1z',b:[[8,8.83,'F','数学'],[9,9.83,'F','英语'],[10,10.83,'F','专业'],[11,11.83,'F','数学'],[12,13.5,'R','午休'],[14,14.83,'F','英语'],[15,15.83,'F','专业'],[16,16.83,'F','数学'],[19,20,'L','复盘'],[22.5,25,'R','睡眠']]}];
+export const TCOL={F:['#ece7f4','#d6cee4','#4a4360'],L:['#f3f2ef','#e4e2dd','#6b6b70'],M:['#f7f0e8','#e6d6c4','#6a5540'],R:['repeating-linear-gradient(135deg,#fff 0 3px,#f1efeb 3px 6px)','#e8e6e2','#8e8e93']};
+export const I18N={
+'工作方式':'How it works','AI 排程':'AI scheduling','专注与笔记':'Focus & notes','插件市场':'Plugins','下载':'Download',
+'你的每一天，':'Your whole day,','从这里开始。':'starts here.',
+'AI、日历、任务、笔记与专注，在同一个地方。用时间盒安排每一天，用插件连接更多可能。':'AI, calendar, tasks, notes and focus in one place. Plan each day with time boxes, and extend it with plugins.',
+'下载 macOS 版':'Download for macOS','看看怎么用':'See how it works','支持 macOS 13 及以上 · 可同步 iCloud、Google 日历':'macOS 13 or later · Syncs with iCloud and Google Calendar',
+'文件':'File','编辑':'Edit','显示':'View','窗口':'Window','帮助':'Help',
+'PRD v2 · 收尾与评审':'PRD v2 · Wrap-up & review','接下来':'Up next','周五分享：做演示稿':'Friday talk: build slides','健身':'Workout',
+'9月30日 周三 11:20':'Wed Sep 30 11:20','没有匹配的结果':'No results','捕获想法':'Capture ideas','工作区':'Workspace','插件':'Plugins',
+'周一':'Mon','周二':'Tue','周三':'Wed','周四':'Thu','周五':'Fri','AI 助手':'AI assistant','Esc 关闭':'Esc to close','↵ 保存':'↵ Save',
+'可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中':'Try it: press C to capture, ⌘K to search, click an event to select it',
+'从一个念头，到做完一件事。':'From a passing thought to a finished task.','按 C 记下，先放进 Inbox。':'Press C to jot it down in the Inbox.',
+'变成任务':'Turn it into tasks','AI 把目标拆成合适长度的任务。':'AI breaks goals into tasks of the right size.','安排时间盒':'Time-box it',
+'放进日历里真正空着的时间。':'Placed into time that is actually free.','开始专注':'Start focus','菜单栏倒计时，结束后自动记录。':'A menu bar countdown, logged when it ends.',
+'留下笔记':'Take notes','用 [[ ]] 把笔记连到任务。':'Link notes to tasks with [[ ]].',
+'01 · 捕获':'01 · Capture','想到就记，稍后再排。':'Write it down now, schedule it later.',
+'在任何应用里按下快捷键，弹出捕获框。想法先存进 Inbox，之后再让 AI 排进日历。':'Press a shortcut in any app to open the capture box. Ideas land in the Inbox, and AI can put them on your calendar later.',
+'在上方演示窗口里试一下':'Try it in the demo window above','待办':'To-do','想法':'Idea','时间盒':'Time box','给周五分享找 3 个案例':'Find 3 examples for Friday talk',
+'存到 Inbox':'Save to Inbox','刚刚':'Just now','整理插件权限说明':'Write up plugin permissions','昨天':'Yesterday','预约体检':'Book a checkup',
+'02 · AI 排程':'02 · AI scheduling','说一句要做什么，剩下的交给日历。':'Say what needs doing. The calendar handles the rest.',
+'AI 读取已有日程和截止日期，把任务切成合适的长度，放进真正空着的时间。改动已有日程前，会先问你。':'AI reads your events and deadlines, sizes each task, and places it in time that is actually free. It asks before changing anything already on your calendar.',
+'输入':'Input','这周把 PRD v2 写完，周五前准备好分享，健身 4 次':'Finish PRD v2 this week, prep the Friday talk, work out 4 times',
+'读取：本周已有 11 个日程 · 2 个截止日期':'Read: 11 events this week · 2 deadlines','任务拆解':'Breakdown',
+'PRD v2 · 第一段':'PRD v2 · Part 1','PRD v2 · 第二段':'PRD v2 · Part 2','分享彩排':'Talk rehearsal','健身 × 4':'Workout × 4','邮件与计划':'Email & planning',
+'PRD · 第一段':'PRD · Part 1','深度工作':'Deep work','PRD · 第二段':'PRD · Part 2','PRD · 收尾':'PRD · Wrap-up','做演示稿':'Build slides',
+'早上自动规划今天':'Plans your day each morning','把今天的空档和 Inbox 整理成一份时间盒方案。':'Turns today\'s free time and your Inbox into a time-box plan.',
+'长任务自动拆开':'Splits long tasks','单个时间盒超过你设定的上限，就拆成几段。':'Anything longer than your limit is split into parts.',
+'会议前后留出缓冲':'Buffers around meetings','不会把深度工作紧贴在会议后面。':'Deep work never starts right after a meeting.',
+'写入你指定的日历':'Writes to the calendar you choose','AI 生成的时间盒单独存放，随时能清理。':'AI time boxes are kept separate and easy to clear.',
+'03 · 重排':'03 · Reschedule','临时来了个会，':'A meeting just came up.','日历自己挪好。':'Your calendar adjusts.',
+'选一种你习惯的处理方式，右侧会按这个方式重排。':'Pick how you like conflicts handled and watch the timeline adjust.','重播':'Replay',
+'周三 9月30日':'Wed, Sep 30','上午':'Morning','新日程':'New event','确认':'Confirm',
+'04 · 专注与笔记':'04 · Focus & notes','开始专注，结束时留下一段笔记。':'Focus, then leave a note when you finish.',
+'从时间盒一键开始番茄钟，剩余时间一直显示在菜单栏。结束后，实际专注时长写回这个时间盒，并记进笔记。':'Start a Pomodoro from any time box and keep the countdown in your menu bar. When you finish, the actual focus time is saved to the time box and your note.',
+'结束并记录':'End & log','笔记 · 周三 11:20 · 点击即可编辑':'Note · Wed 11:20 · Click to edit','关联任务':'Linked task','[[周五分享：做演示稿]]':'[[Friday talk: build slides]]',
+'时间':'Time','周三 14:00 – 16:00':'Wed 14:00 – 16:00','类型':'Type','AI 时间盒':'AI time box','之后':'Next','周四 14:00 分享彩排':'Thu 14:00 Talk rehearsal',
+'排程性格':'Scheduling styles','按你的节奏排，不按别人的。':'Scheduled around your rhythm.',
+'告诉 AI 你几点起床、什么时候最专注、容不容易分心。也可以从模板开始，切换看看同一天怎么排。':'Tell AI when you wake up, when you focus best and how easily you get distracted. Or start from a template and see how the same day changes.',
+'专注总时长':'Total focus','专注段数':'Focus blocks','最长一段':'Longest block','清晨':'Early','夜间':'Night','专注':'Focus','会议':'Meeting','轻事务':'Light work','休息':'Break',
+'模板均为示例，可按自己的作息修改':'Templates are examples. Adjust them to your routine.',
+'05 · 插件市场':'05 · Plugins','需要什么，装什么。':'Install only what you need.',
+'插件都挂在日历上：专注计时写回时间盒，GitHub 的 Issue 变成待排期任务，写代码的活可以按时间盒交给 AI 执行。':'Plugins live on your calendar: focus timers log to time boxes, GitHub issues become tasks to schedule, and coding work can be handed to AI by time box.',
+'浏览全部插件':'Browse all plugins','番茄钟':'Pomodoro','效率':'Productivity','开发':'Dev','读书':'Reading','阅读':'Reading','习惯打卡':'Habits','生活':'Life','全部插件':'All plugins',
+'从这周开始，':'Start this week.','让每件事都有时间。':'Give everything its time.','免费下载，接入现有日历账户即可使用。':'Free to download. Connect your existing calendar accounts to start.',
+'再看一遍':'Watch again','支持 macOS 13 及以上':'macOS 13 or later','AI、日历、任务、笔记与专注，在同一个地方。':'AI, calendar, tasks, notes and focus in one place.',
+'产品':'Product','捕获':'Capture','支持':'Support','隐私政策':'Privacy','服务条款':'Terms',
+'当前时间盒':'Current time box','搜索日程、任务、笔记…':'Search events, tasks, notes…','给 AI 的指令':'Instruction for AI','安排这段时间，例如明天下午留 2 小时写代码':'Plan this time, e.g. block 2 hours tomorrow afternoon for coding',
+'发送':'Send','写下想法，回车保存':'Write an idea, press Return to save','重排方式':'Reschedule mode','笔记标题':'Note title','笔记正文':'Note body','任务详情':'Task details','关闭':'Close','排程模板':'Scheduling templates','语言':'Language',
+'自动顺延':'Push back','没做完的顺延到下一个空档，事后告诉我':'Move unfinished work to the next free slot and tell me after','先问我':'Ask me first','给出 2–3 个新时间让我选':'Offer 2–3 new times to choose from',
+'拆小一点':'Split it up','把剩下的拆成 25 分钟的小段，插进空档':'Split what\'s left into 25-minute blocks and fit them into gaps',
+'把时间盒变成专注计时，完成后自动记录。':'Turns a time box into a focus timer and logs it when done.','微循环':'Micro-loops','把任务切成一个个小循环：先想清楚目标，再专注，最后复盘。':'Splits tasks into small loops: set a goal, focus, then review.',
+'把任务交给 Claude Code，进度和结果回写到关联的时间盒。':'Hands tasks to Claude Code and writes progress back to the linked time box.','把编码任务排队给 Codex，按时间盒开始执行。':'Queues coding tasks for Codex to run by time box.',
+'内置终端，用 @ 引用日历任务作为上下文再执行。':'A built-in terminal. Use @ to pull in calendar tasks as context.','分配给你的 PR 与 Issue 自动生成待排期任务。':'PRs and issues assigned to you become tasks to schedule.',
+'同步分配给你的 issue 和截止日期。':'Syncs issues assigned to you and their due dates.','每天重复的小目标，连续天数一目了然。':'Small daily goals with streaks at a glance.','时间感知器':'Life in weeks',
+'把一生画成点阵，每个点是一周。':'Draws your life as a grid, one dot per week.','记账':'Expenses','把消费记录挂在当天的日程旁边。':'Keeps spending next to that day\'s events.',
+'记录读书进度，在每一章写下感受。':'Tracks reading progress with notes on each chapter.','便签打印':'Sticky print','把今天的时间盒打印成一张便签。':'Prints today\'s time boxes on a sticky note.',
+'产品周会':'Product weekly','深度工作：插件系统原型':'Deep work: plugin prototype','1:1 沟通':'1:1','站会':'Standup','临时会议':'Ad-hoc meeting','整理读书笔记':'Tidy reading notes','体检预约':'Book checkup','周五分享':'Friday talk','竞品调研':'Competitor research',
+'排程':'Schedule','说一句，排好一周。':'One sentence plans the week.','AI 读取你已有的日程，把任务放进真正空着的时间。':'AI reads your calendar and puts tasks into time that is actually free.',
+'顺延':'Reschedule','计划被打乱，日历自己重排。':'Plans change. Your calendar adjusts.','新日程和时间盒冲突时，按你选的方式处理。':'When a new event conflicts, it\'s handled the way you choose.',
+'在任何应用里按快捷键，想法先进 Inbox。':'Press a shortcut in any app to send ideas to the Inbox.','不切换应用，也知道现在该做什么。':'Know what\'s next without switching apps.','菜单栏显示当前时间盒，一键开始专注。':'The menu bar shows your current time box. One click to focus.',
+'专注计时自动记录':'Auto-logged focus','目标 · 专注 · 复盘':'Goal · Focus · Review','交给 Claude 执行':'Run with Claude','编码任务排队':'Queue coding','引用任务再执行':'Run with task context','Issue 变成任务':'Issues to tasks','同步 issue':'Sync issues','每天的小目标':'Daily goals','把一生画成点阵':'Life as dots','消费挂在日程旁':'Spend by event','读书进度与感受':'Reading log','打印今天的便签':'Print today',
+'ADHD 友好':'ADHD-friendly','小满':'Xiaoman','短时间盒、多缓冲，计划被打乱时拆小重排，不催促':'Short blocks and generous buffers. Disruptions get split and re-planned, with no nagging.',
+'杂事':'Errands','午休':'Lunch','复盘':'Review','夜猫子':'Night owl','林间':'Linjian','把深度工作放在晚上，上午只放轻量事务':'Deep work in the evening, light tasks in the morning','邮件':'Email','午饭':'Lunch','晚饭':'Dinner','深度专注':'Deep focus',
+'INTJ · 深度工作':'INTJ · Deep work','阿Ken':'Ken','上午整块专注，会议集中到下午，严格保护专注时间':'Long focus blocks in the morning, meetings grouped in the afternoon, focus time protected','整块专注':'Focus block','运动':'Exercise',
+'考试周':'Exam week','周末读书人':'Weekend reader','按科目轮换，每 50 分钟休息，睡眠优先':'Rotate subjects, break every 50 minutes, sleep comes first','数学':'Math','英语':'English','专业':'Major','睡眠':'Sleep','全部':'All',
+'已存到任务':'Saved to tasks','已排进日历的下一个空档':'Scheduled in the next free slot','已存到 Inbox':'Saved to Inbox','存到任务':'Save to tasks','排进日历':'Add to calendar',
+'日历':'Calendar','任务':'Tasks','项目':'Projects','笔记':'Notes','日程':'Events','本周日程':'This week',
+'专注中':'Focusing','已请 AI 顺延到 13:00 →':'Asked AI to move it to 13:00 →','调整时间':'Adjust time','剩余 40 分钟':'40 min left',
+'正在查看空档…':'Checking free time…','已找到空档，建议这样安排（演示）：':'Found a slot. Suggested plan (demo):','应用':'Apply','再调整':'Adjust',
+'今天 11:00':'Today 11:00','今天 11:30':'Today 11:30','明天 09:00':'Tomorrow 09:00','冲突':'Conflict',
+'周三上午，正在写 PRD。':'Wednesday morning, writing the PRD.','日历更新：新日程「临时会议」10:00 – 11:00':'Calendar update: new event "Ad-hoc meeting" 10:00 – 11:00',
+'已顺延到 11:00 – 12:30，其余安排不变。':'Moved to 11:00 – 12:30. Nothing else changed.','剩下的拆成 3 段 25 分钟，中间各留 10 分钟。':'Split into three 25-minute blocks with 10 minutes between.',
+'和临时会议冲突了，选一个新时间再确认：':'Conflicts with the ad-hoc meeting. Pick a new time, then confirm:','候选':'Option',
+'已移到明天 09:00 – 10:30，今天空出这段时间。':'Moved to tomorrow 09:00 – 10:30. This slot is now free.',
+'再开始一轮':'Start another','暂停':'Pause','继续':'Resume',
+'PRD 分三段，放在上午和周二下午':'PRD in three parts, mornings and Tuesday afternoon','演示稿周三下午，周四彩排':'Slides Wednesday afternoon, rehearsal Thursday','健身都在 18:00，避开会议':'Workouts at 18:00, clear of meetings',
+'正在查看这周的空档…':'Checking this week\'s free time…','已排好 9 个时间盒：':'Planned 9 time boxes:','已应用':'Applied','已写入 9 个时间盒':'9 time boxes added','已排好 9 个时间盒，已应用。':'Planned and applied 9 time boxes.',
+'日历更新 · 新日程「临时会议」10:00 – 11:00':'Calendar update · New event "Ad-hoc meeting" 10:00 – 11:00',
+'和「PRD v2 · 收尾与评审」冲突了，已顺延到 11:00 – 13:00，其余安排不变。':'Conflicted with "PRD v2 · Wrap-up & review". Moved to 11:00 – 13:00. Nothing else changed.',
+'撤销':'Undo','已顺延 1 个时间盒 · ⌘Z 撤销':'Moved 1 time box · ⌘Z to undo','已排入':'Scheduled','排到周四 11:30':'Schedule Thu 11:30','稍后':'Later','已排到 周四 11:30':'Scheduled for Thu 11:30',
+'现在是「PRD v2 · 收尾与评审」，还剩 40 分钟。':'Now: "PRD v2 · Wrap-up & review", 40 min left.','已开始 25 分钟专注，结束后自动记到这个时间盒。':'Started a 25-minute focus. It will be logged to this time box.',
+'进行中':'In progress','PRD v2 · 收尾 · 40 分钟':'PRD v2 · Wrap-up · 40 min','PRD v2 评审记录':'PRD v2 review notes',
+'插件权限改为按需申请\n日历视图保留周视图为默认\n周五前补充演示稿的案例':'Request plugin permissions only when needed\nKeep week view as the default\nAdd examples to the slides before Friday',
+'PRD · 1/3':'PRD · 1/3','已存到':'Saved to'};
+export const I18R=[
+ [/第 (\d+) 个番茄已完成 · 已写入笔记/g,'Pomodoro $1 done · saved to note'],[/第 (\d+) 个番茄 · 共 25 分钟/g,'Pomodoro $1 · 25 min'],[/已暂停 · 第 (\d+) 个番茄/g,'Paused · Pomodoro $1'],
+ [/第 (\d+) 个番茄 · 专注 /g,'Pomodoro $1 · focused '],[/本轮专注 /g,'This round: '],[/ · 已写回时间盒「PRD v2 · 收尾与评审」/g,' · saved to "PRD v2 · Wrap-up & review"'],
+ [/专注进行中 · 已专注 /g,'Focusing · '],[/已暂停 · 已专注 /g,'Paused · '],[/专注中 · /g,'Focusing · '],[/(\d+:\d+) 专注/g,'$1 focus'],
+ [/Inbox 里有一条新想法：「(.*)」。周四 11:30 有空档，排进去？/g,'New idea in the Inbox: "$1". Thursday 11:30 is free. Schedule it?'],
+ [/已移到 (.*)。/g,'Moved to $1.'],[/(\d+) 分 (\d+) 秒/g,'$1m $2s'],[/(\d+) 秒/g,'$1s'],[/(\d+) 小时 (\d+) 分/g,'$1 h $2 min'],[/(\d+) 小时/g,'$1 h'],[/(\d+) 分钟/g,'$1 min'],[/(\d+) 段/g,'$1'],[/(\d+) 个结果/g,'$1 results']];
+export const I18K=Object.keys(I18N).filter(k=>k.length>=2).sort((a,b)=>b.length-a.length);

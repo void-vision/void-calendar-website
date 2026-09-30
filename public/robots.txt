@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://voidvision.ai/sitemap.xml
