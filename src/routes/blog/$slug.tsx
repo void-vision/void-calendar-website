@@ -1,6 +1,7 @@
 import { Link, createFileRoute, notFound } from '@tanstack/react-router'
+import { Markdown } from '../../components/Markdown'
 import { SiteFrame, useEn } from '../../components/SiteFrame'
-import { findPost, posts } from '../../content/posts'
+import { findPost, posts, readingMinutes } from '../../content/posts'
 import { socialMeta } from '../../lib/seo'
 
 export const Route = createFileRoute('/blog/$slug')({
@@ -31,20 +32,15 @@ function BlogPostPage() {
           <h1 className="m-0 text-[clamp(32px,4vw,48px)] leading-[1.2] font-medium tracking-[-0.03em]">
             {en ? post.titleEn : post.title}
           </h1>
-          <time className="text-sm text-[#8e8e93]">{en ? post.dateEn : post.date}</time>
+          <div className="flex items-center gap-3 text-sm text-[#8e8e93]">
+            <time>{en ? post.dateEn : post.date}</time>
+            <span aria-hidden="true">·</span>
+            <span>
+              {readingMinutes(en ? post.bodyEn : post.body)} {en ? 'min read' : '分钟阅读'}
+            </span>
+          </div>
         </div>
-        {post.sections.map((section) => (
-          <section key={section.heading} className="flex flex-col gap-3 border-t border-[#f0efec] pt-8">
-            <h2 className="m-0 text-[22px] font-medium tracking-[-0.02em]">
-              {en ? section.headingEn : section.heading}
-            </h2>
-            {(en ? section.paragraphsEn : section.paragraphs).map((paragraph) => (
-              <p key={paragraph} className="m-0 text-[#3a3a3c]">
-                {paragraph}
-              </p>
-            ))}
-          </section>
-        ))}
+        <Markdown source={en ? post.bodyEn : post.body} />
       </article>
     </SiteFrame>
   )

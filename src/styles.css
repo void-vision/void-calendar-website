@@ -18,6 +18,113 @@ a {
   text-decoration: none;
 }
 
+.md {
+  color: #3a3a3c;
+  font-size: 1.0625rem;
+  line-height: 1.8;
+}
+
+.md > * + * {
+  margin-top: 1.15em;
+}
+
+.md h2 {
+  margin-top: 2.6em;
+  color: #1c1c1e;
+  font-size: clamp(1.35rem, 2vw, 1.6rem);
+  font-weight: 500;
+  letter-spacing: -0.025em;
+  line-height: 1.35;
+}
+
+.md h3 {
+  margin-top: 2em;
+  color: #1c1c1e;
+  font-size: 1.15rem;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+}
+
+.md p,
+.md li {
+  text-wrap: pretty;
+}
+
+.md a {
+  color: #1463d9;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.md a:hover {
+  color: #0d4fb3;
+}
+
+.md strong {
+  color: #1c1c1e;
+  font-weight: 600;
+}
+
+.md ul,
+.md ol {
+  padding-left: 1.25em;
+}
+
+.md ul {
+  list-style: disc;
+}
+
+.md ol {
+  list-style: decimal;
+}
+
+.md li + li {
+  margin-top: 0.45em;
+}
+
+.md blockquote {
+  margin: 1.8em 0;
+  padding-left: 1.05em;
+  border-left: 2px solid #1c1c1e;
+  color: #1c1c1e;
+  font-size: 1.2rem;
+  line-height: 1.6;
+  letter-spacing: -0.015em;
+}
+
+.md blockquote p {
+  margin: 0;
+}
+
+.md code {
+  padding: 0.12em 0.38em;
+  border-radius: 5px;
+  background: #f4f3f0;
+  font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+  font-size: 0.9em;
+}
+
+.md pre {
+  overflow: auto;
+  padding: 16px 18px;
+  border-radius: 14px;
+  background: #1c1c1e;
+  color: #f6f5f3;
+}
+
+.md pre code {
+  padding: 0;
+  background: transparent;
+  color: inherit;
+}
+
+.md hr {
+  margin: 2.4em 0;
+  border: 0;
+  border-top: 1px solid #f0efec;
+}
+
 * {
   box-sizing: border-box;
 }

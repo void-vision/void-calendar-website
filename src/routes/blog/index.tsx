@@ -1,6 +1,6 @@
 import { Link, createFileRoute } from '@tanstack/react-router'
 import { SiteFrame, useEn } from '../../components/SiteFrame'
-import { posts } from '../../content/posts'
+import { posts, readingMinutes } from '../../content/posts'
 import { socialMeta } from '../../lib/seo'
 
 export const Route = createFileRoute('/blog/')({
@@ -36,7 +36,13 @@ function BlogIndexPage() {
             params={{ slug: post.slug }}
             className="flex flex-col gap-2 border-t border-[#f0efec] py-7 text-[#1c1c1e] hover:text-[#1463d9]"
           >
-            <time className="text-sm text-[#8e8e93]">{en ? post.dateEn : post.date}</time>
+            <span className="text-sm text-[#8e8e93]">
+              <time>{en ? post.dateEn : post.date}</time>
+              <span aria-hidden="true"> · </span>
+              <span>
+                {readingMinutes(en ? post.bodyEn : post.body)} {en ? 'min read' : '分钟阅读'}
+              </span>
+            </span>
             <span className="text-[22px] leading-[1.35] font-medium tracking-[-0.02em]">
               {en ? post.titleEn : post.title}
             </span>
