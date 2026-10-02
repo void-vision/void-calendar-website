@@ -22,38 +22,36 @@ export function HomePage() {
             </span>
             <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Void Calendar</span>
           </a>
-          <nav className="flex min-w-0 flex-1 justify-center gap-[clamp(16px,2.4vw,32px)] overflow-x-auto text-[14.5px] whitespace-nowrap [scrollbar-width:none]">
-            {[
-              ['#flow', '工作方式'],
-              ['#ai', 'AI 排程'],
-              ['#focus', '专注与笔记'],
-              ['#plugins', '插件市场'],
-            ].map(([href, label]) => (
-              <a key={href} href={href} className="text-[#48484a] transition-colors duration-150 hover:text-[#1c1c1e]">
-                {label}
-              </a>
-            ))}
+          <nav className="flex min-w-0 flex-1 justify-center gap-8 overflow-x-auto text-[14.5px] whitespace-nowrap [scrollbar-width:none]">
+            <Link to="/blog" className="text-[#48484a] transition-colors duration-150 hover:text-[#1c1c1e]">
+              博客
+            </Link>
+            <Link to="/changelog" className="text-[#48484a] transition-colors duration-150 hover:text-[#1c1c1e]">
+              更新日志
+            </Link>
           </nav>
-          <button
-            type="button"
-            onClick={v.toggleLang}
-            aria-label={v.langAria}
-            title={v.langAria}
-            className="flex h-[38px] min-w-11 shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border border-[#e3e1dd] bg-white px-3 text-[13px] font-medium text-[#1c1c1e] transition-[background,border-color] duration-150 hover:border-[#d6d3cd] hover:bg-[#f7f6f4]"
-          >
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true">
-              <circle cx="8" cy="8" r="6.3" />
-              <path d="M1.7 8h12.6M8 1.7c1.8 1.9 2.7 4 2.7 6.3S9.8 12.4 8 14.3M8 1.7C6.2 3.6 5.3 5.7 5.3 8s.9 4.4 2.7 6.3" />
-            </svg>
-            <span>{v.langLabel}</span>
-          </button>
-          <motion.a
-            href={macDownloadUrl}
-            whileTap={{ scale: 0.98 }}
-            className="flex h-[38px] shrink-0 items-center rounded-[10px] bg-[#1c1c1e] px-4 text-sm font-medium whitespace-nowrap text-white hover:bg-[#3a3a3c] hover:text-white"
-          >
-            下载
-          </motion.a>
+          <div className="flex shrink-0 items-center gap-2">
+            <button
+              type="button"
+              onClick={v.toggleLang}
+              aria-label={v.langAria}
+              title={v.langAria}
+              className="flex h-[38px] min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border border-[#e3e1dd] bg-white px-3 text-[13px] font-medium text-[#1c1c1e] transition-[background,border-color] duration-150 hover:border-[#d6d3cd] hover:bg-[#f7f6f4]"
+            >
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true">
+                <circle cx="8" cy="8" r="6.3" />
+                <path d="M1.7 8h12.6M8 1.7c1.8 1.9 2.7 4 2.7 6.3S9.8 12.4 8 14.3M8 1.7C6.2 3.6 5.3 5.7 5.3 8s.9 4.4 2.7 6.3" />
+              </svg>
+              <span>{v.langLabel}</span>
+            </button>
+            <motion.a
+              href={macDownloadUrl}
+              whileTap={{ scale: 0.98 }}
+              className="flex h-[38px] items-center rounded-[10px] bg-[#1c1c1e] px-4 text-sm font-medium whitespace-nowrap text-white hover:bg-[#3a3a3c] hover:text-white"
+            >
+              下载
+            </motion.a>
+          </div>
         </div>
       </header>
 
