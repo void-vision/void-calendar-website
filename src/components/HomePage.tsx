@@ -1067,6 +1067,8 @@ function Footer() {
             <a href="#capture" className="text-[#3a3a3c] hover:text-[#1463d9]">捕获</a>
             <a href="#focus" className="text-[#3a3a3c] hover:text-[#1463d9]">专注与笔记</a>
             <a href="#plugins" className="text-[#3a3a3c] hover:text-[#1463d9]">插件市场</a>
+            <Link to="/changelog" className="text-[#3a3a3c] hover:text-[#1463d9]">更新日志</Link>
+            <Link to="/blog" className="text-[#3a3a3c] hover:text-[#1463d9]">博客</Link>
           </div>
           <div className="flex flex-col gap-3 text-sm">
             <div className="mb-1 text-[13px] text-[#8e8e93]">支持</div>

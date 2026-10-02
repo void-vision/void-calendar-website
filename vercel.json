@@ -1,4 +1,15 @@
 {
   "framework": "tanstack-start",
-  "bunVersion": "1.x"
+  "bunVersion": "1.x",
+  "headers": [
+    {
+      "source": "/updates/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=0, must-revalidate"
+        }
+      ]
+    }
+  ]
 }

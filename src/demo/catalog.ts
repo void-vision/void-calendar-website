@@ -85,7 +85,7 @@ export const I18N={
 '浏览全部插件':'Browse all plugins','番茄钟':'Pomodoro','效率':'Productivity','开发':'Dev','读书':'Reading','阅读':'Reading','习惯打卡':'Habits','生活':'Life','全部插件':'All plugins',
 '从这周开始，':'Start this week.','让每件事都有时间。':'Give everything its time.','免费下载，接入现有日历账户即可使用。':'Free to download. Connect your existing calendar accounts to start.',
 '再看一遍':'Watch again','支持 macOS 13 及以上':'macOS 13 or later','AI、日历、任务、笔记与专注，在同一个地方。':'AI, calendar, tasks, notes and focus in one place.',
-'产品':'Product','捕获':'Capture','支持':'Support','隐私政策':'Privacy','服务条款':'Terms',
+'产品':'Product','捕获':'Capture','支持':'Support','隐私政策':'Privacy','服务条款':'Terms','更新日志':'Changelog','博客':'Blog',
 '当前时间盒':'Current time box','搜索日程、任务、笔记…':'Search events, tasks, notes…','给 AI 的指令':'Instruction for AI','安排这段时间，例如明天下午留 2 小时写代码':'Plan this time, e.g. block 2 hours tomorrow afternoon for coding',
 '发送':'Send','写下想法，回车保存':'Write an idea, press Return to save','重排方式':'Reschedule mode','笔记标题':'Note title','笔记正文':'Note body','任务详情':'Task details','关闭':'Close','排程模板':'Scheduling templates','语言':'Language',
 '自动顺延':'Push back','没做完的顺延到下一个空档，事后告诉我':'Move unfinished work to the next free slot and tell me after','先问我':'Ask me first','给出 2–3 个新时间让我选':'Offer 2–3 new times to choose from',
