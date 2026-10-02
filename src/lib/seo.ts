@@ -1,5 +1,5 @@
 /** Public site origin. Override with VITE_SITE_URL when the live domain is different. */
-export const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://voidvision.ai').replace(/\/$/, '')
+export const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://calendar.voidvision.ai').replace(/\/$/, '')
 
 export const siteName = 'Void Calendar'
 
