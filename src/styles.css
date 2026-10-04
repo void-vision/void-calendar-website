@@ -66,6 +66,17 @@ a {
   font-weight: 600;
 }
 
+.md .md-caption {
+  margin-top: 0.7em;
+  color: #8e8e93;
+  font-size: 0.8125rem;
+  line-height: 1.7;
+}
+
+.md-caption em {
+  font-style: normal;
+}
+
 .md ul,
 .md ol {
   padding-left: 1.25em;
@@ -123,6 +134,45 @@ a {
   margin: 2.4em 0;
   border: 0;
   border-top: 1px solid #f0efec;
+}
+
+.md-table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  border: 1px solid #e8e6e2;
+  border-radius: 12px;
+}
+
+.md table {
+  width: 100%;
+  min-width: 540px;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+}
+
+.md th,
+.md td {
+  padding: 14px 16px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.md th {
+  background: #f7f6f4;
+  color: #1c1c1e;
+  font-weight: 500;
+}
+
+.md tbody tr + tr,
+.md tbody tr:first-child {
+  border-top: 1px solid #e8e6e2;
+}
+
+.md th + th,
+.md td + td {
+  border-left: 1px solid #e8e6e2;
 }
 
 * {
