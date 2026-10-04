@@ -14,6 +14,9 @@ import {
 import { FTOT, type DemoEvent, type DemoState, type Msg } from './types'
 import { dayLabels, demoEvents, eventTime } from './events'
 import { trEN } from './i18n'
+import { buildWorkspaceView } from './workspaceView'
+import { buildCaptureView } from './captureView'
+import type { CaptureTemplateId } from './captureTemplates'
 
 type Ev = DemoEvent
 const EVENTS = demoEvents
@@ -28,6 +31,9 @@ export type DemoApi = {
   closeCap: () => void
   saveCap: () => void
   sendAi: () => void
+  selectCaptureTemplate: (id: CaptureTemplateId) => void
+  openProjectCapture: (id: string) => void
+  prepareProjectPlan: (id: string, title: string, tasks: { id: string; title: string; hours: number }[]) => void
   applySuggestions: () => void
   adjustSuggestions: () => void
   flash: (message: string) => void
@@ -215,10 +221,10 @@ function heroVals(s: DemoState, api: DemoApi) {
     }
   }
   if (sc === 2) {
-    if (t >= 3400 && t < 4400) toast = '已存到 Inbox'
+    if (t >= 3400 && t < 4400) toast = '已存到笔记'
     if (t >= 4400)
       msgs.push(
-        A(`Inbox 里有一条新想法：「${IDEA}」。周四 11:30 有空档，排进去？`, [], [
+        A(`笔记里记下一条想法：「${IDEA}」。周四 11:30 有空档，排进去？`, [], [
           act(t >= 5800 ? '已排入' : '排到周四 11:30', t >= 5800 && t < 6000, true),
           act('稍后'),
         ]),
@@ -250,7 +256,7 @@ function heroVals(s: DemoState, api: DemoApi) {
     capOp: capOn ? 1 : 0,
     capSc: capOn ? 1 : 0.96,
     capText: sc === 2 ? typed(IDEA, 1200, 3000) : '',
-    inboxN: sc === 2 && t >= 3300 && t < 5800 ? 4 : 3,
+    inboxN: 3,
     inboxSc: sc === 2 && ((t >= 3300 && t < 3600) || (t >= 5800 && t < 6100)) ? 1.3 : 1,
     popOp: sc === 3 && t >= 500 ? 1 : 0,
     popY: sc === 3 && t >= 500 ? 0 : -8,
@@ -317,29 +323,11 @@ function userVals<T extends {
     r.capOp = 1
     r.capSc = 1
   }
-  const typ = s.capUser ? s.capType : 'idea'
-  const capTypes = (
-    [
-      ['todo', '待办'],
-      ['idea', '想法'],
-      ['box', '时间盒'],
-    ] as const
-  ).map(([id, label]) => {
-    const on = id === typ
-    return {
-      label,
-      bg: on ? '#e4ecfb' : '#fff',
-      fg: on ? '#1463d9' : '#1c1c1e',
-      bd: on ? '#e4ecfb' : '#e3e1dd',
-      pick: (e: { preventDefault: () => void }) => {
-        e.preventDefault()
-        api.set({ capType: id })
-      },
-    }
-  })
   const nv = (id: string, label: string, badge?: number) => {
     const on = s.navSel === id
     return {
+      id,
+      active: on,
       label,
       bg: on ? '#e4ecfb' : 'transparent',
       fg: on ? '#1463d9' : '#2c2c2e',
@@ -347,7 +335,7 @@ function userVals<T extends {
       hasBadge: !!badge,
       badge,
       sc: id === 'inbox' ? r.inboxSc : 1,
-      pick: () => api.set({ navSel: id, evSel: null, heroManual: true }),
+      pick: () => api.set({ navSel: id, evSel: null, heroManual: true, ...((id === 'proj' || id === 'memo') && !s.uChat && (s.scene !== 0 || s.t < 5200) ? { scene: 0, t: 5600, mbCtl: true, mbOpen: false } : {}) }),
     }
   }
   const q = s.searchQ.trim().toLowerCase()
@@ -371,7 +359,9 @@ function userVals<T extends {
   return {
     ...r,
     navSel: s.navSel,
-    collectionTitle: itemType === 'todo' ? '任务列表' : 'Inbox',
+    ...buildWorkspaceView(s, api),
+    ...buildCaptureView(s, api),
+    collectionTitle: itemType === 'todo' ? '任务列表' : 'Idea',
     collectionItems: collectionItems.map((item) => ({
       ...item,
       userTitle: item.id.startsWith('capture-') ? item.title : null,
@@ -396,13 +386,19 @@ function userVals<T extends {
     applySuggestions: api.applySuggestions,
     adjustSuggestions: api.adjustSuggestions,
     aiPending: s.aiPending,
+    showSamplePlan: !s.uChat && s.scene === 0 && (s.navSel === 'proj' || s.navSel === 'memo'),
+    samplePlan: [
+      { title: 'PRD v2 · 第一段', when: '周一 · 10:30–12:00', hours: '1.5h', color: '#2f6fe0' },
+      { title: 'PRD v2 · 第二段', when: '周二 · 15:00–16:30', hours: '1.5h', color: '#2f6fe0' },
+      { title: 'PRD v2 · 收尾与评审', when: '周三 · 10:00–12:00', hours: '2h', color: '#2f6fe0' },
+      { title: '周五分享：做演示稿', when: '周三 · 14:00–16:00', hours: '2h', color: '#2f6fe0' },
+      { title: '健身 × 4', when: '18:00–19:00', hours: '4h', color: '#3a9a5b' },
+    ],
     capPE: s.capUser ? 'auto' : 'none',
     capUser: s.capUser,
     capDemo: !s.capUser,
     capVal: s.capVal,
-    capTypes,
-    capTarget: typ === 'todo' ? '存到任务' : typ === 'box' ? '排进日历' : '存到 Inbox',
-    navWork: [nv('cal', '日历'), nv('inbox', 'Inbox', r.inboxN), nv('tasks', '任务'), nv('proj', '项目'), nv('memo', '笔记')],
+    navWork: [nv('cal', '日历'), nv('inbox', 'Idea', r.inboxN), nv('tasks', '任务列表'), nv('proj', '项目'), nv('memo', '笔记')],
     navPlug: [nv('pomo', '番茄钟'), nv('habit', '习惯打卡'), nv('gh', 'GitHub')],
     searchRes: list.slice(0, 6).map((e) => ({
       title: e.t,

@@ -1,3 +1,6 @@
+import type { CaptureTemplateId } from './captureTemplates'
+import type { WorkspaceProject, WorkspaceTask } from './workspaces'
+
 export type CapType = 'todo' | 'idea' | 'box'
 export type ModeId = 'shift' | 'ask' | 'split'
 export type DemoEvent = {
@@ -9,6 +12,7 @@ export type DemoEvent = {
   c: 'gray' | 'blue' | 'purple' | 'green' | 'orange'
   ai?: number
   k?: number
+  sourceTask?: string
 }
 export type CapturedItem = { id: string; title: string; type: CapType }
 
@@ -36,12 +40,30 @@ export type DemoState = {
   scene: number
   t: number
   navSel: string
+  projectSel: string
+  noteSel: string
+  noteDrafts: Record<string, { title: string; body: string }>
+  workspaceCollapsed: string[]
+  customProjects: WorkspaceProject[]
+  projectExtraTasks: Record<string, WorkspaceTask[]>
+  projectScheduled: Record<string, string>
+  noteChecks: string[]
+  noteStatus: Record<string, string>
+  noteEditing: boolean
+  noteBodyEdited: string[]
+  notesListing: boolean
+  capturedNotes: { id: string; title: string; body: string; source: string }[]
+  planSourceProject: string | null
   evSel: string | null
   searchQ: string
   searchOpen: boolean
   capUser: boolean
   capVal: string
   capType: CapType
+  capStage: 'templates' | 'input'
+  capTemplate: CaptureTemplateId
+  capProjectId: string | null
+  captureResult: { label: string; target: string; content: string; status: string } | null
   inboxExtra: number
   uToast: string
   pcat: string
@@ -92,12 +114,30 @@ export function initialState(): DemoState {
     scene: 0,
     t: 0,
     navSel: 'cal',
+    projectSel: 'snake',
+    noteSel: 'quickstart',
+    noteDrafts: {},
+    workspaceCollapsed: [],
+    customProjects: [],
+    projectExtraTasks: {},
+    projectScheduled: {},
+    noteChecks: ['note-quickstart-review'],
+    noteStatus: {},
+    noteEditing: false,
+    noteBodyEdited: [],
+    notesListing: false,
+    capturedNotes: [],
+    planSourceProject: null,
     evSel: null,
     searchQ: '',
     searchOpen: false,
     capUser: false,
     capVal: '',
     capType: 'idea',
+    capStage: 'templates',
+    capTemplate: 'idea',
+    capProjectId: null,
+    captureResult: null,
     inboxExtra: 0,
     uToast: '',
     pcat: '全部',
@@ -125,7 +165,7 @@ export function initialState(): DemoState {
     suggestions: [],
     extraEvents: [],
     capturedItems: [],
-    completedItems: [],
+    completedItems: ['snake-requirements', 'snake-research', 'share-outline'],
     heroManual: false,
     focusTitle: null,
     focusWhen: null,

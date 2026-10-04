@@ -3,6 +3,9 @@ import { motion } from 'motion/react'
 import { useEffect, useRef } from 'react'
 import { useDemo } from '../demo/useDemo'
 import { MobilePluginList } from './MobilePluginList'
+import { DemoNotes, DemoProjects, DemoSamplePlan } from './DemoWorkspace'
+import { DemoSidebar } from './DemoSidebar'
+import { DemoCapture, DemoCaptureResult } from './DemoCapture'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
 const macDownloadUrl = 'https://void-calendar-1300838638.cos.ap-hongkong.myqcloud.com/Void%20Calendar.dmg'
@@ -291,32 +294,15 @@ function DemoChrome({ v }: { v: View }) {
         <div className="demo-toolbar-extra w-16" />
         <button type="button" onClick={v.openCap} className="h-9 shrink-0 cursor-pointer rounded-lg border border-[#e6e4e0] bg-white px-2.5 text-xs lg:hidden">捕获想法</button>
       </div>
-      <div className="demo-body relative flex h-[clamp(200px,calc(100vh-400px),600px)] text-xs">
-        <aside className="demo-sidebar flex w-44 shrink-0 flex-col gap-0.5 border-r border-[#e8e6e2] bg-[#f6f5f3] px-2.5 py-3">
-          <div onClick={v.openCap} className="mb-2.5 flex h-[30px] cursor-pointer items-center gap-1.5 rounded-[7px] border border-[#e6e4e0] bg-white px-2.5 hover:border-[#cfcdc8] hover:bg-[#fcfbfa]">
-            <span className="flex-1">捕获想法</span>
-            <span className="rounded border border-[#e3e1dd] px-[5px] text-[10.5px] leading-[15px] text-[#8e8e93]">C</span>
-          </div>
-          <div className="px-2.5 py-1 text-[11px] text-[#8e8e93]">工作区</div>
-          {v.navWork.map((n) => (
-            <div key={n.label} onClick={n.pick} className="flex h-[30px] cursor-pointer items-center gap-2 rounded-md px-2.5 select-none" style={{ background: n.bg, color: n.fg }} onMouseEnter={(e) => (e.currentTarget.style.background = n.hbg)} onMouseLeave={(e) => (e.currentTarget.style.background = n.bg)}>
-              <span className="flex-1">{n.label}</span>
-              {n.hasBadge ? (
-                <span className="flex h-4 min-w-[18px] items-center justify-center rounded-lg bg-[#e5484d] text-[10px] text-white transition-transform duration-250" style={{ transform: `scale(${n.sc})` }}>
-                  {n.badge}
-                </span>
-              ) : null}
-            </div>
-          ))}
-          <div className="px-2.5 pt-3.5 pb-1 text-[11px] text-[#8e8e93]">插件</div>
-          {v.navPlug.map((n) => (
-            <div key={n.label} onClick={n.pick} className="flex h-[30px] cursor-pointer items-center rounded-md px-2.5 select-none" style={{ background: n.bg, color: n.fg }} onMouseEnter={(e) => (e.currentTarget.style.background = n.hbg)} onMouseLeave={(e) => (e.currentTarget.style.background = n.bg)}>
-              {n.label}
-            </div>
-          ))}
-        </aside>
+      <div role="tablist" aria-label="工作区切换" className="demo-workspace-switcher flex shrink-0 gap-1 overflow-x-auto border-b border-[#e8e6e2] bg-[#f6f5f3] px-2 py-1.5 lg:hidden">
+        {v.navWork.map((item) => (
+          <button key={item.id} type="button" role="tab" aria-selected={item.active} onClick={item.pick} className="min-h-8 shrink-0 cursor-pointer rounded-md px-2.5 font-[inherit] text-xs whitespace-nowrap" style={{ background: item.bg, color: item.fg }}>{item.label}</button>
+        ))}
+      </div>
+      <div data-workspace={v.navSel === 'proj' || v.navSel === 'memo' ? 'expanded' : undefined} className="demo-body relative flex h-[clamp(200px,calc(100vh-400px),600px)] text-xs">
+        <DemoSidebar v={v} />
         <div className="demo-calendar relative flex min-w-0 flex-1 flex-col">
-          {v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
+          {v.navSel === 'capture-result' ? <DemoCaptureResult v={v} /> : v.navSel === 'proj' ? <DemoProjects v={v} /> : v.navSel === 'memo' ? <DemoNotes v={v} /> : v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
             <div ref={calendarRef} className="demo-calendar-scroll flex min-h-0 flex-1 flex-col">
               <div className="demo-week flex min-h-0 flex-1 flex-col">
                 <div className="demo-week-grid grid h-11 shrink-0 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb]">
@@ -389,7 +375,7 @@ function DemoChrome({ v }: { v: View }) {
               </button>
             </div>
           ) : null}
-          <div className="demo-toast pointer-events-none absolute bottom-[18px] left-1/2 z-6 -translate-x-1/2 rounded-lg bg-[#1c1c1e] px-3.5 py-2 text-[12.5px] whitespace-nowrap text-white transition-[opacity,transform] duration-300" style={{ opacity: v.toastOp, transform: `translateX(-50%) translateY(${v.toastY}px)` }}>
+          <div className="demo-toast pointer-events-none absolute bottom-[18px] left-1/2 z-6 -translate-x-1/2 rounded-lg bg-[#1c1c1e] px-3.5 py-2 text-[12.5px] whitespace-nowrap text-white transition-[opacity,transform] duration-300" style={{ opacity: v.navSel === 'proj' || v.navSel === 'memo' ? 0 : v.toastOp, transform: `translateX(-50%) translateY(${v.toastY}px)` }}>
             {v.toast}
           </div>
         </div>
@@ -399,13 +385,13 @@ function DemoChrome({ v }: { v: View }) {
             {v.msgs.map((m, i) => (
               <div key={i} className="vc-in shrink-0 flex flex-col gap-1.5" style={{ alignSelf: m.as, maxWidth: m.mw, background: m.bg, borderRadius: m.rad, padding: m.pad, color: m.fg, lineHeight: 1.6 }}>
                 <span data-no-translate={m.userText ? true : undefined}>{m.userText ?? m.text}</span>
-                {m.bullets.map((b) => (
+                {(!v.showSamplePlan || !m.hasActs) && m.bullets.map((b) => (
                   <div key={b.text} className="flex items-center gap-1.5">
                     <span className="size-1.5 shrink-0 rounded-full" style={{ background: b.dot }} />
                     <span>{b.text}</span>
                   </div>
                 ))}
-                {m.hasActs ? (
+                {v.showSamplePlan && m.hasActs ? <DemoSamplePlan v={v} acts={m.acts} /> : m.hasActs ? (
                   <div className="mt-1 flex gap-1.5">
                     {m.acts.map((a) => (
                       <button key={a.label} type="button" onClick={a.pick} disabled={a.disabled} className="flex min-h-7 flex-1 cursor-pointer items-center justify-center rounded-md border px-2 font-[inherit] whitespace-nowrap transition-all hover:brightness-95 disabled:cursor-default" style={{ background: a.bg, color: a.fg, borderColor: a.bd, transform: `scale(${a.sc})` }}>
@@ -468,39 +454,7 @@ function DemoChrome({ v }: { v: View }) {
             </div>
           </div>
         </aside>
-        <div onMouseDown={v.closeCap} aria-hidden={!v.capUser} inert={!v.capUser} className="demo-capture-overlay absolute inset-0 z-10 flex items-start justify-center bg-[rgba(28,28,30,.10)] pt-[110px] transition-opacity duration-300" style={{ opacity: v.capOp, pointerEvents: v.capPE as 'auto' | 'none' }}>
-          <div onMouseDown={(e) => e.stopPropagation()} className="demo-capture flex w-[440px] max-w-[80%] flex-col gap-3 rounded-[14px] border border-[#e6e4e0] bg-white px-[18px] py-4 shadow-[0_24px_60px_rgba(0,0,0,.2)] transition-transform duration-300" style={{ transform: `scale(${v.capSc})` }}>
-            <div className="flex items-center gap-1.5 text-xs">
-              {v.capTypes.map((c) => (
-                <button key={c.label} type="button" onMouseDown={c.pick} onClick={c.pick} className="flex h-6 cursor-pointer items-center rounded-xl border px-2.5 font-[inherit]" style={{ borderColor: c.bd, background: c.bg, color: c.fg }}>
-                  {c.label}
-                </button>
-              ))}
-              <span className="flex-1" />
-              <button type="button" onClick={v.closeCap} aria-label="关闭" className="demo-capture-close cursor-pointer text-[#aeaeb2]">{v.lang === 'en' ? 'Close' : '关闭'}</button>
-            </div>
-            {v.capUser ? (
-              <input ref={r.capRef} value={v.capVal} onChange={v.onCapVal} onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
-                  e.preventDefault()
-                  v.saveCap()
-                } else if (e.key === 'Escape') {
-                  e.stopPropagation()
-                  v.closeCap()
-                }
-              }} placeholder="写下想法，回车保存" className="h-[26px] w-full border-0 bg-transparent p-0 font-[inherit] text-base text-[#1c1c1e] outline-none" />
-            ) : (
-              <div className="flex min-h-[26px] items-center text-base">
-                <span>{v.capText}</span>
-                <span className="vc-blink ml-px h-[18px] w-[1.5px] bg-[#1463d9]" />
-              </div>
-            )}
-            <div className="flex border-t border-[#f0efec] pt-2.5 text-[11.5px] text-[#8e8e93]">
-              <span className="flex-1">{v.capTarget}</span>
-              <button type="button" onClick={v.saveCap} disabled={v.capUser && !v.capVal.trim()} className="demo-capture-save cursor-pointer disabled:cursor-default disabled:opacity-40">↵ 保存</button>
-            </div>
-          </div>
-        </div>
+        <DemoCapture v={v} />
       </div>
     </>
   )
@@ -537,7 +491,7 @@ function DayHead({ label, n }: { label: string; n: string }) {
 
 function Flow() {
   const steps = [
-    ['#capture', '01', '捕获想法', '按 C 记下，先放进 Inbox。', '#1c1c1e'],
+    ['#capture', '01', '捕获想法', '按 C 选择模板，先记下。', '#1c1c1e'],
     ['#ai', '02', '变成任务', 'AI 把目标拆成合适长度的任务。', '#dddbd6'],
     ['#ai', '03', '安排时间盒', '放进日历里真正空着的时间。', '#dddbd6'],
     ['#focus', '04', '开始专注', '菜单栏倒计时，结束后自动记录。', '#dddbd6'],
@@ -571,7 +525,7 @@ function Capture() {
         <div data-rv="0" className="flex flex-col gap-[18px]">
           <div className="text-sm font-medium text-[#1463d9]">01 · 捕获</div>
           <h2 className="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.22] font-medium tracking-[-0.025em] text-balance">想到就记，稍后再排。</h2>
-          <p className="m-0 max-w-[440px] text-[17px] leading-[1.75] text-[#6b6b70] text-pretty">在任何应用里按下快捷键，弹出捕获框。想法先存进 Inbox，之后再让 AI 排进日历。</p>
+          <p className="m-0 max-w-[440px] text-[17px] leading-[1.75] text-[#6b6b70] text-pretty">按下快捷键，选择捕获模板。待办先放进 Idea，想法写进笔记，再让 AI 帮你安排时间。</p>
           <div className="mt-1 flex items-center gap-2.5 text-sm text-[#6b6b70]">
             <span className="flex h-7 min-w-7 items-center justify-center rounded-[7px] border border-[#dddbd6] border-b-2 text-[13px] font-medium text-[#1c1c1e]">C</span>
             在上方演示窗口里试一下
@@ -580,8 +534,8 @@ function Capture() {
         <div data-rv="1" className="relative py-[clamp(8px,2vw,24px)]">
           <div className="relative z-2 ml-auto flex max-w-[460px] flex-col gap-3.5 rounded-2xl border border-[#e8e6e2] bg-white px-5 py-[18px] shadow-[0_30px_70px_rgba(28,28,30,.10)]">
             <div className="flex gap-1.5 text-[12.5px]">
-              <span className="flex h-[26px] items-center rounded-[7px] border border-[#e3e1dd] px-2.5">待办</span>
-              <span className="flex h-[26px] items-center rounded-[7px] bg-[#e4ecfb] px-2.5 text-[#1463d9]">想法</span>
+              <span className="flex h-[26px] items-center rounded-[7px] bg-[#e4ecfb] px-2.5 text-[#1463d9]">待办</span>
+              <span className="flex h-[26px] items-center rounded-[7px] border border-[#e3e1dd] px-2.5">想法</span>
               <span className="flex h-[26px] items-center rounded-[7px] border border-[#e3e1dd] px-2.5">时间盒</span>
             </div>
             <div className="flex items-center text-lg">
@@ -589,11 +543,11 @@ function Capture() {
               <span className="vc-blink ml-0.5 h-5 w-[1.5px] bg-[#1463d9]" />
             </div>
             <div className="flex border-t border-[#f0efec] pt-2.5 text-xs text-[#8e8e93]">
-              <span className="flex-1">存到 Inbox</span><span>↵ 保存</span>
+              <span className="flex-1">存到 Idea</span><span>↵ 保存</span>
             </div>
           </div>
           <div className="relative z-1 mx-0 mt-[-18px] flex max-w-[420px] flex-col rounded-2xl border border-[#ecebe8] bg-[#fafaf9] px-[18px] pt-[30px] pb-3 text-sm">
-            <div className="flex items-center gap-2 px-1 pb-2 text-[12.5px] text-[#8e8e93]"><span className="flex-1">Inbox</span><span>4</span></div>
+            <div className="flex items-center gap-2 px-1 pb-2 text-[12.5px] text-[#8e8e93]"><span className="flex-1">Idea</span><span>4</span></div>
             <InboxRow title="给周五分享找 3 个案例" when="刚刚" fresh />
             <InboxRow title="整理插件权限说明" when="昨天" />
             <InboxRow title="预约体检" when="周一" />
