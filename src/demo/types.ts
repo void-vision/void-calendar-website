@@ -1,8 +1,23 @@
+import type { CaptureTemplateId } from './captureTemplates'
+import type { WorkspaceProject, WorkspaceTask } from './workspaces'
+
 export type CapType = 'todo' | 'idea' | 'box'
 export type ModeId = 'shift' | 'ask' | 'split'
+export type DemoEvent = {
+  id: string
+  d: number
+  s: number
+  e: number
+  t: string
+  c: 'gray' | 'blue' | 'purple' | 'green' | 'orange'
+  ai?: number
+  k?: number
+  sourceTask?: string
+}
+export type CapturedItem = { id: string; title: string; type: CapType }
 
 export type Bullet = { dot: string; text: string }
-export type Act = { label: string; bg: string; fg: string; bd: string; sc: number }
+export type Act = { label: string; bg: string; fg: string; bd: string; sc: number; pick?: () => void; disabled?: boolean }
 export type Msg = {
   as: string
   mw: string
@@ -11,6 +26,7 @@ export type Msg = {
   pad: string
   fg: string
   text: string
+  userText?: string
   bullets: Bullet[]
   hasActs: boolean
   acts: Act[]
@@ -24,12 +40,30 @@ export type DemoState = {
   scene: number
   t: number
   navSel: string
+  projectSel: string
+  noteSel: string
+  noteDrafts: Record<string, { title: string; body: string }>
+  workspaceCollapsed: string[]
+  customProjects: WorkspaceProject[]
+  projectExtraTasks: Record<string, WorkspaceTask[]>
+  projectScheduled: Record<string, string>
+  noteChecks: string[]
+  noteStatus: Record<string, string>
+  noteEditing: boolean
+  noteBodyEdited: string[]
+  notesListing: boolean
+  capturedNotes: { id: string; title: string; body: string; source: string }[]
+  planSourceProject: string | null
   evSel: string | null
   searchQ: string
   searchOpen: boolean
   capUser: boolean
   capVal: string
   capType: CapType
+  capStage: 'templates' | 'input'
+  capTemplate: CaptureTemplateId
+  capProjectId: string | null
+  captureResult: { label: string; target: string; content: string; status: string } | null
   inboxExtra: number
   uToast: string
   pcat: string
@@ -53,6 +87,14 @@ export type DemoState = {
   aiVal: string
   aiFocus: boolean
   uChat: Msg[] | null
+  aiPending: boolean
+  suggestions: DemoEvent[]
+  extraEvents: DemoEvent[]
+  capturedItems: CapturedItem[]
+  completedItems: string[]
+  heroManual: boolean
+  focusTitle: string | null
+  focusWhen: string | null
   mbCtl: boolean
   mbOpen: boolean
   uFocus: boolean
@@ -72,12 +114,30 @@ export function initialState(): DemoState {
     scene: 0,
     t: 0,
     navSel: 'cal',
+    projectSel: 'snake',
+    noteSel: 'quickstart',
+    noteDrafts: {},
+    workspaceCollapsed: [],
+    customProjects: [],
+    projectExtraTasks: {},
+    projectScheduled: {},
+    noteChecks: ['note-quickstart-review'],
+    noteStatus: {},
+    noteEditing: false,
+    noteBodyEdited: [],
+    notesListing: false,
+    capturedNotes: [],
+    planSourceProject: null,
     evSel: null,
     searchQ: '',
     searchOpen: false,
     capUser: false,
     capVal: '',
     capType: 'idea',
+    capStage: 'templates',
+    capTemplate: 'idea',
+    capProjectId: null,
+    captureResult: null,
     inboxExtra: 0,
     uToast: '',
     pcat: '全部',
@@ -101,6 +161,14 @@ export function initialState(): DemoState {
     aiVal: '',
     aiFocus: false,
     uChat: null,
+    aiPending: false,
+    suggestions: [],
+    extraEvents: [],
+    capturedItems: [],
+    completedItems: ['snake-requirements', 'snake-research', 'share-outline'],
+    heroManual: false,
+    focusTitle: null,
+    focusWhen: null,
     mbCtl: false,
     mbOpen: false,
     uFocus: false,

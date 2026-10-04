@@ -37,6 +37,10 @@ export function trEN(s: string) {
 }
 
 const SKIP = new Set([
+  'userTitle',
+  'userText',
+  'focusUserTitle',
+  'mbUserText',
   'searchQ',
   'capVal',
   'aiValue',
@@ -77,6 +81,8 @@ export function applyLang(root: HTMLElement, en: boolean) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
     acceptNode(n) {
       const p = n.parentNode?.nodeName
+      // 用户写入的内容保持原文，只翻译产品界面文案。
+      if (n.parentElement?.closest('[data-no-translate]')) return NodeFilter.FILTER_REJECT
       return p === 'STYLE' || p === 'SCRIPT' || p === 'TEXTAREA' ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
     },
   })
@@ -102,6 +108,7 @@ export function applyLang(root: HTMLElement, en: boolean) {
   }
   const els = [root, ...root.querySelectorAll<HTMLElement>('[placeholder],[aria-label],[title],[alt]')]
   els.forEach((el) => {
+    if (el.closest('[data-no-translate]')) return
     ;(['placeholder', 'aria-label', 'title', 'alt'] as const).forEach((a) => {
       const value = el.getAttribute(a)
       if (!value) return

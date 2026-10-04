@@ -1,9 +1,16 @@
-import { Link } from '@tanstack/react-router'
 import { motion } from 'motion/react'
+import { useEffect, useRef } from 'react'
 import { useDemo } from '../demo/useDemo'
+import { MobilePluginList } from './MobilePluginList'
+import { DemoNotes, DemoProjects, DemoSamplePlan } from './DemoWorkspace'
+import { DemoSidebar } from './DemoSidebar'
+import { DemoCapture, DemoCaptureResult } from './DemoCapture'
+import { ComparisonBlog } from './ComparisonBlog'
+import { SiteFooter } from './SiteFooter'
+import { SiteHeader } from './SiteHeader'
+import { macDownloadUrl } from '../lib/download'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
-const macDownloadUrl = 'https://void-calendar-1300838638.cos.ap-hongkong.myqcloud.com/Void%20Calendar.dmg'
 
 function Logo({ className = 'size-full object-contain' }: { className?: string }) {
   return <img src="/logo.png" alt="Void Calendar" width={256} height={256} decoding="async" className={className} />
@@ -14,46 +21,7 @@ export function HomePage() {
   const r = v.refs
   return (
     <div ref={r.rootRef} className="min-h-screen bg-white text-[15px] leading-[1.6] text-[#1c1c1e]">
-      <header className="sticky top-0 z-30 border-b border-[#f0efec] bg-white/82 backdrop-blur-[16px] backdrop-saturate-[1.4]">
-        <div className="mx-auto flex h-[68px] max-w-[1360px] items-center gap-[clamp(16px,3vw,40px)] px-[clamp(16px,3vw,40px)]">
-          <a href="#top" className="flex shrink-0 items-center gap-2.5 text-[#1c1c1e]">
-            <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white">
-              <Logo />
-            </span>
-            <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Void Calendar</span>
-          </a>
-          <nav className="flex min-w-0 flex-1 justify-center gap-8 overflow-x-auto text-[14.5px] whitespace-nowrap [scrollbar-width:none]">
-            <Link to="/blog" className="text-[#48484a] transition-colors duration-150 hover:text-[#1c1c1e]">
-              博客
-            </Link>
-            <Link to="/changelog" className="text-[#48484a] transition-colors duration-150 hover:text-[#1c1c1e]">
-              更新日志
-            </Link>
-          </nav>
-          <div className="flex shrink-0 items-center gap-2">
-            <button
-              type="button"
-              onClick={v.toggleLang}
-              aria-label={v.langAria}
-              title={v.langAria}
-              className="flex h-[38px] min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border border-[#e3e1dd] bg-white px-3 text-[13px] font-medium text-[#1c1c1e] transition-[background,border-color] duration-150 hover:border-[#d6d3cd] hover:bg-[#f7f6f4]"
-            >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true">
-                <circle cx="8" cy="8" r="6.3" />
-                <path d="M1.7 8h12.6M8 1.7c1.8 1.9 2.7 4 2.7 6.3S9.8 12.4 8 14.3M8 1.7C6.2 3.6 5.3 5.7 5.3 8s.9 4.4 2.7 6.3" />
-              </svg>
-              <span>{v.langLabel}</span>
-            </button>
-            <motion.a
-              href={macDownloadUrl}
-              whileTap={{ scale: 0.98 }}
-              className="flex h-[38px] items-center rounded-[10px] bg-[#1c1c1e] px-4 text-sm font-medium whitespace-nowrap text-white hover:bg-[#3a3a3c] hover:text-white"
-            >
-              下载
-            </motion.a>
-          </div>
-        </div>
-      </header>
+      <SiteHeader lang={v.lang} onToggleLang={v.toggleLang} />
 
       <main>
       <section id="top" className="px-[clamp(20px,5vw,72px)] pt-[clamp(88px,11vw,152px)]">
@@ -79,11 +47,11 @@ export function HomePage() {
       </section>
 
       <section id="showcase" className="relative mt-[clamp(48px,6vw,80px)] h-[200vh]">
-        <div className="sticky top-[68px] flex h-[calc(100vh-68px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
+        <div className="showcase-content sticky top-[68px] flex h-[calc(100vh-68px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
           <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] [transform:translate3d(0,24px,0)_scale(.84)]">
             <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[18px] border border-[#e3e1dd] bg-linear-to-b from-[#f2f4f7] to-[#e9ecf1] text-[#1c1c1e] shadow-[0_20px_60px_rgba(28,28,30,.08)]">
               <MenuBar v={v} />
-              <div className="px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)]">
+              <div className="demo-window-padding px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)]">
                 <div className="w-full overflow-hidden rounded-xl border border-[rgba(28,28,30,.1)] bg-white text-[#1c1c1e] shadow-[0_18px_50px_rgba(28,28,30,.12),0_2px_6px_rgba(28,28,30,.05)]">
                   <DemoChrome v={v} />
                 </div>
@@ -97,9 +65,9 @@ export function HomePage() {
                   <span className="block h-0.5 overflow-hidden rounded-sm bg-[#e8e6e2]">
                     <span className="block h-full bg-[#1c1c1e]" style={{ width: `${tb.pct}%` }} />
                   </span>
-                  <span className="flex gap-2 text-[13.5px] transition-colors" style={{ color: tb.fg }}>
-                    <span className="tabular-nums">0{tb.n}</span>
-                    <span>{tb.label}</span>
+                  <span className="flex gap-2 text-[13.5px] transition-colors max-sm:gap-1 max-sm:text-xs" style={{ color: tb.fg }}>
+                    <span className={`tabular-nums ${v.lang === 'en' ? 'max-md:hidden' : ''}`}>0{tb.n}</span>
+                    <span className="max-sm:text-[11px]">{tb.label}</span>
                   </span>
                 </button>
               ))}
@@ -107,7 +75,10 @@ export function HomePage() {
             <div className="flex min-h-16 min-w-[min(100%,320px)] flex-[1_1_320px] flex-col gap-1">
               <div className="text-[17px] font-medium tracking-[-0.01em]">{v.capTitle}</div>
               <div className="text-sm text-[#6b6b70]">{v.capSub}</div>
-              <div className="mt-0.5 text-[12.5px] text-[#8e8e93]">可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中</div>
+              <div className="mt-0.5 text-[12.5px] text-[#8e8e93]">
+                <span className="hidden md:inline">可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中</span>
+                <span className="md:hidden">左右滑动查看整周，点击捕获想法或日程试试</span>
+              </div>
             </div>
           </div>
         </div>
@@ -121,8 +92,9 @@ export function HomePage() {
       <Templates v={v} />
       <Plugins v={v} />
       <Download />
+      <ComparisonBlog lang={v.lang} />
       </main>
-      <Footer />
+      <SiteFooter lang={v.lang} />
     </div>
   )
 }
@@ -132,12 +104,12 @@ type View = ReturnType<typeof useDemo>
 function MenuBar({ v }: { v: View }) {
   const r = v.refs
   return (
-    <div className="relative z-20 flex h-7 items-center gap-4 border-b border-[rgba(28,28,30,.06)] bg-white/72 px-3.5 text-[12.5px] whitespace-nowrap backdrop-blur-[18px]">
-      <svg width="13" height="15" viewBox="0 0 13 15" fill="#1c1c1e" aria-label="Apple" className="-mt-px shrink-0">
+    <div className="demo-menubar relative z-20 flex h-7 items-center gap-4 border-b border-[rgba(28,28,30,.06)] bg-white/72 px-3.5 text-[12.5px] whitespace-nowrap backdrop-blur-[18px]">
+      <svg width="13" height="15" viewBox="0 0 13 15" fill="#1c1c1e" aria-label="Apple" className="demo-menu-extra -mt-px shrink-0">
         <path d="M10.6 8c0-1.7 1.4-2.5 1.5-2.6-.8-1.2-2.1-1.3-2.5-1.4-1.1-.1-2.1.6-2.6.6-.6 0-1.4-.6-2.3-.6C3.5 4 2.4 4.7 1.8 5.8c-1.3 2.2-.3 5.5.9 7.3.6.9 1.3 1.9 2.3 1.8.9 0 1.2-.6 2.3-.6s1.4.6 2.3.6c1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2.1 0 0-1.9-.7-2.2-3zM8.9 2.9c.5-.6.8-1.4.7-2.2-.7 0-1.5.5-2 1.1-.4.5-.8 1.3-.7 2.1.8.1 1.5-.4 2-1z" />
       </svg>
       <b className="font-semibold">Void Calendar</b>
-      <span>文件</span><span>编辑</span><span>显示</span><span>窗口</span><span>帮助</span>
+      <span className="demo-menu-extra">文件</span><span className="demo-menu-extra">编辑</span><span className="demo-menu-extra">显示</span><span className="demo-menu-extra">窗口</span><span className="demo-menu-extra">帮助</span>
       <span className="flex-1" />
       <span className="relative flex">
         <button
@@ -151,21 +123,23 @@ function MenuBar({ v }: { v: View }) {
           style={{ background: v.mbPillBg }}
         >
           <span className="size-[7px] rounded-[2px] transition-colors" style={{ background: v.mbDot }} />
-          <span>{v.mbText}</span>
+          <span data-no-translate={v.mbUserText ? true : undefined} className="min-w-0 truncate">{v.mbUserText ?? v.mbText}</span>
         </button>
         <div
           ref={r.popRef}
           role="dialog"
           aria-label="当前时间盒"
-          className="absolute top-[calc(100%+6px)] -right-2 z-21 flex w-[clamp(300px,26vw,340px)] origin-[90%_0] flex-col rounded-[14px] border border-[rgba(28,28,30,.08)] bg-[rgba(252,252,251,.985)] text-[12.5px] leading-[1.45] whitespace-normal text-[#1c1c1e] shadow-[0_1px_2px_rgba(28,28,30,.04),0_16px_40px_rgba(28,28,30,.12)] backdrop-blur-3xl transition-[opacity,transform] duration-180"
+          aria-hidden={v.popPE === 'none'}
+          inert={v.popPE === 'none'}
+          className="demo-timebox absolute top-[calc(100%+6px)] -right-2 z-21 flex w-[clamp(300px,26vw,340px)] origin-[90%_0] flex-col rounded-[14px] border border-[rgba(28,28,30,.08)] bg-[rgba(252,252,251,.985)] text-[12.5px] leading-[1.45] whitespace-normal text-[#1c1c1e] shadow-[0_1px_2px_rgba(28,28,30,.04),0_16px_40px_rgba(28,28,30,.12)] backdrop-blur-3xl transition-[opacity,transform] duration-180"
           style={{ opacity: v.popOp, transform: `translateY(${v.popY}px)`, pointerEvents: v.popPE as 'auto' | 'none', transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}
         >
           <div className="flex flex-col gap-2.5 px-[18px] pt-4 pb-3.5">
             <div className="flex items-center gap-2 text-[11.5px] text-[#8e8e93]">
-              <span>{v.popTag}</span><span className="flex-1" /><span className="tabular-nums">10:00 – 12:00</span>
+              <span>{v.popTag}</span><span className="flex-1" /><span className="tabular-nums">{v.focusWhen}</span>
             </div>
             <div className="flex items-baseline gap-3">
-              <span className="min-w-0 flex-1 text-[14.5px] font-medium tracking-[-0.005em]">PRD v2 · 收尾与评审</span>
+              <span data-no-translate={v.focusUserTitle ? true : undefined} className="min-w-0 flex-1 text-[14.5px] font-medium tracking-[-0.005em]">{v.focusUserTitle ?? v.focusTitle}</span>
               <span className="text-[13px] whitespace-nowrap text-[#48484a] tabular-nums">{v.popLeft}</span>
             </div>
             <div className="h-0.5 overflow-hidden rounded-sm bg-[#ecebe8]">
@@ -187,15 +161,15 @@ function MenuBar({ v }: { v: View }) {
           </div>
         </div>
       </span>
-      <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="#1c1c1e" strokeWidth="1.4" strokeLinecap="round" className="shrink-0">
+      <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="#1c1c1e" strokeWidth="1.4" strokeLinecap="round" className="demo-menu-extra shrink-0">
         <path d="M1 3.8a9 9 0 0 1 13 0M3.3 6.2a5.6 5.6 0 0 1 8.4 0M5.6 8.5a2.3 2.3 0 0 1 3.8 0" />
       </svg>
-      <svg width="22" height="11" viewBox="0 0 22 11" fill="none" className="shrink-0">
+      <svg width="22" height="11" viewBox="0 0 22 11" fill="none" className="demo-menu-extra shrink-0">
         <rect x=".6" y=".6" width="18.4" height="9.8" rx="2.6" stroke="#1c1c1e" strokeOpacity=".45" strokeWidth="1.2" />
         <rect x="2.2" y="2.2" width="12" height="6.6" rx="1.4" fill="#1c1c1e" />
         <path d="M20.4 3.8v3.4" stroke="#1c1c1e" strokeOpacity=".45" strokeWidth="1.4" strokeLinecap="round" />
       </svg>
-      <span className="tabular-nums">9月30日 周三 11:20</span>
+      <span className="demo-menu-extra tabular-nums">9月30日 周三 11:20</span>
     </div>
   )
 }
@@ -212,14 +186,45 @@ function NextRow({ time, color, title }: { time: string; color: string; title: s
 
 function DemoChrome({ v }: { v: View }) {
   const r = v.refs
+  const calendarRef = useRef<HTMLDivElement>(null)
+  const messagesRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const calendar = calendarRef.current
+    if (!calendar) return
+    // 手机默认把周三放在中间，整周日程仍可横向滑动查看。
+    const centerWeek = () => {
+      calendar.scrollLeft = window.matchMedia('(max-width: 767px)').matches
+        ? Math.max(0, (calendar.scrollWidth - calendar.clientWidth) / 2)
+        : 0
+    }
+    const observer = new ResizeObserver(centerWeek)
+    observer.observe(calendar)
+    return () => observer.disconnect()
+  }, [v.navSel])
+
+  useEffect(() => {
+    const messages = messagesRef.current
+    if (messages) messages.scrollTop = messages.scrollHeight
+  }, [v.msgs.length, v.suggestions.length])
+
+  useEffect(() => {
+    const calendar = calendarRef.current
+    if (!calendar || !v.selectedEvent || !window.matchMedia('(max-width: 767px)').matches) return
+    const day = calendar.querySelector(`[data-demo-event="${v.selectedEvent.id}"]`)?.parentElement
+    if (!day) return
+    const rect = day.getBoundingClientRect()
+    calendar.scrollLeft += rect.left + rect.width / 2 - calendar.getBoundingClientRect().left - calendar.clientWidth / 2
+  }, [v.selectedEvent?.id])
+
   return (
     <>
-      <div className="relative z-12 flex h-11 items-center gap-[7px] border-b border-[#e8e6e2] bg-[#f6f5f3] px-3 pl-4 text-xs">
-        <span className="size-3 rounded-full bg-[#ff5f57]" />
-        <span className="size-3 rounded-full bg-[#febc2e]" />
-        <span className="size-3 rounded-full bg-[#28c840]" />
-        <div className="flex-1" />
-        <div className="relative min-w-0 flex-[0_1_380px]">
+      <div className="demo-toolbar relative z-12 flex h-11 items-center gap-[7px] border-b border-[#e8e6e2] bg-[#f6f5f3] px-3 pl-4 text-xs">
+        <span className="demo-toolbar-extra size-3 rounded-full bg-[#ff5f57]" />
+        <span className="demo-toolbar-extra size-3 rounded-full bg-[#febc2e]" />
+        <span className="demo-toolbar-extra size-3 rounded-full bg-[#28c840]" />
+        <div className="demo-toolbar-extra flex-1" />
+        <div className="demo-search relative min-w-0 flex-[0_1_380px]">
           <input
             ref={r.searchRef}
             value={v.searchQ}
@@ -239,120 +244,149 @@ function DemoChrome({ v }: { v: View }) {
             <div className="vc-in absolute top-[34px] right-0 left-0 z-30 flex flex-col gap-px rounded-[10px] border border-[#e6e4e0] bg-white p-1.5 shadow-[0_14px_36px_rgba(0,0,0,.16)]">
               <div className="px-2 py-1 text-[11px] text-[#8e8e93]">{v.searchHead}</div>
               {v.searchRes.map((item) => (
-                <div key={item.title + item.when} onMouseDown={item.pick} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-[7px] hover:bg-[#f4f3f0]">
+                <button key={item.title + item.when} type="button" onMouseDown={(event) => event.preventDefault()} onClick={item.pick} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-[7px] text-left font-[inherit] hover:bg-[#f4f3f0]">
                   <span className="size-1.5 shrink-0 rounded-full" style={{ background: item.dot }} />
-                  <span className="min-w-0 flex-1 truncate">{item.title}</span>
+                  <span data-no-translate={item.userTitle ? true : undefined} className="min-w-0 flex-1 truncate">{item.userTitle ?? item.title}</span>
                   <span className="whitespace-nowrap text-[#8e8e93] tabular-nums">{item.when}</span>
-                </div>
+                </button>
               ))}
               {v.searchNone ? <div className="p-2 text-[#aeaeb2]">没有匹配的结果</div> : null}
             </div>
           ) : null}
         </div>
-        <div className="flex-1" />
-        <div className="w-16" />
+        <div className="demo-toolbar-extra flex-1" />
+        <div className="demo-toolbar-extra w-16" />
+        <button type="button" onClick={v.openCap} className="h-9 shrink-0 cursor-pointer rounded-lg border border-[#e6e4e0] bg-white px-2.5 text-xs lg:hidden">捕获想法</button>
       </div>
-      <div className="relative flex h-[clamp(200px,calc(100vh-400px),600px)] text-xs">
-        <aside className="flex w-44 shrink-0 flex-col gap-0.5 border-r border-[#e8e6e2] bg-[#f6f5f3] px-2.5 py-3">
-          <div onClick={v.openCap} className="mb-2.5 flex h-[30px] cursor-pointer items-center gap-1.5 rounded-[7px] border border-[#e6e4e0] bg-white px-2.5 hover:border-[#cfcdc8] hover:bg-[#fcfbfa]">
-            <span className="flex-1">捕获想法</span>
-            <span className="rounded border border-[#e3e1dd] px-[5px] text-[10.5px] leading-[15px] text-[#8e8e93]">C</span>
-          </div>
-          <div className="px-2.5 py-1 text-[11px] text-[#8e8e93]">工作区</div>
-          {v.navWork.map((n) => (
-            <div key={n.label} onClick={n.pick} className="flex h-[30px] cursor-pointer items-center gap-2 rounded-md px-2.5 select-none" style={{ background: n.bg, color: n.fg }} onMouseEnter={(e) => (e.currentTarget.style.background = n.hbg)} onMouseLeave={(e) => (e.currentTarget.style.background = n.bg)}>
-              <span className="flex-1">{n.label}</span>
-              {n.hasBadge ? (
-                <span className="flex h-4 min-w-[18px] items-center justify-center rounded-lg bg-[#e5484d] text-[10px] text-white transition-transform duration-250" style={{ transform: `scale(${n.sc})` }}>
-                  {n.badge}
-                </span>
-              ) : null}
-            </div>
-          ))}
-          <div className="px-2.5 pt-3.5 pb-1 text-[11px] text-[#8e8e93]">插件</div>
-          {v.navPlug.map((n) => (
-            <div key={n.label} onClick={n.pick} className="flex h-[30px] cursor-pointer items-center rounded-md px-2.5 select-none" style={{ background: n.bg, color: n.fg }} onMouseEnter={(e) => (e.currentTarget.style.background = n.hbg)} onMouseLeave={(e) => (e.currentTarget.style.background = n.bg)}>
-              {n.label}
-            </div>
-          ))}
-        </aside>
-        <div className="relative flex min-w-0 flex-1 flex-col">
-          <div className="grid h-11 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb]">
-            <div />
-            <DayHead label="周一" n="28" />
-            <DayHead label="周二" n="29" />
-            <div className="px-2 py-1.5 text-[#1463d9]">
-              周三 <b className="inline-flex size-[22px] items-center justify-center rounded-full bg-[#1463d9] text-[11.5px] text-white">30</b>
-            </div>
-            <DayHead label="周四" n="1" />
-            <DayHead label="周五" n="2" />
-          </div>
-          <div className="relative grid flex-1 grid-cols-[44px_repeat(5,minmax(0,1fr))] bg-[linear-gradient(#f1f0ed_1px,transparent_1px)] bg-size-[100%_8.333%]">
-            <div className="relative text-[10.5px] text-[#aeaeb2]">
-              {['09', '11', '13', '15', '17', '19'].map((h, i) => (
-                <span key={h} className="absolute right-2" style={{ top: `${[8.33, 25, 41.67, 58.33, 75, 91.67][i]}%` }}>{h}</span>
-              ))}
-            </div>
-            {v.days.map((d, i) => (
-              <div key={i} className="relative border-l border-[#f1f0ed]" style={{ background: d.bg }}>
-                {d.evs.map((e) => (
-                  <div
-                    key={e.id}
-                    onClick={e.pick}
-                    className="absolute right-[3px] left-[3px] cursor-pointer overflow-hidden rounded-[5px] px-1.5 py-[3px] text-[11.5px] leading-[1.4] transition-[top,opacity,transform,box-shadow,background] duration-300 hover:brightness-97"
-                    style={{
-                      top: `${e.top}%`,
-                      height: `${e.h}%`,
-                      background: e.bg,
-                      color: e.fg,
-                      border: `1px ${e.bs} ${e.bd}`,
-                      borderLeft: `3px ${e.bs} ${e.bl}`,
-                      opacity: e.op,
-                      transform: e.tf,
-                      boxShadow: e.sh,
-                      zIndex: e.z,
-                      transitionDuration: '600ms,350ms,350ms,300ms,300ms',
-                      transitionTimingFunction: 'cubic-bezier(.3,.7,.2,1)',
-                    }}
-                  >
-                    {e.title}
+      <div role="tablist" aria-label="工作区切换" className="demo-workspace-switcher flex shrink-0 gap-1 overflow-x-auto border-b border-[#e8e6e2] bg-[#f6f5f3] px-2 py-1.5 lg:hidden">
+        {v.navWork.map((item) => (
+          <button key={item.id} type="button" role="tab" aria-selected={item.active} onClick={item.pick} className="min-h-8 shrink-0 cursor-pointer rounded-md px-2.5 font-[inherit] text-xs whitespace-nowrap" style={{ background: item.bg, color: item.fg }}>{item.label}</button>
+        ))}
+      </div>
+      <div data-workspace={v.navSel === 'proj' || v.navSel === 'memo' ? 'expanded' : undefined} className="demo-body relative flex h-[clamp(200px,calc(100vh-400px),600px)] text-xs">
+        <DemoSidebar v={v} />
+        <div className="demo-calendar relative flex min-w-0 flex-1 flex-col">
+          {v.navSel === 'capture-result' ? <DemoCaptureResult v={v} /> : v.navSel === 'proj' ? <DemoProjects v={v} /> : v.navSel === 'memo' ? <DemoNotes v={v} /> : v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
+            <div ref={calendarRef} className="demo-calendar-scroll flex min-h-0 flex-1 flex-col">
+              <div className="demo-week flex min-h-0 flex-1 flex-col">
+                <div className="demo-week-grid grid h-11 shrink-0 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb]">
+                  <div />
+                  <DayHead label="周一" n="28" />
+                  <DayHead label="周二" n="29" />
+                  <div className="px-2 py-1.5 text-[#1463d9]">
+                    周三 <b className="inline-flex size-[22px] items-center justify-center rounded-full bg-[#1463d9] text-[11.5px] text-white">30</b>
                   </div>
-                ))}
-                <div className="absolute right-0 -left-1 z-4 h-0.5 bg-[#e5484d]" style={{ display: d.nowD, top: '27.78%' }}>
-                  <span className="absolute top-[-3px] left-0 size-2 rounded-full bg-[#e5484d]" />
+                  <DayHead label="周四" n="1" />
+                  <DayHead label="周五" n="2" />
+                </div>
+                <div className="demo-week-grid relative grid flex-1 grid-cols-[44px_repeat(5,minmax(0,1fr))] bg-[linear-gradient(#f1f0ed_1px,transparent_1px)] bg-size-[100%_8.333%]">
+                  <div className="relative text-[10.5px] text-[#aeaeb2]">
+                    {['09', '11', '13', '15', '17', '19'].map((h, i) => (
+                      <span key={h} className="absolute right-2" style={{ top: `${[8.33, 25, 41.67, 58.33, 75, 91.67][i]}%` }}>{h}</span>
+                    ))}
+                  </div>
+                  {v.days.map((d, i) => (
+                    <div key={i} className="relative border-l border-[#f1f0ed]" style={{ background: d.bg }}>
+                      {d.evs.map((e) => (
+                        <button
+                          key={e.id}
+                          type="button"
+                          data-demo-event={e.id}
+                          data-no-translate={e.userTitle ? true : undefined}
+                          aria-label={`${e.userTitle ?? e.title}，${e.when}`}
+                          aria-pressed={v.selectedEvent?.id === e.id}
+                          disabled={e.op === 0}
+                          onClick={e.pick}
+                          className="absolute right-[3px] left-[3px] flex cursor-pointer items-start overflow-hidden rounded-[5px] px-1.5 py-[3px] text-left font-[inherit] text-[11.5px] leading-[1.4] transition-[top,opacity,transform,box-shadow,background] duration-300 hover:brightness-97"
+                          style={{
+                            top: `${e.top}%`,
+                            height: `${e.h}%`,
+                            background: e.bg,
+                            color: e.fg,
+                            border: `1px ${e.bs} ${e.bd}`,
+                            borderLeft: `3px ${e.bs} ${e.bl}`,
+                            opacity: e.op,
+                            transform: e.tf,
+                            boxShadow: e.sh,
+                            zIndex: e.z,
+                            transitionDuration: '600ms,350ms,350ms,300ms,300ms',
+                            transitionTimingFunction: 'cubic-bezier(.3,.7,.2,1)',
+                          }}
+                        >
+                          {e.userTitle ?? e.title}
+                        </button>
+                      ))}
+                      <div className="absolute right-0 -left-1 z-4 h-0.5 bg-[#e5484d]" style={{ display: d.nowD, top: '27.78%' }}>
+                        <span className="absolute top-[-3px] left-0 size-2 rounded-full bg-[#e5484d]" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-          <div className="pointer-events-none absolute bottom-[18px] left-1/2 z-6 -translate-x-1/2 rounded-lg bg-[#1c1c1e] px-3.5 py-2 text-[12.5px] whitespace-nowrap text-white transition-[opacity,transform] duration-300" style={{ opacity: v.toastOp, transform: `translateX(-50%) translateY(${v.toastY}px)` }}>
+            </div>
+          )}
+          {v.selectedEvent ? (
+            <div ref={r.eventRef} role="dialog" aria-label="日程详情" className="demo-event-detail vc-in absolute top-14 right-3 z-8 flex w-[280px] max-w-[calc(100%-24px)] flex-col gap-3 rounded-xl border border-[#e3e1dd] bg-white p-4 shadow-[0_12px_32px_rgba(28,28,30,.12)]">
+              <div className="flex items-center gap-2 text-[11px] text-[#8e8e93]">
+                <span className="size-1.5 rounded-full" style={{ background: v.selectedEvent.dot }} />
+                <span className="flex-1">{v.selectedEvent.kind}</span>
+                <button type="button" onClick={v.closeEvent} aria-label="关闭日程详情" className="flex size-7 cursor-pointer items-center justify-center rounded-md text-base hover:bg-[#f4f3f0]">×</button>
+              </div>
+              <div data-no-translate={v.selectedEvent.userTitle ? true : undefined} className="text-sm leading-relaxed font-medium">{v.selectedEvent.userTitle ?? v.selectedEvent.title}</div>
+              <div className="text-xs text-[#6b6b70] tabular-nums">{v.selectedEvent.when}</div>
+              <button type="button" onClick={v.selectedEvent.pending ? v.applySuggestions : v.startEventFocus} className="mt-1 h-9 cursor-pointer self-start rounded-lg bg-[#1c1c1e] px-3.5 text-xs font-medium text-white hover:bg-[#3a3a3c]">
+                {v.selectedEvent.pending ? '加入日历' : '开始专注'}
+              </button>
+            </div>
+          ) : null}
+          <div className="demo-toast pointer-events-none absolute bottom-[18px] left-1/2 z-6 -translate-x-1/2 rounded-lg bg-[#1c1c1e] px-3.5 py-2 text-[12.5px] whitespace-nowrap text-white transition-[opacity,transform] duration-300" style={{ opacity: v.navSel === 'proj' || v.navSel === 'memo' ? 0 : v.toastOp, transform: `translateX(-50%) translateY(${v.toastY}px)` }}>
             {v.toast}
           </div>
         </div>
-        <aside className="flex w-[264px] shrink-0 flex-col gap-3 border-l border-[#e8e6e2] bg-white p-3.5">
+        <aside className="demo-ai flex w-[264px] shrink-0 flex-col gap-3 border-l border-[#e8e6e2] bg-white p-3.5">
           <div className="text-[13px] font-semibold">AI 助手</div>
-          <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
+          <div ref={messagesRef} className="demo-messages flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto">
             {v.msgs.map((m, i) => (
-              <div key={i} className="vc-in flex flex-col gap-1.5" style={{ alignSelf: m.as, maxWidth: m.mw, background: m.bg, borderRadius: m.rad, padding: m.pad, color: m.fg, lineHeight: 1.6 }}>
-                <span>{m.text}</span>
-                {m.bullets.map((b) => (
+              <div key={i} className="vc-in shrink-0 flex flex-col gap-1.5" style={{ alignSelf: m.as, maxWidth: m.mw, background: m.bg, borderRadius: m.rad, padding: m.pad, color: m.fg, lineHeight: 1.6 }}>
+                <span data-no-translate={m.userText ? true : undefined}>{m.userText ?? m.text}</span>
+                {(!v.showSamplePlan || !m.hasActs) && m.bullets.map((b) => (
                   <div key={b.text} className="flex items-center gap-1.5">
                     <span className="size-1.5 shrink-0 rounded-full" style={{ background: b.dot }} />
                     <span>{b.text}</span>
                   </div>
                 ))}
-                {m.hasActs ? (
+                {v.showSamplePlan && m.hasActs ? <DemoSamplePlan v={v} acts={m.acts} /> : m.hasActs ? (
                   <div className="mt-1 flex gap-1.5">
                     {m.acts.map((a) => (
-                      <span key={a.label} className="flex h-7 flex-1 cursor-pointer items-center justify-center rounded-md border px-2 whitespace-nowrap transition-all hover:brightness-95" style={{ background: a.bg, color: a.fg, borderColor: a.bd, transform: `scale(${a.sc})` }}>
+                      <button key={a.label} type="button" onClick={a.pick} disabled={a.disabled} className="flex min-h-7 flex-1 cursor-pointer items-center justify-center rounded-md border px-2 font-[inherit] whitespace-nowrap transition-all hover:brightness-95 disabled:cursor-default" style={{ background: a.bg, color: a.fg, borderColor: a.bd, transform: `scale(${a.sc})` }}>
                         {a.label}
-                      </span>
+                      </button>
                     ))}
                   </div>
                 ) : null}
               </div>
             ))}
+            {v.suggestions.length ? (
+              <div className="demo-plan vc-in flex shrink-0 flex-col overflow-hidden rounded-xl border border-[#e8e6e2] bg-[#fafaf9]">
+                <div className="border-b border-[#eeece8] px-3 py-2 text-[11px] text-[#8e8e93]">建议的时间盒 · 待确认</div>
+                {v.suggestions.map((event) => (
+                  <div key={event.id} className="flex items-start gap-2 px-3 py-3">
+                    <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#2f6fe0]" />
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      <span data-no-translate className="text-xs leading-relaxed font-medium break-words">{event.userTitle}</span>
+                      <span className="text-[11px] text-[#8e8e93] tabular-nums">{event.when}</span>
+                    </div>
+                    <span className="shrink-0 text-[11px] text-[#8e8e93]">{event.duration}</span>
+                  </div>
+                ))}
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 border-t border-[#eeece8] p-2.5">
+                  <button type="button" onClick={v.applySuggestions} className="min-h-8 cursor-pointer rounded-lg bg-[#1c1c1e] px-2.5 text-xs font-medium text-white hover:bg-[#3a3a3c]">加入日历</button>
+                  <button type="button" onClick={v.adjustSuggestions} className="min-h-8 cursor-pointer rounded-lg border border-[#e3e1dd] bg-white px-2.5 text-xs hover:bg-[#f4f3f0]">换个时间</button>
+                </div>
+              </div>
+            ) : null}
           </div>
-          <div className="flex shrink-0 flex-col gap-1.5 rounded-[14px] border bg-white px-3 pt-2.5 pb-2 transition-[border-color,box-shadow]" style={{ borderColor: v.inBd, boxShadow: v.inSh }}>
+          <div className="demo-composer flex shrink-0 flex-col gap-1.5 rounded-[14px] border bg-white px-3 pt-2.5 pb-2 transition-[border-color,box-shadow]" style={{ borderColor: v.inBd, boxShadow: v.inSh }}>
             <textarea
               ref={r.aiRef}
               value={v.aiValue}
@@ -384,41 +418,30 @@ function DemoChrome({ v }: { v: View }) {
             </div>
           </div>
         </aside>
-        <div onMouseDown={v.closeCap} className="absolute inset-0 z-10 flex items-start justify-center bg-[rgba(28,28,30,.10)] pt-[110px] transition-opacity duration-300" style={{ opacity: v.capOp, pointerEvents: v.capPE as 'auto' | 'none' }}>
-          <div onMouseDown={(e) => e.stopPropagation()} className="flex w-[440px] max-w-[80%] flex-col gap-3 rounded-[14px] border border-[#e6e4e0] bg-white px-[18px] py-4 shadow-[0_24px_60px_rgba(0,0,0,.2)] transition-transform duration-300" style={{ transform: `scale(${v.capSc})` }}>
-            <div className="flex items-center gap-1.5 text-xs">
-              {v.capTypes.map((c) => (
-                <span key={c.label} onMouseDown={c.pick} className="flex h-6 cursor-pointer items-center rounded-xl border px-2.5" style={{ borderColor: c.bd, background: c.bg, color: c.fg }}>
-                  {c.label}
-                </span>
-              ))}
-              <span className="flex-1" />
-              <span className="text-[#aeaeb2]">Esc 关闭</span>
-            </div>
-            {v.capUser ? (
-              <input ref={r.capRef} value={v.capVal} onChange={v.onCapVal} onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
-                  e.preventDefault()
-                  v.saveCap()
-                } else if (e.key === 'Escape') {
-                  e.stopPropagation()
-                  v.closeCap()
-                }
-              }} placeholder="写下想法，回车保存" className="h-[26px] w-full border-0 bg-transparent p-0 font-[inherit] text-base text-[#1c1c1e] outline-none" />
-            ) : (
-              <div className="flex min-h-[26px] items-center text-base">
-                <span>{v.capText}</span>
-                <span className="vc-blink ml-px h-[18px] w-[1.5px] bg-[#1463d9]" />
-              </div>
-            )}
-            <div className="flex border-t border-[#f0efec] pt-2.5 text-[11.5px] text-[#8e8e93]">
-              <span className="flex-1">{v.capTarget}</span>
-              <span>↵ 保存</span>
-            </div>
-          </div>
-        </div>
+        <DemoCapture v={v} />
       </div>
     </>
+  )
+}
+
+function DemoCollection({ v }: { v: View }) {
+  return (
+    <div className="demo-collection flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-white p-4">
+      <div className="flex items-center gap-2 border-b border-[#efeeeb] pb-3">
+        <span className="flex-1 text-sm font-semibold">{v.collectionTitle}</span>
+        <button type="button" onClick={v.showCalendar} className="min-h-8 cursor-pointer rounded-lg bg-[#f4f3f0] px-2.5 text-xs text-[#48484a] hover:bg-[#e9e7e3]">返回日历</button>
+      </div>
+      {v.collectionItems.map((item) => (
+        <div key={item.id} className="flex items-start gap-2.5 border-b border-[#f0efec] py-2.5">
+          {v.navSel === 'tasks' ? (
+            <button type="button" data-no-translate={item.userTitle ? true : undefined} onClick={item.toggle} aria-label={`${v.lang === 'en' ? item.done ? 'Mark incomplete' : 'Complete' : item.done ? '取消完成' : '完成'}：${item.userTitle ?? item.title}`} aria-pressed={item.done} className="mt-0.5 flex size-4 shrink-0 cursor-pointer items-center justify-center rounded border border-[#cfcdc8] text-[10px]" style={{ background: item.done ? '#1c1c1e' : 'white', color: item.done ? 'white' : '#1c1c1e' }}>{item.done ? '✓' : ''}</button>
+          ) : <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#c7c4be]" />}
+          <span data-no-translate={item.userTitle ? true : undefined} className="min-w-0 flex-1 text-xs leading-relaxed" style={{ textDecoration: item.done ? 'line-through' : 'none', color: item.done ? '#aeaeb2' : '#1c1c1e' }}>{item.userTitle ?? item.title}</span>
+          <span className="shrink-0 text-[10px] text-[#8e8e93]">{item.when}</span>
+        </div>
+      ))}
+      <button type="button" onClick={v.openCap} className="mt-1 min-h-9 cursor-pointer self-start rounded-lg border border-[#e3e1dd] bg-white px-3 text-xs hover:bg-[#f4f3f0]">捕获想法</button>
+    </div>
   )
 }
 
@@ -432,7 +455,7 @@ function DayHead({ label, n }: { label: string; n: string }) {
 
 function Flow() {
   const steps = [
-    ['#capture', '01', '捕获想法', '按 C 记下，先放进 Inbox。', '#1c1c1e'],
+    ['#capture', '01', '捕获想法', '按 C 选择模板，先记下。', '#1c1c1e'],
     ['#ai', '02', '变成任务', 'AI 把目标拆成合适长度的任务。', '#dddbd6'],
     ['#ai', '03', '安排时间盒', '放进日历里真正空着的时间。', '#dddbd6'],
     ['#focus', '04', '开始专注', '菜单栏倒计时，结束后自动记录。', '#dddbd6'],
@@ -466,7 +489,7 @@ function Capture() {
         <div data-rv="0" className="flex flex-col gap-[18px]">
           <div className="text-sm font-medium text-[#1463d9]">01 · 捕获</div>
           <h2 className="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.22] font-medium tracking-[-0.025em] text-balance">想到就记，稍后再排。</h2>
-          <p className="m-0 max-w-[440px] text-[17px] leading-[1.75] text-[#6b6b70] text-pretty">在任何应用里按下快捷键，弹出捕获框。想法先存进 Inbox，之后再让 AI 排进日历。</p>
+          <p className="m-0 max-w-[440px] text-[17px] leading-[1.75] text-[#6b6b70] text-pretty">按下快捷键，选择捕获模板。待办先放进 Idea，想法写进笔记，再让 AI 帮你安排时间。</p>
           <div className="mt-1 flex items-center gap-2.5 text-sm text-[#6b6b70]">
             <span className="flex h-7 min-w-7 items-center justify-center rounded-[7px] border border-[#dddbd6] border-b-2 text-[13px] font-medium text-[#1c1c1e]">C</span>
             在上方演示窗口里试一下
@@ -475,8 +498,8 @@ function Capture() {
         <div data-rv="1" className="relative py-[clamp(8px,2vw,24px)]">
           <div className="relative z-2 ml-auto flex max-w-[460px] flex-col gap-3.5 rounded-2xl border border-[#e8e6e2] bg-white px-5 py-[18px] shadow-[0_30px_70px_rgba(28,28,30,.10)]">
             <div className="flex gap-1.5 text-[12.5px]">
-              <span className="flex h-[26px] items-center rounded-[7px] border border-[#e3e1dd] px-2.5">待办</span>
-              <span className="flex h-[26px] items-center rounded-[7px] bg-[#e4ecfb] px-2.5 text-[#1463d9]">想法</span>
+              <span className="flex h-[26px] items-center rounded-[7px] bg-[#e4ecfb] px-2.5 text-[#1463d9]">待办</span>
+              <span className="flex h-[26px] items-center rounded-[7px] border border-[#e3e1dd] px-2.5">想法</span>
               <span className="flex h-[26px] items-center rounded-[7px] border border-[#e3e1dd] px-2.5">时间盒</span>
             </div>
             <div className="flex items-center text-lg">
@@ -484,11 +507,11 @@ function Capture() {
               <span className="vc-blink ml-0.5 h-5 w-[1.5px] bg-[#1463d9]" />
             </div>
             <div className="flex border-t border-[#f0efec] pt-2.5 text-xs text-[#8e8e93]">
-              <span className="flex-1">存到 Inbox</span><span>↵ 保存</span>
+              <span className="flex-1">存到 Idea</span><span>↵ 保存</span>
             </div>
           </div>
           <div className="relative z-1 mx-0 mt-[-18px] flex max-w-[420px] flex-col rounded-2xl border border-[#ecebe8] bg-[#fafaf9] px-[18px] pt-[30px] pb-3 text-sm">
-            <div className="flex items-center gap-2 px-1 pb-2 text-[12.5px] text-[#8e8e93]"><span className="flex-1">Inbox</span><span>4</span></div>
+            <div className="flex items-center gap-2 px-1 pb-2 text-[12.5px] text-[#8e8e93]"><span className="flex-1">Idea</span><span>4</span></div>
             <InboxRow title="给周五分享找 3 个案例" when="刚刚" fresh />
             <InboxRow title="整理插件权限说明" when="昨天" />
             <InboxRow title="预约体检" when="周一" />
@@ -629,7 +652,7 @@ function Disrupt({ v }: { v: View }) {
             日历自己挪好。
           </h2>
           <p className="m-0 max-w-[420px] text-base leading-[1.75] text-[#6b6b70]">选一种你习惯的处理方式，右侧会按这个方式重排。</p>
-          <div role="tablist" aria-label="重排方式" className="mt-2.5 flex max-w-[440px] gap-7 border-b border-[#ecebe8]">
+          <div role="tablist" aria-label="重排方式" className="mt-2.5 flex max-w-[440px] gap-4 border-b border-[#ecebe8] sm:gap-7">
             {v.modes.map((m) => (
               <button key={m.name} type="button" role="tab" aria-selected={m.sel === 'true'} onClick={m.pick} className="relative cursor-pointer border-0 bg-transparent p-0 pb-3 font-[inherit] text-[15px] whitespace-nowrap transition-colors duration-200 hover:text-[#1c1c1e]" style={{ color: m.fg }}>
                 {m.name}
@@ -648,7 +671,7 @@ function Disrupt({ v }: { v: View }) {
           </div>
         </div>
         <div data-rv="1" className="flex min-w-0 flex-col gap-4 pt-1.5">
-          <div className="flex items-baseline gap-3 border-b border-[#ecebe8] pb-3 text-[13px]">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-[#ecebe8] pb-3 text-[13px]">
             <span className="font-medium">周三 9月30日</span>
             <span className="text-[#8e8e93]">上午</span>
             <span className="flex-1" />
@@ -729,7 +752,7 @@ function Focus({ v }: { v: View }) {
         <div className="flex flex-wrap items-start gap-x-[clamp(28px,4vw,56px)] gap-y-8">
           <div data-rv="1" className="flex min-w-0 flex-[1.35_1_440px] flex-wrap items-center gap-x-11 gap-y-7 rounded-[22px] border border-[#ecebe8] bg-white p-[clamp(24px,3vw,40px)]">
             <Tomato v={v} />
-            <div className="flex min-w-[220px] flex-[1_1_220px] flex-col gap-3.5">
+            <div className="flex min-w-[min(100%,220px)] flex-[1_1_220px] flex-col gap-3.5">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 text-sm font-medium text-[#1c1c1e]">
                   <span className="size-[7px] shrink-0 rounded-[2px] bg-[#8e86a3]" />
@@ -759,7 +782,7 @@ function Focus({ v }: { v: View }) {
             <span className="absolute top-2 -left-1 size-[7px] rounded-full border border-[#bdb9b2] bg-[#fafaf9]" />
             <div className="text-[12.5px] text-[#8e8e93]">笔记 · 周三 11:20 · 点击即可编辑</div>
             <input value={v.nTitle} onChange={v.onNTitle} aria-label="笔记标题" className="-mx-1.5 w-[calc(100%+12px)] rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-xl font-medium tracking-[-0.01em] text-[#1c1c1e] outline-none transition-[background,box-shadow] hover:bg-[#f3f2ef] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6]" />
-            <textarea ref={r.noteRef} value={v.nBody} onChange={v.onNBody} aria-label="笔记正文" rows={3} className="-mx-1.5 w-[calc(100%+12px)] resize-none overflow-hidden rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-[15px] leading-[1.7] text-[#3a3a3c] outline-none transition-[background,box-shadow] hover:bg-[#f3f2ef] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6]" />
+            <textarea ref={r.noteRef} value={v.nBody} onChange={v.onNBody} aria-label="笔记正文" rows={3} className="-mx-1.5 w-[calc(100%+12px)] resize-none overflow-hidden rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-base leading-[1.7] text-[#3a3a3c] outline-none transition-[background,box-shadow] hover:bg-[#f3f2ef] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6] sm:text-[15px]" />
             <div className="relative flex flex-wrap items-center gap-2 text-sm text-[#6b6b70]">
               <span>关联任务</span>
               <button ref={r.lnkBtnRef} type="button" onClick={v.toggleLnk} aria-expanded={v.lnkExp === 'true'} className="cursor-pointer border-0 border-b border-[#b9cdf2] bg-transparent p-0 font-[inherit] text-sm text-[#1463d9] hover:border-[#1463d9] hover:text-[#0d4fb3]">
@@ -974,8 +997,9 @@ function Plugins({ v }: { v: View }) {
             ))}
           </div>
         </div>
-        <div data-rv="1" className="flex flex-col items-center gap-7">
-          <div ref={r.hiveRef} className="relative mx-auto w-full max-w-[900px] transition-[height] duration-[480ms]" style={{ height: v.hiveH, transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}>
+        <div data-rv="1" className="flex w-full min-w-0 flex-col items-center gap-7">
+          <MobilePluginList v={v} />
+          <div ref={r.hiveRef} className="relative mx-auto hidden w-full max-w-[900px] transition-[height] duration-[480ms] sm:block" style={{ height: v.hiveH, transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}>
             <div aria-live="polite" className="absolute top-0 left-0 z-2 transition-transform duration-[520ms]" style={{ width: v.hexW, height: v.hexH, transform: `translate3d(${v.detX}px,${v.detY}px,0)`, filter: 'drop-shadow(0 10px 24px rgba(28,28,30,.08))', transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}>
               <span className="absolute inset-0 bg-[#c9c7c2] [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
               <span className="absolute inset-px flex flex-col items-center justify-center bg-[#faf9f7] text-center [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" style={{ padding: `0 ${v.detPad}%` }}>
@@ -1044,39 +1068,5 @@ function Download() {
         <div className="text-[13px] text-[#8e8e93]">支持 macOS 13 及以上</div>
       </div>
     </section>
-  )
-}
-
-function Footer() {
-  return (
-    <footer className="border-t border-[#f0efec] px-[clamp(20px,5vw,72px)] pt-14 pb-10">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-12">
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-9">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2.5">
-              <span className="flex size-7 overflow-hidden rounded-full border border-[#e8e6e2] bg-white"><Logo /></span>
-              <span className="font-semibold">Void Calendar</span>
-            </div>
-            <span className="text-sm text-[#6b6b70]">AI、日历、任务、笔记与专注，在同一个地方。</span>
-          </div>
-          <div className="flex flex-col gap-3 text-sm">
-            <div className="mb-1 text-[13px] text-[#8e8e93]">产品</div>
-            <a href="#ai" className="text-[#3a3a3c] hover:text-[#1463d9]">AI 排程</a>
-            <a href="#capture" className="text-[#3a3a3c] hover:text-[#1463d9]">捕获</a>
-            <a href="#focus" className="text-[#3a3a3c] hover:text-[#1463d9]">专注与笔记</a>
-            <a href="#plugins" className="text-[#3a3a3c] hover:text-[#1463d9]">插件市场</a>
-            <Link to="/changelog" className="text-[#3a3a3c] hover:text-[#1463d9]">更新日志</Link>
-            <Link to="/blog" className="text-[#3a3a3c] hover:text-[#1463d9]">博客</Link>
-          </div>
-          <div className="flex flex-col gap-3 text-sm">
-            <div className="mb-1 text-[13px] text-[#8e8e93]">支持</div>
-            <a href="mailto:support@voidvision.ai" className="text-[#3a3a3c] hover:text-[#1463d9]">support@voidvision.ai</a>
-            <Link to="/privacy" className="text-[#3a3a3c] hover:text-[#1463d9]">隐私政策</Link>
-            <Link to="/terms" className="text-[#3a3a3c] hover:text-[#1463d9]">服务条款</Link>
-          </div>
-        </div>
-        <div className="border-t border-[#f0efec] pt-6 text-[13px] text-[#8e8e93]">© 2026 VOID VISION PTY LTD</div>
-      </div>
-    </footer>
   )
 }

@@ -1,4 +1,5 @@
 /* Ported from OpenDesign 官网 v2.dc.html. Visual copy and demo data stay in sync with that prototype. */
+import { workspaceTranslations } from './workspaceTranslations'
 export type PluginRow = [string, string, string]
 export const MODES=[
   {id:'shift',name:'自动顺延',desc:'没做完的顺延到下一个空档，事后告诉我'},
@@ -31,7 +32,7 @@ export const EVS=[
  {id:'a6',d:3,s:9,e:10.5,t:'整理读书笔记',c:'green'},{id:'a7',d:3,s:11,e:11.5,t:'体检预约',c:'green'},{id:'idea',d:3,s:11.5,e:12.5,t:'给周五分享找 3 个案例',c:'orange',ai:1},{id:'reh',d:3,s:14,e:15.5,t:'分享彩排',c:'orange',ai:1,k:4},{id:'fit3',d:3,s:18,e:19,t:'健身',c:'green',ai:1,k:7},
  {id:'a8',d:4,s:10,e:11,t:'周五分享',c:'orange'},{id:'a9',d:4,s:13,e:15,t:'竞品调研',c:'blue'},{id:'fit4',d:4,s:18,e:19,t:'健身',c:'green',ai:1,k:8}];
 export const Q='这周把 PRD v2 写完，周五前准备好分享，健身 4 次',IDEA='给周五分享找 3 个案例';
-export const TABS=[{label:'排程',title:'说一句，排好一周。',sub:'AI 读取你已有的日程，把任务放进真正空着的时间。'},{label:'顺延',title:'计划被打乱，日历自己重排。',sub:'新日程和时间盒冲突时，按你选的方式处理。'},{label:'捕获',title:'想到就记，稍后再排。',sub:'在任何应用里按快捷键，想法先进 Inbox。'},{label:'专注',title:'不切换应用，也知道现在该做什么。',sub:'菜单栏显示当前时间盒，一键开始专注。'}];
+export const TABS=[{label:'排程',title:'说一句，排好一周。',sub:'AI 读取你已有的日程，把任务放进真正空着的时间。'},{label:'顺延',title:'计划被打乱，日历自己重排。',sub:'新日程和时间盒冲突时，按你选的方式处理。'},{label:'捕获',title:'想到就记，稍后再排。',sub:'按快捷键选择模板，待办进 Idea，想法写进笔记。'},{label:'专注',title:'不切换应用，也知道现在该做什么。',sub:'菜单栏显示当前时间盒，一键开始专注。'}];
 export const ICONS={'番茄钟':'M10 5a6 6 0 1 0 0 12a6 6 0 0 0 0-12zM10 8v3l2 1.5M8 2.5h4','微循环':'M4 10a6 6 0 0 1 10.2-4.2M16 10a6 6 0 0 1-10.2 4.2M14.5 3v3h-3M5.5 17v-3h3','Claude Code':'M7 6l-4 4 4 4M13 6l4 4-4 4M11 4.5l-2 11','Codex':'M4 5h12v10H4zM7 9l2 1.5L7 12M11 12h2.5','Terminal':'M3.5 4.5h13v11h-13zM6 8.5l2.5 2L6 12.5M10 12.5h4','GitHub':'M6 3.5v13M14 5.5a1.8 1.8 0 1 0 0 .01M14 7.5c0 3.5-8 2.5-8 7','Linear':'M4 11l5 5M4 7.5l8.5 8.5M5.5 5.5l9 9M8 4l8 8','习惯打卡':'M4 10.5l3.5 3.5L16 6','时间感知器':'M5 5h.01M10 5h.01M15 5h.01M5 10h.01M10 10h.01M15 10h.01M5 15h.01M10 15h.01M15 15h.01','记账':'M4 5h12v10H4zM4 8.5h12M7 12h3','读书':'M3 5c3-1 5-1 7 1v10c-2-2-4-2-7-1zM17 5c-3-1-5-1-7 1v10c2-2 4-2 7-1z','便签打印':'M6 3.5h8v4H6zM4 7.5h12v6H4zM6 11.5h8v5H6z'};
 export const SHORT={'番茄钟':'专注计时自动记录','微循环':'目标 · 专注 · 复盘','Claude Code':'交给 Claude 执行','Codex':'编码任务排队','Terminal':'引用任务再执行','GitHub':'Issue 变成任务','Linear':'同步 issue','习惯打卡':'每天的小目标','时间感知器':'把一生画成点阵','记账':'消费挂在日程旁','读书':'读书进度与感受','便签打印':'打印今天的便签'};
 export const PTINT={'效率':['#e4ecfb','#1d4ea3'],'开发':['#ede7f8','#5a3ea0'],'生活':['#e2f1e6','#2c6a3f'],'阅读':['#fbe8db','#8b4a1c']};
@@ -42,6 +43,7 @@ export const TPLS=[
  {name:'考试周',author:'周末读书人',ic:[[1,5,7,10,1],[9.5,5,7,10,.6],[18,5,7,10,.32],[26.5,5,6.5,10,1]],path:'',desc:'按科目轮换，每 50 分钟休息，睡眠优先',icon:'M3 5.5c2.5-1 4.8-.8 7 1v9c-2.2-1.8-4.5-2-7-1zM17 5.5c-2.5-1-4.8-.8-7 1v9c2.2-1.8 4.5-2 7-1z',b:[[8,8.83,'F','数学'],[9,9.83,'F','英语'],[10,10.83,'F','专业'],[11,11.83,'F','数学'],[12,13.5,'R','午休'],[14,14.83,'F','英语'],[15,15.83,'F','专业'],[16,16.83,'F','数学'],[19,20,'L','复盘'],[22.5,25,'R','睡眠']]}];
 export const TCOL={F:['#ece7f4','#d6cee4','#4a4360'],L:['#f3f2ef','#e4e2dd','#6b6b70'],M:['#f7f0e8','#e6d6c4','#6a5540'],R:['repeating-linear-gradient(135deg,#fff 0 3px,#f1efeb 3px 6px)','#e8e6e2','#8e8e93']};
 export const I18N={
+...workspaceTranslations,
 '工作方式':'How it works','AI 排程':'AI scheduling','专注与笔记':'Focus & notes','插件市场':'Plugins','下载':'Download',
 '你的每一天，':'Your whole day,','从这里开始。':'starts here.',
 'AI、日历、任务、笔记与专注，在同一个地方。用时间盒安排每一天，用插件连接更多可能。':'AI, calendar, tasks, notes and focus in one place. Plan each day with time boxes, and extend it with plugins.',
@@ -51,6 +53,16 @@ export const I18N={
 '9月30日 周三 11:20':'Wed Sep 30 11:20','没有匹配的结果':'No results','捕获想法':'Capture ideas','工作区':'Workspace','插件':'Plugins',
 '周一':'Mon','周二':'Tue','周三':'Wed','周四':'Thu','周五':'Fri','AI 助手':'AI assistant','Esc 关闭':'Esc to close','↵ 保存':'↵ Save',
 '可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中':'Try it: press C to capture, ⌘K to search, click an event to select it',
+'左右滑动查看整周，点击捕获想法或日程试试':'Swipe to see the week. Tap Capture ideas or an event to try it.',
+'工作区切换':'Switch workspace','项目预览':'Project preview','笔记预览':'Note preview',
+'把产品需求写清楚，再逐项验证。':'Clarify the product requirements, then validate each one.','整理案例，准备演示，再做一次彩排。':'Collect examples, prepare the demo, then rehearse.',
+'整理需求与边界':'Define requirements and scope','补齐核心流程':'Complete the core flows','完成评审与收尾':'Finish the review and wrap-up','挑选 3 个案例':'Choose 3 examples','制作演示稿':'Prepare the slides','分享前彩排':'Rehearse the talk',
+'每周复盘':'Weekly review','读书摘记':'Reading notes',
+'这周完成了什么？\n把临时想到的事先放进 Inbox。\n下周给深度工作留出完整的时间。':'What did you finish this week?\nCapture passing ideas in the Inbox.\nReserve uninterrupted time for deep work next week.',
+'专注需要提前安排，而不是等有空再开始。\n把一个大目标拆成下一步能做的小事。\n用时间盒为重要的事情留出位置。':'Schedule focus ahead of time.\nBreak a big goal into a small next step.\nGive important work its own time box.',
+'日程详情':'Event details','关闭日程详情':'Close event details','加入日历':'Add to calendar','换个时间':'Another time','待确认':'Pending','待安排':'Unscheduled','返回日历':'Back to calendar','任务列表':'Task list',
+'建议的时间盒 · 待确认':'Suggested time box · Pending','已找到空档，确认后加入日历。':'Found a free slot. Confirm to add it to your calendar.','已加入演示日历。':'Added to the demo calendar.','已加入日历':'Added to calendar',
+'本周没有合适空档，请换成更短的时间盒。':'No suitable slot this week. Try a shorter time box.','没有更晚的空档，可以先缩短时间盒。':'No later slot is available. Try a shorter time box.','完成':'Complete','取消完成':'Mark incomplete',
 '从一个念头，到做完一件事。':'From a passing thought to a finished task.','按 C 记下，先放进 Inbox。':'Press C to jot it down in the Inbox.',
 '变成任务':'Turn it into tasks','AI 把目标拆成合适长度的任务。':'AI breaks goals into tasks of the right size.','安排时间盒':'Time-box it',
 '放进日历里真正空着的时间。':'Placed into time that is actually free.','开始专注':'Start focus','菜单栏倒计时，结束后自动记录。':'A menu bar countdown, logged when it ends.',
@@ -85,7 +97,7 @@ export const I18N={
 '浏览全部插件':'Browse all plugins','番茄钟':'Pomodoro','效率':'Productivity','开发':'Dev','读书':'Reading','阅读':'Reading','习惯打卡':'Habits','生活':'Life','全部插件':'All plugins',
 '从这周开始，':'Start this week.','让每件事都有时间。':'Give everything its time.','免费下载，接入现有日历账户即可使用。':'Free to download. Connect your existing calendar accounts to start.',
 '再看一遍':'Watch again','支持 macOS 13 及以上':'macOS 13 or later','AI、日历、任务、笔记与专注，在同一个地方。':'AI, calendar, tasks, notes and focus in one place.',
-'产品':'Product','捕获':'Capture','支持':'Support','隐私政策':'Privacy','服务条款':'Terms','更新日志':'Changelog','博客':'Blog',
+'产品':'Product','捕获':'Capture','支持':'Support','隐私政策':'Privacy','服务条款':'Terms','更新日志':'Changelog','博客':'Blog','定价':'Pricing',
 '当前时间盒':'Current time box','搜索日程、任务、笔记…':'Search events, tasks, notes…','给 AI 的指令':'Instruction for AI','安排这段时间，例如明天下午留 2 小时写代码':'Plan this time, e.g. block 2 hours tomorrow afternoon for coding',
 '发送':'Send','写下想法，回车保存':'Write an idea, press Return to save','重排方式':'Reschedule mode','笔记标题':'Note title','笔记正文':'Note body','任务详情':'Task details','关闭':'Close','排程模板':'Scheduling templates','语言':'Language',
 '自动顺延':'Push back','没做完的顺延到下一个空档，事后告诉我':'Move unfinished work to the next free slot and tell me after','先问我':'Ask me first','给出 2–3 个新时间让我选':'Offer 2–3 new times to choose from',

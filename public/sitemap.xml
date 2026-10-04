@@ -26,6 +26,12 @@
     <priority>0.7</priority>
   </url>
   <url>
+    <loc>https://calendar.voidvision.ai/pricing</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://calendar.voidvision.ai/blog/mac-time-box</loc>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
@@ -37,6 +43,78 @@
   </url>
   <url>
     <loc>https://calendar.voidvision.ai/blog/when-a-meeting-appears</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-notion</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-motion</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-morgen</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-ticktick</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-google-tasks</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-todoist</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-microsoft-to-do</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-trello</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-omnifocus</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-things-3</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-org-mode</loc>
+    <lastmod>2026-10-05</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://calendar.voidvision.ai/blog/void-calendar-vs-obsidian-tasks</loc>
+    <lastmod>2026-10-05</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
