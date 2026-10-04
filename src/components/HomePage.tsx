@@ -1,4 +1,3 @@
-import { Link } from '@tanstack/react-router'
 import { motion } from 'motion/react'
 import { useEffect, useRef } from 'react'
 import { useDemo } from '../demo/useDemo'
@@ -6,9 +5,12 @@ import { MobilePluginList } from './MobilePluginList'
 import { DemoNotes, DemoProjects, DemoSamplePlan } from './DemoWorkspace'
 import { DemoSidebar } from './DemoSidebar'
 import { DemoCapture, DemoCaptureResult } from './DemoCapture'
+import { ComparisonBlog } from './ComparisonBlog'
+import { SiteFooter } from './SiteFooter'
+import { SiteHeader } from './SiteHeader'
+import { macDownloadUrl } from '../lib/download'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
-const macDownloadUrl = 'https://void-calendar-1300838638.cos.ap-hongkong.myqcloud.com/Void%20Calendar.dmg'
 
 function Logo({ className = 'size-full object-contain' }: { className?: string }) {
   return <img src="/logo.png" alt="Void Calendar" width={256} height={256} decoding="async" className={className} />
@@ -19,46 +21,7 @@ export function HomePage() {
   const r = v.refs
   return (
     <div ref={r.rootRef} className="min-h-screen bg-white text-[15px] leading-[1.6] text-[#1c1c1e]">
-      <header className="sticky top-0 z-30 border-b border-[#f0efec] bg-white/82 backdrop-blur-[16px] backdrop-saturate-[1.4]">
-        <div className="home-header mx-auto flex h-[68px] max-w-[1360px] items-center gap-[clamp(16px,3vw,40px)] px-[clamp(16px,3vw,40px)]">
-          <a href="#top" className="home-brand flex shrink-0 items-center gap-2.5 text-[#1c1c1e]">
-            <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white">
-              <Logo />
-            </span>
-            <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Void Calendar</span>
-          </a>
-          <nav aria-label="主导航" className="home-nav flex min-w-0 flex-1 justify-center gap-8 overflow-x-auto text-[14.5px] whitespace-nowrap [scrollbar-width:none]">
-            <Link to="/blog" className="text-[#48484a] transition-colors duration-150 hover:text-[#1c1c1e]">
-              博客
-            </Link>
-            <Link to="/changelog" className="text-[#48484a] transition-colors duration-150 hover:text-[#1c1c1e]">
-              更新日志
-            </Link>
-          </nav>
-          <div className="home-actions flex shrink-0 items-center gap-2">
-            <button
-              type="button"
-              onClick={v.toggleLang}
-              aria-label={v.langAria}
-              title={v.langAria}
-              className="flex h-[38px] min-w-11 cursor-pointer items-center justify-center gap-1.5 rounded-[10px] border border-[#e3e1dd] bg-white px-3 text-[13px] font-medium text-[#1c1c1e] transition-[background,border-color] duration-150 hover:border-[#d6d3cd] hover:bg-[#f7f6f4]"
-            >
-              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true">
-                <circle cx="8" cy="8" r="6.3" />
-                <path d="M1.7 8h12.6M8 1.7c1.8 1.9 2.7 4 2.7 6.3S9.8 12.4 8 14.3M8 1.7C6.2 3.6 5.3 5.7 5.3 8s.9 4.4 2.7 6.3" />
-              </svg>
-              <span>{v.langLabel}</span>
-            </button>
-            <motion.a
-              href={macDownloadUrl}
-              whileTap={{ scale: 0.98 }}
-              className="flex h-[38px] items-center rounded-[10px] bg-[#1c1c1e] px-4 text-sm font-medium whitespace-nowrap text-white hover:bg-[#3a3a3c] hover:text-white"
-            >
-              下载
-            </motion.a>
-          </div>
-        </div>
-      </header>
+      <SiteHeader lang={v.lang} onToggleLang={v.toggleLang} />
 
       <main>
       <section id="top" className="px-[clamp(20px,5vw,72px)] pt-[clamp(88px,11vw,152px)]">
@@ -129,8 +92,9 @@ export function HomePage() {
       <Templates v={v} />
       <Plugins v={v} />
       <Download />
+      <ComparisonBlog lang={v.lang} />
       </main>
-      <Footer />
+      <SiteFooter lang={v.lang} />
     </div>
   )
 }
@@ -1104,39 +1068,5 @@ function Download() {
         <div className="text-[13px] text-[#8e8e93]">支持 macOS 13 及以上</div>
       </div>
     </section>
-  )
-}
-
-function Footer() {
-  return (
-    <footer className="border-t border-[#f0efec] px-[clamp(20px,5vw,72px)] pt-14 pb-10">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-12">
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-9">
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2.5">
-              <span className="flex size-7 overflow-hidden rounded-full border border-[#e8e6e2] bg-white"><Logo /></span>
-              <span className="font-semibold">Void Calendar</span>
-            </div>
-            <span className="text-sm text-[#6b6b70]">AI、日历、任务、笔记与专注，在同一个地方。</span>
-          </div>
-          <div className="flex flex-col gap-3 text-sm">
-            <div className="mb-1 text-[13px] text-[#8e8e93]">产品</div>
-            <a href="#ai" className="text-[#3a3a3c] hover:text-[#1463d9]">AI 排程</a>
-            <a href="#capture" className="text-[#3a3a3c] hover:text-[#1463d9]">捕获</a>
-            <a href="#focus" className="text-[#3a3a3c] hover:text-[#1463d9]">专注与笔记</a>
-            <a href="#plugins" className="text-[#3a3a3c] hover:text-[#1463d9]">插件市场</a>
-            <Link to="/changelog" className="text-[#3a3a3c] hover:text-[#1463d9]">更新日志</Link>
-            <Link to="/blog" className="text-[#3a3a3c] hover:text-[#1463d9]">博客</Link>
-          </div>
-          <div className="flex flex-col gap-3 text-sm">
-            <div className="mb-1 text-[13px] text-[#8e8e93]">支持</div>
-            <a href="mailto:support@voidvision.ai" className="text-[#3a3a3c] hover:text-[#1463d9]">support@voidvision.ai</a>
-            <Link to="/privacy" className="text-[#3a3a3c] hover:text-[#1463d9]">隐私政策</Link>
-            <Link to="/terms" className="text-[#3a3a3c] hover:text-[#1463d9]">服务条款</Link>
-          </div>
-        </div>
-        <div className="border-t border-[#f0efec] pt-6 text-[13px] text-[#8e8e93]">© 2026 VOID VISION PTY LTD</div>
-      </div>
-    </footer>
   )
 }
