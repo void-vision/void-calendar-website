@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { Link } from '@tanstack/react-router'
 import { setSiteLang, useSiteLang } from '../lib/lang'
 
-export function SiteFrame({ children }: { children: ReactNode }) {
+export function SiteFrame({ children, wide = false }: { children: ReactNode; wide?: boolean }) {
   const lang = useSiteLang()
   const en = lang === 'en'
   return (
@@ -37,7 +37,7 @@ export function SiteFrame({ children }: { children: ReactNode }) {
           </Link>
         </div>
       </header>
-      <main className="mx-auto flex max-w-[800px] flex-col gap-8 px-5 py-16">{children}</main>
+      <main className={`mx-auto flex flex-col gap-8 px-5 py-16 ${wide ? 'max-w-[1160px]' : 'max-w-[800px]'}`}>{children}</main>
     </div>
   )
 }

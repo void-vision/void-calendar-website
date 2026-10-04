@@ -29,7 +29,7 @@ export function socialMeta(title: string, description: string, path: string) {
       { name: 'robots', content: 'index,follow' },
       { property: 'og:site_name', content: siteName },
       { property: 'og:locale', content: 'zh_CN' },
-      { property: 'og:type', content: path === '/' ? 'website' : 'article' },
+      { property: 'og:type', content: path === '/' || path === '/pricing' ? 'website' : 'article' },
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:url', content: url },
