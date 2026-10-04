@@ -149,7 +149,11 @@ export function useDemo() {
       if (cur === name) return
       const el = detRef.current
       const rm = reduced.current
-      if (!el || !el.animate || rm) {
+      // 手机卡片直接更新详情，隐藏的蜂窝不参与切换动画。
+      if (!el || !el.animate || rm || !el.getClientRects().length) {
+        pickTok.current += 1
+        detAnim.current?.cancel()
+        pendSel.current = null
         set({ psel: name })
         return
       }
@@ -170,6 +174,7 @@ export function useDemo() {
       out.onfinish = () => {
         if (tok !== pickTok.current) return
         set({ psel: pendSel.current })
+        pendSel.current = null
         requestAnimationFrame(() => {
           if (tok !== pickTok.current || !detRef.current) return
           out.cancel()
@@ -375,6 +380,14 @@ export function useDemo() {
         if (!sec) return
         const r = sec.getBoundingClientRect()
         const vh = innerHeight
+        // 手机不固定整屏演示，避免浏览器工具栏变化时内容被裁切。
+        if (window.matchMedia('(max-width: 767px)').matches) {
+          pe = undefined
+          st.style.transform = 'none'
+          mk.style.borderRadius = '14px'
+          mk.style.boxShadow = '0 20px 60px rgba(28,28,30,.08)'
+          return
+        }
         const span = Math.max(1, vh * 0.9 + (r.height - vh) * 0.55)
         let p = (vh * 0.9 - r.top) / span
         p = reduced.current ? 1 : Math.max(0, Math.min(1, p))

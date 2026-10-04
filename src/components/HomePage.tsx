@@ -1,6 +1,8 @@
 import { Link } from '@tanstack/react-router'
 import { motion } from 'motion/react'
+import { useEffect, useRef } from 'react'
 import { useDemo } from '../demo/useDemo'
+import { MobilePluginList } from './MobilePluginList'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
 const macDownloadUrl = 'https://void-calendar-1300838638.cos.ap-hongkong.myqcloud.com/Void%20Calendar.dmg'
@@ -15,14 +17,14 @@ export function HomePage() {
   return (
     <div ref={r.rootRef} className="min-h-screen bg-white text-[15px] leading-[1.6] text-[#1c1c1e]">
       <header className="sticky top-0 z-30 border-b border-[#f0efec] bg-white/82 backdrop-blur-[16px] backdrop-saturate-[1.4]">
-        <div className="mx-auto flex h-[68px] max-w-[1360px] items-center gap-[clamp(16px,3vw,40px)] px-[clamp(16px,3vw,40px)]">
-          <a href="#top" className="flex shrink-0 items-center gap-2.5 text-[#1c1c1e]">
+        <div className="home-header mx-auto flex h-[68px] max-w-[1360px] items-center gap-[clamp(16px,3vw,40px)] px-[clamp(16px,3vw,40px)]">
+          <a href="#top" className="home-brand flex shrink-0 items-center gap-2.5 text-[#1c1c1e]">
             <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white">
               <Logo />
             </span>
             <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Void Calendar</span>
           </a>
-          <nav className="flex min-w-0 flex-1 justify-center gap-8 overflow-x-auto text-[14.5px] whitespace-nowrap [scrollbar-width:none]">
+          <nav aria-label="主导航" className="home-nav flex min-w-0 flex-1 justify-center gap-8 overflow-x-auto text-[14.5px] whitespace-nowrap [scrollbar-width:none]">
             <Link to="/blog" className="text-[#48484a] transition-colors duration-150 hover:text-[#1c1c1e]">
               博客
             </Link>
@@ -30,7 +32,7 @@ export function HomePage() {
               更新日志
             </Link>
           </nav>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="home-actions flex shrink-0 items-center gap-2">
             <button
               type="button"
               onClick={v.toggleLang}
@@ -79,11 +81,11 @@ export function HomePage() {
       </section>
 
       <section id="showcase" className="relative mt-[clamp(48px,6vw,80px)] h-[200vh]">
-        <div className="sticky top-[68px] flex h-[calc(100vh-68px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
+        <div className="showcase-content sticky top-[68px] flex h-[calc(100vh-68px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
           <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] [transform:translate3d(0,24px,0)_scale(.84)]">
             <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[18px] border border-[#e3e1dd] bg-linear-to-b from-[#f2f4f7] to-[#e9ecf1] text-[#1c1c1e] shadow-[0_20px_60px_rgba(28,28,30,.08)]">
               <MenuBar v={v} />
-              <div className="px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)]">
+              <div className="demo-window-padding px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)]">
                 <div className="w-full overflow-hidden rounded-xl border border-[rgba(28,28,30,.1)] bg-white text-[#1c1c1e] shadow-[0_18px_50px_rgba(28,28,30,.12),0_2px_6px_rgba(28,28,30,.05)]">
                   <DemoChrome v={v} />
                 </div>
@@ -97,9 +99,9 @@ export function HomePage() {
                   <span className="block h-0.5 overflow-hidden rounded-sm bg-[#e8e6e2]">
                     <span className="block h-full bg-[#1c1c1e]" style={{ width: `${tb.pct}%` }} />
                   </span>
-                  <span className="flex gap-2 text-[13.5px] transition-colors" style={{ color: tb.fg }}>
-                    <span className="tabular-nums">0{tb.n}</span>
-                    <span>{tb.label}</span>
+                  <span className="flex gap-2 text-[13.5px] transition-colors max-sm:gap-1 max-sm:text-xs" style={{ color: tb.fg }}>
+                    <span className={`tabular-nums ${v.lang === 'en' ? 'max-md:hidden' : ''}`}>0{tb.n}</span>
+                    <span className="max-sm:text-[11px]">{tb.label}</span>
                   </span>
                 </button>
               ))}
@@ -107,7 +109,10 @@ export function HomePage() {
             <div className="flex min-h-16 min-w-[min(100%,320px)] flex-[1_1_320px] flex-col gap-1">
               <div className="text-[17px] font-medium tracking-[-0.01em]">{v.capTitle}</div>
               <div className="text-sm text-[#6b6b70]">{v.capSub}</div>
-              <div className="mt-0.5 text-[12.5px] text-[#8e8e93]">可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中</div>
+              <div className="mt-0.5 text-[12.5px] text-[#8e8e93]">
+                <span className="hidden md:inline">可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中</span>
+                <span className="md:hidden">左右滑动查看整周，点击捕获想法或日程试试</span>
+              </div>
             </div>
           </div>
         </div>
@@ -132,12 +137,12 @@ type View = ReturnType<typeof useDemo>
 function MenuBar({ v }: { v: View }) {
   const r = v.refs
   return (
-    <div className="relative z-20 flex h-7 items-center gap-4 border-b border-[rgba(28,28,30,.06)] bg-white/72 px-3.5 text-[12.5px] whitespace-nowrap backdrop-blur-[18px]">
-      <svg width="13" height="15" viewBox="0 0 13 15" fill="#1c1c1e" aria-label="Apple" className="-mt-px shrink-0">
+    <div className="demo-menubar relative z-20 flex h-7 items-center gap-4 border-b border-[rgba(28,28,30,.06)] bg-white/72 px-3.5 text-[12.5px] whitespace-nowrap backdrop-blur-[18px]">
+      <svg width="13" height="15" viewBox="0 0 13 15" fill="#1c1c1e" aria-label="Apple" className="demo-menu-extra -mt-px shrink-0">
         <path d="M10.6 8c0-1.7 1.4-2.5 1.5-2.6-.8-1.2-2.1-1.3-2.5-1.4-1.1-.1-2.1.6-2.6.6-.6 0-1.4-.6-2.3-.6C3.5 4 2.4 4.7 1.8 5.8c-1.3 2.2-.3 5.5.9 7.3.6.9 1.3 1.9 2.3 1.8.9 0 1.2-.6 2.3-.6s1.4.6 2.3.6c1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2.1 0 0-1.9-.7-2.2-3zM8.9 2.9c.5-.6.8-1.4.7-2.2-.7 0-1.5.5-2 1.1-.4.5-.8 1.3-.7 2.1.8.1 1.5-.4 2-1z" />
       </svg>
       <b className="font-semibold">Void Calendar</b>
-      <span>文件</span><span>编辑</span><span>显示</span><span>窗口</span><span>帮助</span>
+      <span className="demo-menu-extra">文件</span><span className="demo-menu-extra">编辑</span><span className="demo-menu-extra">显示</span><span className="demo-menu-extra">窗口</span><span className="demo-menu-extra">帮助</span>
       <span className="flex-1" />
       <span className="relative flex">
         <button
@@ -151,13 +156,15 @@ function MenuBar({ v }: { v: View }) {
           style={{ background: v.mbPillBg }}
         >
           <span className="size-[7px] rounded-[2px] transition-colors" style={{ background: v.mbDot }} />
-          <span>{v.mbText}</span>
+              <span className="min-w-0 truncate">{v.mbText}</span>
         </button>
         <div
           ref={r.popRef}
           role="dialog"
           aria-label="当前时间盒"
-          className="absolute top-[calc(100%+6px)] -right-2 z-21 flex w-[clamp(300px,26vw,340px)] origin-[90%_0] flex-col rounded-[14px] border border-[rgba(28,28,30,.08)] bg-[rgba(252,252,251,.985)] text-[12.5px] leading-[1.45] whitespace-normal text-[#1c1c1e] shadow-[0_1px_2px_rgba(28,28,30,.04),0_16px_40px_rgba(28,28,30,.12)] backdrop-blur-3xl transition-[opacity,transform] duration-180"
+          aria-hidden={v.popPE === 'none'}
+          inert={v.popPE === 'none'}
+          className="demo-timebox absolute top-[calc(100%+6px)] -right-2 z-21 flex w-[clamp(300px,26vw,340px)] origin-[90%_0] flex-col rounded-[14px] border border-[rgba(28,28,30,.08)] bg-[rgba(252,252,251,.985)] text-[12.5px] leading-[1.45] whitespace-normal text-[#1c1c1e] shadow-[0_1px_2px_rgba(28,28,30,.04),0_16px_40px_rgba(28,28,30,.12)] backdrop-blur-3xl transition-[opacity,transform] duration-180"
           style={{ opacity: v.popOp, transform: `translateY(${v.popY}px)`, pointerEvents: v.popPE as 'auto' | 'none', transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}
         >
           <div className="flex flex-col gap-2.5 px-[18px] pt-4 pb-3.5">
@@ -187,15 +194,15 @@ function MenuBar({ v }: { v: View }) {
           </div>
         </div>
       </span>
-      <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="#1c1c1e" strokeWidth="1.4" strokeLinecap="round" className="shrink-0">
+      <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="#1c1c1e" strokeWidth="1.4" strokeLinecap="round" className="demo-menu-extra shrink-0">
         <path d="M1 3.8a9 9 0 0 1 13 0M3.3 6.2a5.6 5.6 0 0 1 8.4 0M5.6 8.5a2.3 2.3 0 0 1 3.8 0" />
       </svg>
-      <svg width="22" height="11" viewBox="0 0 22 11" fill="none" className="shrink-0">
+      <svg width="22" height="11" viewBox="0 0 22 11" fill="none" className="demo-menu-extra shrink-0">
         <rect x=".6" y=".6" width="18.4" height="9.8" rx="2.6" stroke="#1c1c1e" strokeOpacity=".45" strokeWidth="1.2" />
         <rect x="2.2" y="2.2" width="12" height="6.6" rx="1.4" fill="#1c1c1e" />
         <path d="M20.4 3.8v3.4" stroke="#1c1c1e" strokeOpacity=".45" strokeWidth="1.4" strokeLinecap="round" />
       </svg>
-      <span className="tabular-nums">9月30日 周三 11:20</span>
+      <span className="demo-menu-extra tabular-nums">9月30日 周三 11:20</span>
     </div>
   )
 }
@@ -212,14 +219,30 @@ function NextRow({ time, color, title }: { time: string; color: string; title: s
 
 function DemoChrome({ v }: { v: View }) {
   const r = v.refs
+  const calendarRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const calendar = calendarRef.current
+    if (!calendar) return
+    // 手机默认把周三放在中间，整周日程仍可横向滑动查看。
+    const centerWeek = () => {
+      calendar.scrollLeft = window.matchMedia('(max-width: 767px)').matches
+        ? Math.max(0, (calendar.scrollWidth - calendar.clientWidth) / 2)
+        : 0
+    }
+    const observer = new ResizeObserver(centerWeek)
+    observer.observe(calendar)
+    return () => observer.disconnect()
+  }, [])
+
   return (
     <>
-      <div className="relative z-12 flex h-11 items-center gap-[7px] border-b border-[#e8e6e2] bg-[#f6f5f3] px-3 pl-4 text-xs">
-        <span className="size-3 rounded-full bg-[#ff5f57]" />
-        <span className="size-3 rounded-full bg-[#febc2e]" />
-        <span className="size-3 rounded-full bg-[#28c840]" />
-        <div className="flex-1" />
-        <div className="relative min-w-0 flex-[0_1_380px]">
+      <div className="demo-toolbar relative z-12 flex h-11 items-center gap-[7px] border-b border-[#e8e6e2] bg-[#f6f5f3] px-3 pl-4 text-xs">
+        <span className="demo-toolbar-extra size-3 rounded-full bg-[#ff5f57]" />
+        <span className="demo-toolbar-extra size-3 rounded-full bg-[#febc2e]" />
+        <span className="demo-toolbar-extra size-3 rounded-full bg-[#28c840]" />
+        <div className="demo-toolbar-extra flex-1" />
+        <div className="demo-search relative min-w-0 flex-[0_1_380px]">
           <input
             ref={r.searchRef}
             value={v.searchQ}
@@ -249,11 +272,12 @@ function DemoChrome({ v }: { v: View }) {
             </div>
           ) : null}
         </div>
-        <div className="flex-1" />
-        <div className="w-16" />
+        <div className="demo-toolbar-extra flex-1" />
+        <div className="demo-toolbar-extra w-16" />
+        <button type="button" onClick={v.openCap} className="h-9 shrink-0 cursor-pointer rounded-lg border border-[#e6e4e0] bg-white px-2.5 text-xs lg:hidden">捕获想法</button>
       </div>
-      <div className="relative flex h-[clamp(200px,calc(100vh-400px),600px)] text-xs">
-        <aside className="flex w-44 shrink-0 flex-col gap-0.5 border-r border-[#e8e6e2] bg-[#f6f5f3] px-2.5 py-3">
+      <div className="demo-body relative flex h-[clamp(200px,calc(100vh-400px),600px)] text-xs">
+        <aside className="demo-sidebar flex w-44 shrink-0 flex-col gap-0.5 border-r border-[#e8e6e2] bg-[#f6f5f3] px-2.5 py-3">
           <div onClick={v.openCap} className="mb-2.5 flex h-[30px] cursor-pointer items-center gap-1.5 rounded-[7px] border border-[#e6e4e0] bg-white px-2.5 hover:border-[#cfcdc8] hover:bg-[#fcfbfa]">
             <span className="flex-1">捕获想法</span>
             <span className="rounded border border-[#e3e1dd] px-[5px] text-[10.5px] leading-[15px] text-[#8e8e93]">C</span>
@@ -276,8 +300,10 @@ function DemoChrome({ v }: { v: View }) {
             </div>
           ))}
         </aside>
-        <div className="relative flex min-w-0 flex-1 flex-col">
-          <div className="grid h-11 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb]">
+        <div className="demo-calendar relative flex min-w-0 flex-1 flex-col">
+          <div ref={calendarRef} className="demo-calendar-scroll flex min-h-0 flex-1 flex-col">
+          <div className="demo-week flex min-h-0 flex-1 flex-col">
+          <div className="demo-week-grid grid h-11 shrink-0 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb]">
             <div />
             <DayHead label="周一" n="28" />
             <DayHead label="周二" n="29" />
@@ -287,7 +313,7 @@ function DemoChrome({ v }: { v: View }) {
             <DayHead label="周四" n="1" />
             <DayHead label="周五" n="2" />
           </div>
-          <div className="relative grid flex-1 grid-cols-[44px_repeat(5,minmax(0,1fr))] bg-[linear-gradient(#f1f0ed_1px,transparent_1px)] bg-size-[100%_8.333%]">
+          <div className="demo-week-grid relative grid flex-1 grid-cols-[44px_repeat(5,minmax(0,1fr))] bg-[linear-gradient(#f1f0ed_1px,transparent_1px)] bg-size-[100%_8.333%]">
             <div className="relative text-[10.5px] text-[#aeaeb2]">
               {['09', '11', '13', '15', '17', '19'].map((h, i) => (
                 <span key={h} className="absolute right-2" style={{ top: `${[8.33, 25, 41.67, 58.33, 75, 91.67][i]}%` }}>{h}</span>
@@ -324,15 +350,17 @@ function DemoChrome({ v }: { v: View }) {
               </div>
             ))}
           </div>
-          <div className="pointer-events-none absolute bottom-[18px] left-1/2 z-6 -translate-x-1/2 rounded-lg bg-[#1c1c1e] px-3.5 py-2 text-[12.5px] whitespace-nowrap text-white transition-[opacity,transform] duration-300" style={{ opacity: v.toastOp, transform: `translateX(-50%) translateY(${v.toastY}px)` }}>
+          </div>
+          </div>
+          <div className="demo-toast pointer-events-none absolute bottom-[18px] left-1/2 z-6 -translate-x-1/2 rounded-lg bg-[#1c1c1e] px-3.5 py-2 text-[12.5px] whitespace-nowrap text-white transition-[opacity,transform] duration-300" style={{ opacity: v.toastOp, transform: `translateX(-50%) translateY(${v.toastY}px)` }}>
             {v.toast}
           </div>
         </div>
-        <aside className="flex w-[264px] shrink-0 flex-col gap-3 border-l border-[#e8e6e2] bg-white p-3.5">
+        <aside className="demo-ai flex w-[264px] shrink-0 flex-col gap-3 border-l border-[#e8e6e2] bg-white p-3.5">
           <div className="text-[13px] font-semibold">AI 助手</div>
-          <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
+          <div className="demo-messages flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
             {v.msgs.map((m, i) => (
-              <div key={i} className="vc-in flex flex-col gap-1.5" style={{ alignSelf: m.as, maxWidth: m.mw, background: m.bg, borderRadius: m.rad, padding: m.pad, color: m.fg, lineHeight: 1.6 }}>
+              <div key={i} className="vc-in shrink-0 flex flex-col gap-1.5" style={{ alignSelf: m.as, maxWidth: m.mw, background: m.bg, borderRadius: m.rad, padding: m.pad, color: m.fg, lineHeight: 1.6 }}>
                 <span>{m.text}</span>
                 {m.bullets.map((b) => (
                   <div key={b.text} className="flex items-center gap-1.5">
@@ -384,8 +412,8 @@ function DemoChrome({ v }: { v: View }) {
             </div>
           </div>
         </aside>
-        <div onMouseDown={v.closeCap} className="absolute inset-0 z-10 flex items-start justify-center bg-[rgba(28,28,30,.10)] pt-[110px] transition-opacity duration-300" style={{ opacity: v.capOp, pointerEvents: v.capPE as 'auto' | 'none' }}>
-          <div onMouseDown={(e) => e.stopPropagation()} className="flex w-[440px] max-w-[80%] flex-col gap-3 rounded-[14px] border border-[#e6e4e0] bg-white px-[18px] py-4 shadow-[0_24px_60px_rgba(0,0,0,.2)] transition-transform duration-300" style={{ transform: `scale(${v.capSc})` }}>
+        <div onMouseDown={v.closeCap} aria-hidden={!v.capUser} inert={!v.capUser} className="demo-capture-overlay absolute inset-0 z-10 flex items-start justify-center bg-[rgba(28,28,30,.10)] pt-[110px] transition-opacity duration-300" style={{ opacity: v.capOp, pointerEvents: v.capPE as 'auto' | 'none' }}>
+          <div onMouseDown={(e) => e.stopPropagation()} className="demo-capture flex w-[440px] max-w-[80%] flex-col gap-3 rounded-[14px] border border-[#e6e4e0] bg-white px-[18px] py-4 shadow-[0_24px_60px_rgba(0,0,0,.2)] transition-transform duration-300" style={{ transform: `scale(${v.capSc})` }}>
             <div className="flex items-center gap-1.5 text-xs">
               {v.capTypes.map((c) => (
                 <span key={c.label} onMouseDown={c.pick} className="flex h-6 cursor-pointer items-center rounded-xl border px-2.5" style={{ borderColor: c.bd, background: c.bg, color: c.fg }}>
@@ -393,7 +421,7 @@ function DemoChrome({ v }: { v: View }) {
                 </span>
               ))}
               <span className="flex-1" />
-              <span className="text-[#aeaeb2]">Esc 关闭</span>
+              <button type="button" onClick={v.closeCap} aria-label="关闭" className="demo-capture-close cursor-pointer text-[#aeaeb2]">{v.lang === 'en' ? 'Close' : '关闭'}</button>
             </div>
             {v.capUser ? (
               <input ref={r.capRef} value={v.capVal} onChange={v.onCapVal} onKeyDown={(e) => {
@@ -413,7 +441,7 @@ function DemoChrome({ v }: { v: View }) {
             )}
             <div className="flex border-t border-[#f0efec] pt-2.5 text-[11.5px] text-[#8e8e93]">
               <span className="flex-1">{v.capTarget}</span>
-              <span>↵ 保存</span>
+              <button type="button" onClick={v.saveCap} className="demo-capture-save cursor-pointer">↵ 保存</button>
             </div>
           </div>
         </div>
@@ -629,7 +657,7 @@ function Disrupt({ v }: { v: View }) {
             日历自己挪好。
           </h2>
           <p className="m-0 max-w-[420px] text-base leading-[1.75] text-[#6b6b70]">选一种你习惯的处理方式，右侧会按这个方式重排。</p>
-          <div role="tablist" aria-label="重排方式" className="mt-2.5 flex max-w-[440px] gap-7 border-b border-[#ecebe8]">
+          <div role="tablist" aria-label="重排方式" className="mt-2.5 flex max-w-[440px] gap-4 border-b border-[#ecebe8] sm:gap-7">
             {v.modes.map((m) => (
               <button key={m.name} type="button" role="tab" aria-selected={m.sel === 'true'} onClick={m.pick} className="relative cursor-pointer border-0 bg-transparent p-0 pb-3 font-[inherit] text-[15px] whitespace-nowrap transition-colors duration-200 hover:text-[#1c1c1e]" style={{ color: m.fg }}>
                 {m.name}
@@ -648,7 +676,7 @@ function Disrupt({ v }: { v: View }) {
           </div>
         </div>
         <div data-rv="1" className="flex min-w-0 flex-col gap-4 pt-1.5">
-          <div className="flex items-baseline gap-3 border-b border-[#ecebe8] pb-3 text-[13px]">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-[#ecebe8] pb-3 text-[13px]">
             <span className="font-medium">周三 9月30日</span>
             <span className="text-[#8e8e93]">上午</span>
             <span className="flex-1" />
@@ -729,7 +757,7 @@ function Focus({ v }: { v: View }) {
         <div className="flex flex-wrap items-start gap-x-[clamp(28px,4vw,56px)] gap-y-8">
           <div data-rv="1" className="flex min-w-0 flex-[1.35_1_440px] flex-wrap items-center gap-x-11 gap-y-7 rounded-[22px] border border-[#ecebe8] bg-white p-[clamp(24px,3vw,40px)]">
             <Tomato v={v} />
-            <div className="flex min-w-[220px] flex-[1_1_220px] flex-col gap-3.5">
+            <div className="flex min-w-[min(100%,220px)] flex-[1_1_220px] flex-col gap-3.5">
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 text-sm font-medium text-[#1c1c1e]">
                   <span className="size-[7px] shrink-0 rounded-[2px] bg-[#8e86a3]" />
@@ -759,7 +787,7 @@ function Focus({ v }: { v: View }) {
             <span className="absolute top-2 -left-1 size-[7px] rounded-full border border-[#bdb9b2] bg-[#fafaf9]" />
             <div className="text-[12.5px] text-[#8e8e93]">笔记 · 周三 11:20 · 点击即可编辑</div>
             <input value={v.nTitle} onChange={v.onNTitle} aria-label="笔记标题" className="-mx-1.5 w-[calc(100%+12px)] rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-xl font-medium tracking-[-0.01em] text-[#1c1c1e] outline-none transition-[background,box-shadow] hover:bg-[#f3f2ef] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6]" />
-            <textarea ref={r.noteRef} value={v.nBody} onChange={v.onNBody} aria-label="笔记正文" rows={3} className="-mx-1.5 w-[calc(100%+12px)] resize-none overflow-hidden rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-[15px] leading-[1.7] text-[#3a3a3c] outline-none transition-[background,box-shadow] hover:bg-[#f3f2ef] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6]" />
+            <textarea ref={r.noteRef} value={v.nBody} onChange={v.onNBody} aria-label="笔记正文" rows={3} className="-mx-1.5 w-[calc(100%+12px)] resize-none overflow-hidden rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-base leading-[1.7] text-[#3a3a3c] outline-none transition-[background,box-shadow] hover:bg-[#f3f2ef] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6] sm:text-[15px]" />
             <div className="relative flex flex-wrap items-center gap-2 text-sm text-[#6b6b70]">
               <span>关联任务</span>
               <button ref={r.lnkBtnRef} type="button" onClick={v.toggleLnk} aria-expanded={v.lnkExp === 'true'} className="cursor-pointer border-0 border-b border-[#b9cdf2] bg-transparent p-0 font-[inherit] text-sm text-[#1463d9] hover:border-[#1463d9] hover:text-[#0d4fb3]">
@@ -974,8 +1002,9 @@ function Plugins({ v }: { v: View }) {
             ))}
           </div>
         </div>
-        <div data-rv="1" className="flex flex-col items-center gap-7">
-          <div ref={r.hiveRef} className="relative mx-auto w-full max-w-[900px] transition-[height] duration-[480ms]" style={{ height: v.hiveH, transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}>
+        <div data-rv="1" className="flex w-full min-w-0 flex-col items-center gap-7">
+          <MobilePluginList v={v} />
+          <div ref={r.hiveRef} className="relative mx-auto hidden w-full max-w-[900px] transition-[height] duration-[480ms] sm:block" style={{ height: v.hiveH, transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}>
             <div aria-live="polite" className="absolute top-0 left-0 z-2 transition-transform duration-[520ms]" style={{ width: v.hexW, height: v.hexH, transform: `translate3d(${v.detX}px,${v.detY}px,0)`, filter: 'drop-shadow(0 10px 24px rgba(28,28,30,.08))', transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}>
               <span className="absolute inset-0 bg-[#c9c7c2] [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
               <span className="absolute inset-px flex flex-col items-center justify-center bg-[#faf9f7] text-center [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" style={{ padding: `0 ${v.detPad}%` }}>

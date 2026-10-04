@@ -51,6 +51,7 @@ export const I18N={
 '9月30日 周三 11:20':'Wed Sep 30 11:20','没有匹配的结果':'No results','捕获想法':'Capture ideas','工作区':'Workspace','插件':'Plugins',
 '周一':'Mon','周二':'Tue','周三':'Wed','周四':'Thu','周五':'Fri','AI 助手':'AI assistant','Esc 关闭':'Esc to close','↵ 保存':'↵ Save',
 '可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中':'Try it: press C to capture, ⌘K to search, click an event to select it',
+'左右滑动查看整周，点击捕获想法或日程试试':'Swipe to see the week. Tap Capture ideas or an event to try it.',
 '从一个念头，到做完一件事。':'From a passing thought to a finished task.','按 C 记下，先放进 Inbox。':'Press C to jot it down in the Inbox.',
 '变成任务':'Turn it into tasks','AI 把目标拆成合适长度的任务。':'AI breaks goals into tasks of the right size.','安排时间盒':'Time-box it',
 '放进日历里真正空着的时间。':'Placed into time that is actually free.','开始专注':'Start focus','菜单栏倒计时，结束后自动记录。':'A menu bar countdown, logged when it ends.',
