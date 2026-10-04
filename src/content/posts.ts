@@ -4,6 +4,31 @@ import googleZh from './blog/google-calendar.md?raw'
 import googleEn from './blog/google-calendar.en.md?raw'
 import meetingZh from './blog/when-a-meeting-appears.md?raw'
 import meetingEn from './blog/when-a-meeting-appears.en.md?raw'
+import { comparisons } from './comparisons'
+import notionZh from './blog/void-calendar-vs-notion.md?raw'
+import notionEn from './blog/void-calendar-vs-notion.en.md?raw'
+import motionZh from './blog/void-calendar-vs-motion.md?raw'
+import motionEn from './blog/void-calendar-vs-motion.en.md?raw'
+import morgenZh from './blog/void-calendar-vs-morgen.md?raw'
+import morgenEn from './blog/void-calendar-vs-morgen.en.md?raw'
+import ticktickZh from './blog/void-calendar-vs-ticktick.md?raw'
+import ticktickEn from './blog/void-calendar-vs-ticktick.en.md?raw'
+import googleTasksZh from './blog/void-calendar-vs-google-tasks.md?raw'
+import googleTasksEn from './blog/void-calendar-vs-google-tasks.en.md?raw'
+import todoistZh from './blog/void-calendar-vs-todoist.md?raw'
+import todoistEn from './blog/void-calendar-vs-todoist.en.md?raw'
+import microsoftZh from './blog/void-calendar-vs-microsoft-to-do.md?raw'
+import microsoftEn from './blog/void-calendar-vs-microsoft-to-do.en.md?raw'
+import trelloZh from './blog/void-calendar-vs-trello.md?raw'
+import trelloEn from './blog/void-calendar-vs-trello.en.md?raw'
+import omnifocusZh from './blog/void-calendar-vs-omnifocus.md?raw'
+import omnifocusEn from './blog/void-calendar-vs-omnifocus.en.md?raw'
+import thingsZh from './blog/void-calendar-vs-things-3.md?raw'
+import thingsEn from './blog/void-calendar-vs-things-3.en.md?raw'
+import orgZh from './blog/void-calendar-vs-org-mode.md?raw'
+import orgEn from './blog/void-calendar-vs-org-mode.en.md?raw'
+import obsidianZh from './blog/void-calendar-vs-obsidian-tasks.md?raw'
+import obsidianEn from './blog/void-calendar-vs-obsidian-tasks.en.md?raw'
 
 export type Post = {
   slug: string
@@ -17,7 +42,28 @@ export type Post = {
   bodyEn: string
 }
 
+const comparisonBodies = {
+  'void-calendar-vs-notion': { body: notionZh, bodyEn: notionEn },
+  'void-calendar-vs-motion': { body: motionZh, bodyEn: motionEn },
+  'void-calendar-vs-morgen': { body: morgenZh, bodyEn: morgenEn },
+  'void-calendar-vs-ticktick': { body: ticktickZh, bodyEn: ticktickEn },
+  'void-calendar-vs-google-tasks': { body: googleTasksZh, bodyEn: googleTasksEn },
+  'void-calendar-vs-todoist': { body: todoistZh, bodyEn: todoistEn },
+  'void-calendar-vs-microsoft-to-do': { body: microsoftZh, bodyEn: microsoftEn },
+  'void-calendar-vs-trello': { body: trelloZh, bodyEn: trelloEn },
+  'void-calendar-vs-omnifocus': { body: omnifocusZh, bodyEn: omnifocusEn },
+  'void-calendar-vs-things-3': { body: thingsZh, bodyEn: thingsEn },
+  'void-calendar-vs-org-mode': { body: orgZh, bodyEn: orgEn },
+  'void-calendar-vs-obsidian-tasks': { body: obsidianZh, bodyEn: obsidianEn },
+} satisfies Record<(typeof comparisons)[number]['slug'], Pick<Post, 'body' | 'bodyEn'>>
+
 export const posts: Post[] = [
+  ...comparisons.map((post) => ({
+    ...post,
+    date: '2026年10月5日',
+    dateEn: 'October 5, 2026',
+    ...comparisonBodies[post.slug],
+  })),
   {
     slug: 'mac-time-box',
     date: '2026年10月2日',
@@ -58,7 +104,8 @@ export function findPost(slug: string) {
 }
 
 export function readingMinutes(markdown: string) {
-  const text = markdown.replace(/[#>*_`\-\[\]\(\)]/g, '')
-  const chars = text.replace(/\s/g, '').length
-  return Math.max(1, Math.round(chars / 380))
+  const text = markdown.replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+  const chineseCharacters = text.match(/\p{Script=Han}/gu)?.length ?? 0
+  const words = text.match(/[a-zA-Z]+(?:['’-][a-zA-Z]+)*/g)?.length ?? 0
+  return Math.max(1, Math.ceil(chineseCharacters / 380 + words / 200))
 }
