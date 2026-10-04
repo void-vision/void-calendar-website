@@ -156,7 +156,7 @@ function MenuBar({ v }: { v: View }) {
           style={{ background: v.mbPillBg }}
         >
           <span className="size-[7px] rounded-[2px] transition-colors" style={{ background: v.mbDot }} />
-              <span className="min-w-0 truncate">{v.mbText}</span>
+          <span data-no-translate={v.mbUserText ? true : undefined} className="min-w-0 truncate">{v.mbUserText ?? v.mbText}</span>
         </button>
         <div
           ref={r.popRef}
@@ -169,10 +169,10 @@ function MenuBar({ v }: { v: View }) {
         >
           <div className="flex flex-col gap-2.5 px-[18px] pt-4 pb-3.5">
             <div className="flex items-center gap-2 text-[11.5px] text-[#8e8e93]">
-              <span>{v.popTag}</span><span className="flex-1" /><span className="tabular-nums">10:00 – 12:00</span>
+              <span>{v.popTag}</span><span className="flex-1" /><span className="tabular-nums">{v.focusWhen}</span>
             </div>
             <div className="flex items-baseline gap-3">
-              <span className="min-w-0 flex-1 text-[14.5px] font-medium tracking-[-0.005em]">PRD v2 · 收尾与评审</span>
+              <span data-no-translate={v.focusUserTitle ? true : undefined} className="min-w-0 flex-1 text-[14.5px] font-medium tracking-[-0.005em]">{v.focusUserTitle ?? v.focusTitle}</span>
               <span className="text-[13px] whitespace-nowrap text-[#48484a] tabular-nums">{v.popLeft}</span>
             </div>
             <div className="h-0.5 overflow-hidden rounded-sm bg-[#ecebe8]">
@@ -220,6 +220,7 @@ function NextRow({ time, color, title }: { time: string; color: string; title: s
 function DemoChrome({ v }: { v: View }) {
   const r = v.refs
   const calendarRef = useRef<HTMLDivElement>(null)
+  const messagesRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const calendar = calendarRef.current
@@ -233,7 +234,21 @@ function DemoChrome({ v }: { v: View }) {
     const observer = new ResizeObserver(centerWeek)
     observer.observe(calendar)
     return () => observer.disconnect()
-  }, [])
+  }, [v.navSel])
+
+  useEffect(() => {
+    const messages = messagesRef.current
+    if (messages) messages.scrollTop = messages.scrollHeight
+  }, [v.msgs.length, v.suggestions.length])
+
+  useEffect(() => {
+    const calendar = calendarRef.current
+    if (!calendar || !v.selectedEvent || !window.matchMedia('(max-width: 767px)').matches) return
+    const day = calendar.querySelector(`[data-demo-event="${v.selectedEvent.id}"]`)?.parentElement
+    if (!day) return
+    const rect = day.getBoundingClientRect()
+    calendar.scrollLeft += rect.left + rect.width / 2 - calendar.getBoundingClientRect().left - calendar.clientWidth / 2
+  }, [v.selectedEvent?.id])
 
   return (
     <>
@@ -262,11 +277,11 @@ function DemoChrome({ v }: { v: View }) {
             <div className="vc-in absolute top-[34px] right-0 left-0 z-30 flex flex-col gap-px rounded-[10px] border border-[#e6e4e0] bg-white p-1.5 shadow-[0_14px_36px_rgba(0,0,0,.16)]">
               <div className="px-2 py-1 text-[11px] text-[#8e8e93]">{v.searchHead}</div>
               {v.searchRes.map((item) => (
-                <div key={item.title + item.when} onMouseDown={item.pick} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-[7px] hover:bg-[#f4f3f0]">
+                <button key={item.title + item.when} type="button" onMouseDown={(event) => event.preventDefault()} onClick={item.pick} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-[7px] text-left font-[inherit] hover:bg-[#f4f3f0]">
                   <span className="size-1.5 shrink-0 rounded-full" style={{ background: item.dot }} />
-                  <span className="min-w-0 flex-1 truncate">{item.title}</span>
+                  <span data-no-translate={item.userTitle ? true : undefined} className="min-w-0 flex-1 truncate">{item.userTitle ?? item.title}</span>
                   <span className="whitespace-nowrap text-[#8e8e93] tabular-nums">{item.when}</span>
-                </div>
+                </button>
               ))}
               {v.searchNone ? <div className="p-2 text-[#aeaeb2]">没有匹配的结果</div> : null}
             </div>
@@ -301,67 +316,89 @@ function DemoChrome({ v }: { v: View }) {
           ))}
         </aside>
         <div className="demo-calendar relative flex min-w-0 flex-1 flex-col">
-          <div ref={calendarRef} className="demo-calendar-scroll flex min-h-0 flex-1 flex-col">
-          <div className="demo-week flex min-h-0 flex-1 flex-col">
-          <div className="demo-week-grid grid h-11 shrink-0 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb]">
-            <div />
-            <DayHead label="周一" n="28" />
-            <DayHead label="周二" n="29" />
-            <div className="px-2 py-1.5 text-[#1463d9]">
-              周三 <b className="inline-flex size-[22px] items-center justify-center rounded-full bg-[#1463d9] text-[11.5px] text-white">30</b>
-            </div>
-            <DayHead label="周四" n="1" />
-            <DayHead label="周五" n="2" />
-          </div>
-          <div className="demo-week-grid relative grid flex-1 grid-cols-[44px_repeat(5,minmax(0,1fr))] bg-[linear-gradient(#f1f0ed_1px,transparent_1px)] bg-size-[100%_8.333%]">
-            <div className="relative text-[10.5px] text-[#aeaeb2]">
-              {['09', '11', '13', '15', '17', '19'].map((h, i) => (
-                <span key={h} className="absolute right-2" style={{ top: `${[8.33, 25, 41.67, 58.33, 75, 91.67][i]}%` }}>{h}</span>
-              ))}
-            </div>
-            {v.days.map((d, i) => (
-              <div key={i} className="relative border-l border-[#f1f0ed]" style={{ background: d.bg }}>
-                {d.evs.map((e) => (
-                  <div
-                    key={e.id}
-                    onClick={e.pick}
-                    className="absolute right-[3px] left-[3px] cursor-pointer overflow-hidden rounded-[5px] px-1.5 py-[3px] text-[11.5px] leading-[1.4] transition-[top,opacity,transform,box-shadow,background] duration-300 hover:brightness-97"
-                    style={{
-                      top: `${e.top}%`,
-                      height: `${e.h}%`,
-                      background: e.bg,
-                      color: e.fg,
-                      border: `1px ${e.bs} ${e.bd}`,
-                      borderLeft: `3px ${e.bs} ${e.bl}`,
-                      opacity: e.op,
-                      transform: e.tf,
-                      boxShadow: e.sh,
-                      zIndex: e.z,
-                      transitionDuration: '600ms,350ms,350ms,300ms,300ms',
-                      transitionTimingFunction: 'cubic-bezier(.3,.7,.2,1)',
-                    }}
-                  >
-                    {e.title}
+          {v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
+            <div ref={calendarRef} className="demo-calendar-scroll flex min-h-0 flex-1 flex-col">
+              <div className="demo-week flex min-h-0 flex-1 flex-col">
+                <div className="demo-week-grid grid h-11 shrink-0 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb]">
+                  <div />
+                  <DayHead label="周一" n="28" />
+                  <DayHead label="周二" n="29" />
+                  <div className="px-2 py-1.5 text-[#1463d9]">
+                    周三 <b className="inline-flex size-[22px] items-center justify-center rounded-full bg-[#1463d9] text-[11.5px] text-white">30</b>
                   </div>
-                ))}
-                <div className="absolute right-0 -left-1 z-4 h-0.5 bg-[#e5484d]" style={{ display: d.nowD, top: '27.78%' }}>
-                  <span className="absolute top-[-3px] left-0 size-2 rounded-full bg-[#e5484d]" />
+                  <DayHead label="周四" n="1" />
+                  <DayHead label="周五" n="2" />
+                </div>
+                <div className="demo-week-grid relative grid flex-1 grid-cols-[44px_repeat(5,minmax(0,1fr))] bg-[linear-gradient(#f1f0ed_1px,transparent_1px)] bg-size-[100%_8.333%]">
+                  <div className="relative text-[10.5px] text-[#aeaeb2]">
+                    {['09', '11', '13', '15', '17', '19'].map((h, i) => (
+                      <span key={h} className="absolute right-2" style={{ top: `${[8.33, 25, 41.67, 58.33, 75, 91.67][i]}%` }}>{h}</span>
+                    ))}
+                  </div>
+                  {v.days.map((d, i) => (
+                    <div key={i} className="relative border-l border-[#f1f0ed]" style={{ background: d.bg }}>
+                      {d.evs.map((e) => (
+                        <button
+                          key={e.id}
+                          type="button"
+                          data-demo-event={e.id}
+                          data-no-translate={e.userTitle ? true : undefined}
+                          aria-label={`${e.userTitle ?? e.title}，${e.when}`}
+                          aria-pressed={v.selectedEvent?.id === e.id}
+                          disabled={e.op === 0}
+                          onClick={e.pick}
+                          className="absolute right-[3px] left-[3px] flex cursor-pointer items-start overflow-hidden rounded-[5px] px-1.5 py-[3px] text-left font-[inherit] text-[11.5px] leading-[1.4] transition-[top,opacity,transform,box-shadow,background] duration-300 hover:brightness-97"
+                          style={{
+                            top: `${e.top}%`,
+                            height: `${e.h}%`,
+                            background: e.bg,
+                            color: e.fg,
+                            border: `1px ${e.bs} ${e.bd}`,
+                            borderLeft: `3px ${e.bs} ${e.bl}`,
+                            opacity: e.op,
+                            transform: e.tf,
+                            boxShadow: e.sh,
+                            zIndex: e.z,
+                            transitionDuration: '600ms,350ms,350ms,300ms,300ms',
+                            transitionTimingFunction: 'cubic-bezier(.3,.7,.2,1)',
+                          }}
+                        >
+                          {e.userTitle ?? e.title}
+                        </button>
+                      ))}
+                      <div className="absolute right-0 -left-1 z-4 h-0.5 bg-[#e5484d]" style={{ display: d.nowD, top: '27.78%' }}>
+                        <span className="absolute top-[-3px] left-0 size-2 rounded-full bg-[#e5484d]" />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-          </div>
-          </div>
+            </div>
+          )}
+          {v.selectedEvent ? (
+            <div ref={r.eventRef} role="dialog" aria-label="日程详情" className="demo-event-detail vc-in absolute top-14 right-3 z-8 flex w-[280px] max-w-[calc(100%-24px)] flex-col gap-3 rounded-xl border border-[#e3e1dd] bg-white p-4 shadow-[0_12px_32px_rgba(28,28,30,.12)]">
+              <div className="flex items-center gap-2 text-[11px] text-[#8e8e93]">
+                <span className="size-1.5 rounded-full" style={{ background: v.selectedEvent.dot }} />
+                <span className="flex-1">{v.selectedEvent.kind}</span>
+                <button type="button" onClick={v.closeEvent} aria-label="关闭日程详情" className="flex size-7 cursor-pointer items-center justify-center rounded-md text-base hover:bg-[#f4f3f0]">×</button>
+              </div>
+              <div data-no-translate={v.selectedEvent.userTitle ? true : undefined} className="text-sm leading-relaxed font-medium">{v.selectedEvent.userTitle ?? v.selectedEvent.title}</div>
+              <div className="text-xs text-[#6b6b70] tabular-nums">{v.selectedEvent.when}</div>
+              <button type="button" onClick={v.selectedEvent.pending ? v.applySuggestions : v.startEventFocus} className="mt-1 h-9 cursor-pointer self-start rounded-lg bg-[#1c1c1e] px-3.5 text-xs font-medium text-white hover:bg-[#3a3a3c]">
+                {v.selectedEvent.pending ? '加入日历' : '开始专注'}
+              </button>
+            </div>
+          ) : null}
           <div className="demo-toast pointer-events-none absolute bottom-[18px] left-1/2 z-6 -translate-x-1/2 rounded-lg bg-[#1c1c1e] px-3.5 py-2 text-[12.5px] whitespace-nowrap text-white transition-[opacity,transform] duration-300" style={{ opacity: v.toastOp, transform: `translateX(-50%) translateY(${v.toastY}px)` }}>
             {v.toast}
           </div>
         </div>
         <aside className="demo-ai flex w-[264px] shrink-0 flex-col gap-3 border-l border-[#e8e6e2] bg-white p-3.5">
           <div className="text-[13px] font-semibold">AI 助手</div>
-          <div className="demo-messages flex min-h-0 flex-1 flex-col gap-3 overflow-hidden">
+          <div ref={messagesRef} className="demo-messages flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto">
             {v.msgs.map((m, i) => (
               <div key={i} className="vc-in shrink-0 flex flex-col gap-1.5" style={{ alignSelf: m.as, maxWidth: m.mw, background: m.bg, borderRadius: m.rad, padding: m.pad, color: m.fg, lineHeight: 1.6 }}>
-                <span>{m.text}</span>
+                <span data-no-translate={m.userText ? true : undefined}>{m.userText ?? m.text}</span>
                 {m.bullets.map((b) => (
                   <div key={b.text} className="flex items-center gap-1.5">
                     <span className="size-1.5 shrink-0 rounded-full" style={{ background: b.dot }} />
@@ -371,16 +408,35 @@ function DemoChrome({ v }: { v: View }) {
                 {m.hasActs ? (
                   <div className="mt-1 flex gap-1.5">
                     {m.acts.map((a) => (
-                      <span key={a.label} className="flex h-7 flex-1 cursor-pointer items-center justify-center rounded-md border px-2 whitespace-nowrap transition-all hover:brightness-95" style={{ background: a.bg, color: a.fg, borderColor: a.bd, transform: `scale(${a.sc})` }}>
+                      <button key={a.label} type="button" onClick={a.pick} disabled={a.disabled} className="flex min-h-7 flex-1 cursor-pointer items-center justify-center rounded-md border px-2 font-[inherit] whitespace-nowrap transition-all hover:brightness-95 disabled:cursor-default" style={{ background: a.bg, color: a.fg, borderColor: a.bd, transform: `scale(${a.sc})` }}>
                         {a.label}
-                      </span>
+                      </button>
                     ))}
                   </div>
                 ) : null}
               </div>
             ))}
+            {v.suggestions.length ? (
+              <div className="demo-plan vc-in flex shrink-0 flex-col overflow-hidden rounded-xl border border-[#e8e6e2] bg-[#fafaf9]">
+                <div className="border-b border-[#eeece8] px-3 py-2 text-[11px] text-[#8e8e93]">建议的时间盒 · 待确认</div>
+                {v.suggestions.map((event) => (
+                  <div key={event.id} className="flex items-start gap-2 px-3 py-3">
+                    <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#2f6fe0]" />
+                    <div className="flex min-w-0 flex-1 flex-col gap-1">
+                      <span data-no-translate className="text-xs leading-relaxed font-medium break-words">{event.userTitle}</span>
+                      <span className="text-[11px] text-[#8e8e93] tabular-nums">{event.when}</span>
+                    </div>
+                    <span className="shrink-0 text-[11px] text-[#8e8e93]">{event.duration}</span>
+                  </div>
+                ))}
+                <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 border-t border-[#eeece8] p-2.5">
+                  <button type="button" onClick={v.applySuggestions} className="min-h-8 cursor-pointer rounded-lg bg-[#1c1c1e] px-2.5 text-xs font-medium text-white hover:bg-[#3a3a3c]">加入日历</button>
+                  <button type="button" onClick={v.adjustSuggestions} className="min-h-8 cursor-pointer rounded-lg border border-[#e3e1dd] bg-white px-2.5 text-xs hover:bg-[#f4f3f0]">换个时间</button>
+                </div>
+              </div>
+            ) : null}
           </div>
-          <div className="flex shrink-0 flex-col gap-1.5 rounded-[14px] border bg-white px-3 pt-2.5 pb-2 transition-[border-color,box-shadow]" style={{ borderColor: v.inBd, boxShadow: v.inSh }}>
+          <div className="demo-composer flex shrink-0 flex-col gap-1.5 rounded-[14px] border bg-white px-3 pt-2.5 pb-2 transition-[border-color,box-shadow]" style={{ borderColor: v.inBd, boxShadow: v.inSh }}>
             <textarea
               ref={r.aiRef}
               value={v.aiValue}
@@ -416,9 +472,9 @@ function DemoChrome({ v }: { v: View }) {
           <div onMouseDown={(e) => e.stopPropagation()} className="demo-capture flex w-[440px] max-w-[80%] flex-col gap-3 rounded-[14px] border border-[#e6e4e0] bg-white px-[18px] py-4 shadow-[0_24px_60px_rgba(0,0,0,.2)] transition-transform duration-300" style={{ transform: `scale(${v.capSc})` }}>
             <div className="flex items-center gap-1.5 text-xs">
               {v.capTypes.map((c) => (
-                <span key={c.label} onMouseDown={c.pick} className="flex h-6 cursor-pointer items-center rounded-xl border px-2.5" style={{ borderColor: c.bd, background: c.bg, color: c.fg }}>
+                <button key={c.label} type="button" onMouseDown={c.pick} onClick={c.pick} className="flex h-6 cursor-pointer items-center rounded-xl border px-2.5 font-[inherit]" style={{ borderColor: c.bd, background: c.bg, color: c.fg }}>
                   {c.label}
-                </span>
+                </button>
               ))}
               <span className="flex-1" />
               <button type="button" onClick={v.closeCap} aria-label="关闭" className="demo-capture-close cursor-pointer text-[#aeaeb2]">{v.lang === 'en' ? 'Close' : '关闭'}</button>
@@ -441,12 +497,33 @@ function DemoChrome({ v }: { v: View }) {
             )}
             <div className="flex border-t border-[#f0efec] pt-2.5 text-[11.5px] text-[#8e8e93]">
               <span className="flex-1">{v.capTarget}</span>
-              <button type="button" onClick={v.saveCap} className="demo-capture-save cursor-pointer">↵ 保存</button>
+              <button type="button" onClick={v.saveCap} disabled={v.capUser && !v.capVal.trim()} className="demo-capture-save cursor-pointer disabled:cursor-default disabled:opacity-40">↵ 保存</button>
             </div>
           </div>
         </div>
       </div>
     </>
+  )
+}
+
+function DemoCollection({ v }: { v: View }) {
+  return (
+    <div className="demo-collection flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-white p-4">
+      <div className="flex items-center gap-2 border-b border-[#efeeeb] pb-3">
+        <span className="flex-1 text-sm font-semibold">{v.collectionTitle}</span>
+        <button type="button" onClick={v.showCalendar} className="min-h-8 cursor-pointer rounded-lg bg-[#f4f3f0] px-2.5 text-xs text-[#48484a] hover:bg-[#e9e7e3]">返回日历</button>
+      </div>
+      {v.collectionItems.map((item) => (
+        <div key={item.id} className="flex items-start gap-2.5 border-b border-[#f0efec] py-2.5">
+          {v.navSel === 'tasks' ? (
+            <button type="button" data-no-translate={item.userTitle ? true : undefined} onClick={item.toggle} aria-label={`${v.lang === 'en' ? item.done ? 'Mark incomplete' : 'Complete' : item.done ? '取消完成' : '完成'}：${item.userTitle ?? item.title}`} aria-pressed={item.done} className="mt-0.5 flex size-4 shrink-0 cursor-pointer items-center justify-center rounded border border-[#cfcdc8] text-[10px]" style={{ background: item.done ? '#1c1c1e' : 'white', color: item.done ? 'white' : '#1c1c1e' }}>{item.done ? '✓' : ''}</button>
+          ) : <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#c7c4be]" />}
+          <span data-no-translate={item.userTitle ? true : undefined} className="min-w-0 flex-1 text-xs leading-relaxed" style={{ textDecoration: item.done ? 'line-through' : 'none', color: item.done ? '#aeaeb2' : '#1c1c1e' }}>{item.userTitle ?? item.title}</span>
+          <span className="shrink-0 text-[10px] text-[#8e8e93]">{item.when}</span>
+        </div>
+      ))}
+      <button type="button" onClick={v.openCap} className="mt-1 min-h-9 cursor-pointer self-start rounded-lg border border-[#e3e1dd] bg-white px-3 text-xs hover:bg-[#f4f3f0]">捕获想法</button>
+    </div>
   )
 }
 

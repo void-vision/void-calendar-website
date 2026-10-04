@@ -1,8 +1,19 @@
 export type CapType = 'todo' | 'idea' | 'box'
 export type ModeId = 'shift' | 'ask' | 'split'
+export type DemoEvent = {
+  id: string
+  d: number
+  s: number
+  e: number
+  t: string
+  c: 'gray' | 'blue' | 'purple' | 'green' | 'orange'
+  ai?: number
+  k?: number
+}
+export type CapturedItem = { id: string; title: string; type: CapType }
 
 export type Bullet = { dot: string; text: string }
-export type Act = { label: string; bg: string; fg: string; bd: string; sc: number }
+export type Act = { label: string; bg: string; fg: string; bd: string; sc: number; pick?: () => void; disabled?: boolean }
 export type Msg = {
   as: string
   mw: string
@@ -11,6 +22,7 @@ export type Msg = {
   pad: string
   fg: string
   text: string
+  userText?: string
   bullets: Bullet[]
   hasActs: boolean
   acts: Act[]
@@ -53,6 +65,14 @@ export type DemoState = {
   aiVal: string
   aiFocus: boolean
   uChat: Msg[] | null
+  aiPending: boolean
+  suggestions: DemoEvent[]
+  extraEvents: DemoEvent[]
+  capturedItems: CapturedItem[]
+  completedItems: string[]
+  heroManual: boolean
+  focusTitle: string | null
+  focusWhen: string | null
   mbCtl: boolean
   mbOpen: boolean
   uFocus: boolean
@@ -101,6 +121,14 @@ export function initialState(): DemoState {
     aiVal: '',
     aiFocus: false,
     uChat: null,
+    aiPending: false,
+    suggestions: [],
+    extraEvents: [],
+    capturedItems: [],
+    completedItems: [],
+    heroManual: false,
+    focusTitle: null,
+    focusWhen: null,
     mbCtl: false,
     mbOpen: false,
     uFocus: false,

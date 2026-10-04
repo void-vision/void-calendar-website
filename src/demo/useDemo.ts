@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { I18N } from './catalog'
 import { buildView, focusElapsed, type DemoApi } from './buildView'
 import { applyLang, trDeep, trEN } from './i18n'
+import { createDemoEvent } from './events'
 import { getSiteLang, setSiteLang, subscribeSiteLang, type SiteLang } from '../lib/lang'
 import {
   DEFAULT_NOTE_BODY,
@@ -33,6 +34,7 @@ export function useDemo() {
   const pickTok = useRef(0)
   const detAnim = useRef<Animation | null>(null)
   const reduced = useRef(false)
+  const aiRequest = useRef(0)
 
   const rootRef = useRef<HTMLDivElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
@@ -47,6 +49,7 @@ export function useDemo() {
   const popRef = useRef<HTMLDivElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const capRef = useRef<HTMLInputElement>(null)
+  const eventRef = useRef<HTMLDivElement>(null)
 
   const set = useCallback((patch: Partial<DemoState> | ((s: DemoState) => Partial<DemoState> | null)) => {
     setState((prev) => {
@@ -73,7 +76,7 @@ export function useDemo() {
   }, [])
 
   const openCap = useCallback(() => {
-    set({ capUser: true, capVal: '', capType: 'idea' })
+    set({ capUser: true, capVal: '', capType: 'idea', evSel: null, heroManual: true })
     setTimeout(() => capRef.current?.focus(), 30)
   }, [set])
 
@@ -91,14 +94,24 @@ export function useDemo() {
     const v = stateRef.current.capVal.trim()
     const ty = stateRef.current.capType
     if (!v) return closeCap()
-    set((s) => ({ capUser: false, inboxExtra: s.inboxExtra + (ty === 'idea' ? 1 : 0) }))
+    const event = ty === 'box' ? createDemoEvent(v, stateRef.current.extraEvents, 1) : null
+    if (ty === 'box' && !event) return flash('本周没有合适空档，请换成更短的时间盒。')
+    const item = { id: `capture-${Date.now()}`, title: v, type: ty }
+    set((s) => ({
+      capUser: false,
+      inboxExtra: s.inboxExtra + (ty === 'idea' ? 1 : 0),
+      capturedItems: ty === 'box' ? s.capturedItems : [item, ...s.capturedItems],
+      extraEvents: event ? [...s.extraEvents, event] : s.extraEvents,
+      navSel: ty === 'box' ? 'cal' : ty === 'todo' ? 'tasks' : 'inbox',
+    }))
     flash(ty === 'todo' ? '已存到任务' : ty === 'box' ? '已排进日历的下一个空档' : '已存到 Inbox')
   }, [closeCap, flash, set])
 
   const sendAi = useCallback(() => {
     const cur = stateRef.current
     const v = cur.aiVal.trim()
-    if (!v || !cur.aiUser) return
+    if (!v || !cur.aiUser || cur.aiPending) return
+    const request = ++aiRequest.current
     const user: Msg = {
       as: 'flex-end',
       mw: '90%',
@@ -107,6 +120,7 @@ export function useDemo() {
       pad: '8px 11px',
       fg: '#1c1c1e',
       text: v,
+      userText: v,
       bullets: [],
       hasActs: false,
       acts: [],
@@ -124,24 +138,47 @@ export function useDemo() {
       acts,
     })
     const base = [...(cur.uChat || []), user]
-    set({ uChat: [...base, reply('正在查看空档…')], aiVal: '' })
+    set({ uChat: [...base, reply('正在查看空档…')], aiVal: '', aiPending: true, suggestions: [], heroManual: true, navSel: 'cal', evSel: null })
     fitAi()
     window.setTimeout(() => {
+      if (request !== aiRequest.current) return
+      const hours = v.match(/(\d+(?:\.5)?)\s*(?:小时|hours?\b|h\b)/i)
+      const duration = hours ? Math.min(4, Math.max(0.5, Math.round(Number(hours[1]) * 2) / 2)) : 2
+      const event = createDemoEvent(v, stateRef.current.extraEvents, duration)
       set({
+        aiPending: false,
+        suggestions: event ? [event] : [],
         uChat: [
           ...base,
-          reply(
-            '已找到空档，建议这样安排（演示）：',
-            [{ dot: '#2f6fe0', text: `周四 14:00 – 16:00 · ${v.length > 18 ? `${v.slice(0, 18)}…` : v}` }],
-            [
-              { label: '应用', bg: '#1463d9', fg: '#fff', bd: 'transparent', sc: 1 },
-              { label: '再调整', bg: '#fff', fg: '#1c1c1e', bd: '#d6dff0', sc: 1 },
-            ],
-          ),
+          reply(event ? '已找到空档，确认后加入日历。' : '本周没有合适空档，请换成更短的时间盒。'),
         ],
       })
     }, 900)
   }, [fitAi, set])
+
+  const applySuggestions = useCallback(() => {
+    const suggestions = stateRef.current.suggestions
+    if (!suggestions.length) return
+    set((s) => ({
+      extraEvents: [...s.extraEvents, ...suggestions],
+      suggestions: [],
+      navSel: 'cal',
+      evSel: null,
+      uChat: s.uChat?.map((message, index) => index === s.uChat!.length - 1
+        ? { ...message, text: '已加入演示日历。', acts: [], hasActs: false }
+        : message) ?? null,
+    }))
+    flash('已加入日历')
+  }, [flash, set])
+
+  const adjustSuggestions = useCallback(() => {
+    const s = stateRef.current
+    const previous = s.suggestions[0]
+    if (!previous) return
+    const next = createDemoEvent(previous.t, s.extraEvents, previous.e - previous.s, previous)
+    if (next) set({ suggestions: [next] })
+    else flash('没有更晚的空档，可以先缩短时间盒。')
+  }, [flash, set])
 
   const pickPlugin = useCallback(
     (name: string) => {
@@ -212,7 +249,8 @@ export function useDemo() {
 
   const goScene = useCallback(
     (i: number) => {
-      set({ scene: i, t: 0, mbCtl: false, mbOpen: false, uFocus: false, askShift: false, uChat: null, aiUser: false, aiVal: '' })
+      aiRequest.current += 1
+      set({ scene: i, t: 0, mbCtl: false, mbOpen: false, uFocus: false, askShift: false, uChat: null, aiUser: false, aiVal: '', aiPending: false, suggestions: [], heroManual: false, evSel: null, navSel: 'cal', focusTitle: null, focusWhen: null })
       try {
         localStorage.setItem('vc-hero-scene', String(i))
       } catch {
@@ -281,6 +319,10 @@ export function useDemo() {
       }
       if (e.key === 'Escape' && stateRef.current.capUser) {
         closeCap()
+        return
+      }
+      if (e.key === 'Escape' && stateRef.current.evSel && !typing) {
+        set({ evSel: null })
         return
       }
       if (e.key === 'Escape' && popRef.current && Number(getComputedStyle(popRef.current).opacity) > 0.5) {
@@ -354,6 +396,10 @@ export function useDemo() {
     if (ro && hiveRef.current) ro.observe(hiveRef.current)
 
     const onDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      if (stateRef.current.evSel && !eventRef.current?.contains(target) && !target.closest('[data-demo-event], .demo-search')) {
+        set({ evSel: null })
+      }
       if (stateRef.current.lnk) {
         const lb = lnkBtnRef.current
         const lp = lnkRef.current
@@ -432,7 +478,7 @@ export function useDemo() {
       const dt = Math.min(200, now - last)
       last = now
       const s = stateRef.current
-      if (s.capUser || s.searchOpen || (s.mbCtl && s.mbOpen) || s.aiFocus || s.aiVal || s.uChat) return
+      if (s.heroManual || s.capUser || s.searchOpen || (s.mbCtl && s.mbOpen) || s.aiFocus || s.aiVal || s.uChat) return
       if (document.hidden) return
       const el = mockRef.current
       if (el) {
@@ -468,6 +514,7 @@ export function useDemo() {
       reveal.disconnect()
       cancelAnimationFrame(raf)
       window.clearInterval(iv)
+      aiRequest.current += 1
     }
   }, [closeCap, closeMb, fitNote, openCap, set, startDis])
 
@@ -480,6 +527,9 @@ export function useDemo() {
       closeCap,
       saveCap,
       sendAi,
+      applySuggestions,
+      adjustSuggestions,
+      flash,
       pickPlugin,
       setDisMode: (id) => setDisMode(id),
       startDis,
@@ -491,7 +541,7 @@ export function useDemo() {
       sceneSeconds: SCENE_SECONDS,
       mem: mem.current,
     }),
-    [closeCap, closeMb, fitAi, fitNote, goScene, openCap, pickPlugin, saveCap, sendAi, set, setDisMode, startDis, toggleLang],
+    [adjustSuggestions, applySuggestions, closeCap, closeMb, fitAi, fitNote, flash, goScene, openCap, pickPlugin, saveCap, sendAi, set, setDisMode, startDis, toggleLang],
   )
 
   useEffect(() => subscribeSiteLang(() => applySiteLang(getSiteLang())), [applySiteLang])
@@ -511,6 +561,6 @@ export function useDemo() {
   return { ...translated, refs: refsOf() }
 
   function refsOf() {
-    return { rootRef, stageRef, mockRef, aiRef, hiveRef, detRef, noteRef, lnkRef, lnkBtnRef, mbBtnRef, popRef, searchRef, capRef }
+    return { rootRef, stageRef, mockRef, aiRef, hiveRef, detRef, noteRef, lnkRef, lnkBtnRef, mbBtnRef, popRef, searchRef, capRef, eventRef }
   }
 }

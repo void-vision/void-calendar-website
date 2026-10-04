@@ -1,5 +1,4 @@
 import {
-  EVS,
   HPAL,
   ICONS,
   IDEA,
@@ -12,20 +11,12 @@ import {
   TCOL,
   TPLS,
 } from './catalog'
-import { FTOT, type DemoState, type Msg } from './types'
+import { FTOT, type DemoEvent, type DemoState, type Msg } from './types'
+import { dayLabels, demoEvents, eventTime } from './events'
+import { trEN } from './i18n'
 
-type Ev = {
-  id: string
-  d: number
-  s: number
-  e: number
-  t: string
-  c: keyof typeof HPAL
-  ai?: number
-  k?: number
-}
-
-const EVENTS = EVS as Ev[]
+type Ev = DemoEvent
+const EVENTS = demoEvents
 type Tint = Record<string, [string, string]>
 const TINT = PTINT as unknown as Tint
 const ICO = ICONS as Record<string, string>
@@ -37,6 +28,9 @@ export type DemoApi = {
   closeCap: () => void
   saveCap: () => void
   sendAi: () => void
+  applySuggestions: () => void
+  adjustSuggestions: () => void
+  flash: (message: string) => void
   pickPlugin: (name: string) => void
   setDisMode: (id: 'shift' | 'ask' | 'split') => void
   startDis: () => void
@@ -153,6 +147,8 @@ function heroVals(s: DemoState, api: DemoApi) {
       top: ((start - 8) / 12) * 100,
       h: ((e.e - e.s) / 12) * 100,
       title: e.t,
+      userTitle: e.id.startsWith('demo-') ? e.t : null,
+      when: `${dayLabels[e.d]} ${eventTime(start)} – ${eventTime(start + e.e - e.s)}`,
       bg: g ? '#fff' : p.bg,
       fg: p.fg,
       bs: g ? 'dashed' : 'solid',
@@ -189,6 +185,8 @@ function heroVals(s: DemoState, api: DemoApi) {
     }
     out.push(mk(e, o))
   })
+  s.extraEvents.forEach((event) => out.push(mk(event, {})))
+  s.suggestions.forEach((event) => out.push(mk(event, { st: 'ghost' })))
   const BUL = [
     { dot: '#7c5cc9', text: 'PRD 分三段，放在上午和周二下午' },
     { dot: '#e0782f', text: '演示稿周三下午，周四彩排' },
@@ -247,8 +245,8 @@ function heroVals(s: DemoState, api: DemoApi) {
     toastOp: toast ? 1 : 0,
     toastY: toast ? 0 : 8,
     inTyped,
-    inBd: sc === 0 && t >= 200 && t < 1800 ? '#c9d8f3' : '#dcdad6',
-    inSh: sc === 0 && t >= 200 && t < 1800 ? '0 0 0 3px rgba(20,99,217,.08)' : '0 1px 2px rgba(28,28,30,.04)',
+    inBd: '#dcdad6',
+    inSh: '0 1px 2px rgba(28,28,30,.04)',
     capOp: capOn ? 1 : 0,
     capSc: capOn ? 1 : 0.96,
     capText: sc === 2 ? typed(IDEA, 1200, 3000) : '',
@@ -306,7 +304,7 @@ function userVals<T extends {
   r.days.forEach((d) =>
     d.evs.forEach((e) => {
       if (e.id === s.evSel) e.sh = '0 0 0 2px #1463d9'
-      ;(e as { pick?: () => void }).pick = () => api.set((x) => ({ evSel: x.evSel === e.id ? null : e.id }))
+      ;(e as { pick?: () => void }).pick = () => api.set((x) => ({ evSel: x.evSel === e.id ? null : e.id, heroManual: true }))
     }),
   )
   r.inboxN += s.inboxExtra
@@ -349,21 +347,55 @@ function userVals<T extends {
       hasBadge: !!badge,
       badge,
       sc: id === 'inbox' ? r.inboxSc : 1,
-      pick: () => api.set({ navSel: id }),
+      pick: () => api.set({ navSel: id, evSel: null, heroManual: true }),
     }
   }
   const q = s.searchQ.trim().toLowerCase()
-  const DN = ['周一', '周二', '周三', '周四', '周五']
-  const fh = (h: number) => `${String(Math.floor(h)).padStart(2, '0')}:${h % 1 ? '30' : '00'}`
-  let list = EVENTS.filter((e) => e.id !== 'meet' && e.id !== 'idea')
-  if (q) list = list.filter((e) => e.t.toLowerCase().includes(q))
+  const DN = dayLabels
+  const fh = eventTime
+  const allEvents = [...EVENTS, ...s.extraEvents, ...s.suggestions]
+  let list = [...EVENTS.filter((e) => e.id !== 'meet' && e.id !== 'idea'), ...s.extraEvents]
+  if (q) list = list.filter((e) => e.t.toLowerCase().includes(q) || trEN(e.t).toLowerCase().includes(q))
+  const selected = allEvents.find((event) => event.id === s.evSel)
+  const selectedStart = selected?.id === 'prd3' && s.scene === 1 && s.t >= 2400 ? 11 : selected?.s ?? 0
+  const selectedWhen = selected ? `${DN[selected.d]} · ${fh(selectedStart)} – ${fh(selectedStart + selected.e - selected.s)}` : ''
+  const itemType = s.navSel === 'tasks' ? 'todo' : 'idea'
+  const seedItems = (itemType === 'todo' ? ['PRD v2 · 收尾与评审', '周五分享：做演示稿', '健身'] : [IDEA, '整理插件权限说明', '预约体检'])
+    .map((title, index) => ({ id: `initial-${itemType}-${index}`, title, type: itemType, when: '待安排' }))
+  const collectionItems = [...s.capturedItems.filter((item) => item.type === itemType).map((item) => ({ ...item, when: '刚刚' })), ...seedItems]
   const demoPop = r.popOp === 1
   const vis = s.mbCtl ? s.mbOpen : demoPop
   const aiText = s.aiUser ? s.aiVal : r.inTyped
-  const empty = !aiText.trim() || !s.aiUser
-  const focusLabel = s.uFocus && vis ? '专注中 · 25:00' : r.focusLabel
+  const empty = !aiText.trim() || !s.aiUser || s.aiPending
+  const focusLabel = s.uFocus ? '专注中 · 25:00' : r.focusLabel
   return {
     ...r,
+    navSel: s.navSel,
+    collectionTitle: itemType === 'todo' ? '任务列表' : 'Inbox',
+    collectionItems: collectionItems.map((item) => ({
+      ...item,
+      userTitle: item.id.startsWith('capture-') ? item.title : null,
+      done: s.completedItems.includes(item.id),
+      toggle: () => api.set((state) => ({ completedItems: state.completedItems.includes(item.id)
+        ? state.completedItems.filter((id) => id !== item.id)
+        : [...state.completedItems, item.id] })),
+    })),
+    showCalendar: () => api.set({ navSel: 'cal', heroManual: true }),
+    selectedEvent: selected ? {
+      id: selected.id,
+      title: selected.t,
+      userTitle: selected.id.startsWith('demo-') ? selected.t : null,
+      when: selectedWhen,
+      kind: s.suggestions.some((event) => event.id === selected.id) ? '待确认' : selected.ai ? 'AI 时间盒' : '日程',
+      pending: s.suggestions.some((event) => event.id === selected.id),
+      dot: HPAL[selected.c].dot,
+    } : null,
+    closeEvent: () => api.set({ evSel: null }),
+    startEventFocus: () => selected && api.set({ uFocus: true, focusTitle: selected.t, focusWhen: selectedWhen, evSel: null, mbCtl: true, mbOpen: true, heroManual: true }),
+    suggestions: s.suggestions.map((event) => ({ id: event.id, userTitle: event.t, when: `${DN[event.d]} · ${fh(event.s)} – ${fh(event.e)}`, duration: `${event.e - event.s} h` })),
+    applySuggestions: api.applySuggestions,
+    adjustSuggestions: api.adjustSuggestions,
+    aiPending: s.aiPending,
     capPE: s.capUser ? 'auto' : 'none',
     capUser: s.capUser,
     capDemo: !s.capUser,
@@ -374,25 +406,31 @@ function userVals<T extends {
     navPlug: [nv('pomo', '番茄钟'), nv('habit', '习惯打卡'), nv('gh', 'GitHub')],
     searchRes: list.slice(0, 6).map((e) => ({
       title: e.t,
+      userTitle: e.id.startsWith('demo-') ? e.t : null,
       dot: HPAL[e.c].dot,
       when: `${DN[e.d]} ${fh(e.s)}`,
       pick: (ev: { preventDefault: () => void }) => {
         ev.preventDefault()
-        api.set({ evSel: e.id, searchOpen: false, searchQ: '' })
+        api.set({ evSel: e.id, searchOpen: false, searchQ: '', navSel: 'cal', heroManual: true, scene: 3, t: 0, mbCtl: true, mbOpen: false })
       },
     })),
     searchHead: q ? '日程' : '本周日程',
     searchNone: !!(q && !list.length),
     searchOpen: s.searchOpen,
     searchQ: s.searchQ,
-    searchBd: s.searchOpen ? '#1463d9' : '#e3e1dd',
-    searchSh: s.searchOpen ? '0 0 0 3px rgba(20,99,217,.15)' : 'none',
+    searchBd: s.searchOpen ? '#c9c7c2' : '#e3e1dd',
+    searchSh: 'none',
     popOp: vis ? 1 : 0,
     popY: vis ? 0 : -6,
     popPE: vis ? 'auto' : 'none',
     mbExpanded: vis ? 'true' : 'false',
     mbPillBg: vis ? 'rgba(28,28,30,.07)' : r.mbPillBg,
     focusLabel,
+    focusTitle: s.focusTitle ?? 'PRD v2 · 收尾与评审',
+    focusUserTitle: s.extraEvents.some((event) => event.t === s.focusTitle) ? s.focusTitle : null,
+    focusWhen: s.focusWhen ?? '10:00 – 12:00',
+    mbText: s.uFocus ? `${s.focusTitle ?? 'PRD v2 · 收尾'} · 25:00` : r.mbText,
+    mbUserText: s.uFocus && s.extraEvents.some((event) => event.t === s.focusTitle) ? `${s.focusTitle} · 25:00` : null,
     focusBg: s.uFocus && vis ? '#1c1c1e' : r.focusBg,
     popTag: s.uFocus && vis ? '专注中' : r.popTag,
     shiftLabel: s.askShift ? '已请 AI 顺延到 13:00 →' : '调整时间',
@@ -400,20 +438,33 @@ function userVals<T extends {
     mbDot: (s.scene === 3 && s.t >= 2800) || s.uFocus ? '#1c1c1e' : '#8e86a3',
     aiValue: aiText,
     aiEmpty: empty,
-    sendBg: empty ? '#bcd3f5' : '#4f8ef0',
+    sendBg: empty ? '#d9d7d2' : '#1c1c1e',
     sendCur: empty ? 'default' : 'pointer',
-    inBd: s.aiFocus || s.aiUser ? '#c9d8f3' : r.inBd,
-    inSh: s.aiFocus || s.aiUser ? '0 0 0 3px rgba(20,99,217,.08)' : r.inSh,
-    msgs: s.uChat ?? r.msgs,
+    inBd: s.aiFocus ? '#c9c7c2' : r.inBd,
+    inSh: r.inSh,
+    msgs: (s.uChat ?? r.msgs).map((message) => ({
+      ...message,
+      acts: message.acts.map((action) => ({
+        ...action,
+        disabled: action.label === '已应用' || action.label === '已排入',
+        pick: () => {
+          if (action.label === '应用') api.set({ t: 6300, heroManual: true })
+          else if (action.label === '撤销') api.set({ t: 1200, heroManual: true })
+          else if (action.label === '排到周四 11:30') api.set({ t: 6000, heroManual: true })
+          else if (action.label === '稍后') api.set({ t: 3400, heroManual: true })
+          else if (action.label === '再调整') api.set({ aiUser: true, aiVal: Q, heroManual: true })
+        },
+      })),
+    })),
     openCap: api.openCap,
     closeCap: api.closeCap,
     saveCap: api.saveCap,
     sendAi: api.sendAi,
     toggleMb: () => api.set((x) => ({ mbCtl: true, mbOpen: !(x.mbCtl ? x.mbOpen : demoPop) })),
-    startFocus: () => api.set({ uFocus: true }),
+    startFocus: () => api.set({ uFocus: true, heroManual: true }),
     askShift: () => api.set({ askShift: true }),
     onCapVal: (e: { target: { value: string } }) => api.set({ capVal: e.target.value }),
-    onSearchQ: (e: { target: { value: string } }) => api.set({ searchQ: e.target.value }),
+    onSearchQ: (e: { target: { value: string } }) => api.set({ searchQ: e.target.value, searchOpen: true }),
     onSearchFocus: () => api.set({ searchOpen: true }),
     onSearchBlur: () => api.set({ searchOpen: false }),
     onAiVal: (e: { target: { value: string } }) => {

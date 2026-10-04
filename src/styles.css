@@ -388,6 +388,33 @@ section[id],
   outline-offset: 3px;
 }
 
+/* 文本输入由容器的细边框提示焦点，避免叠加全站键盘焦点框。 */
+.demo-search input:focus,
+.demo-search input:focus-visible,
+.demo-composer textarea:focus,
+.demo-composer textarea:focus-visible,
+.demo-capture input:focus,
+.demo-capture input:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
+.demo-capture:focus-within {
+  border-color: #c9c7c2;
+}
+
+@media (max-width: 767px) {
+  .demo-ai:has(.demo-plan) {
+    height: 340px;
+  }
+
+  .demo-event-detail {
+    top: 48px;
+    max-height: 260px;
+    overflow-y: auto;
+  }
+}
+
 button:focus:not(:focus-visible) {
   outline: none;
 }
