@@ -1,5 +1,27 @@
 export const releases = [
   {
+    version: '0.1.0-beta.2',
+    published: '2026-10-08',
+    summary: '优化 macOS 桌面体验，移除浏览器默认右键菜单。',
+    summaryEn: 'This update improves the macOS desktop experience by removing browser-specific right-click menus.',
+    items: [
+      '禁用正式桌面构建中的默认 WebView 右键菜单，移除查询、翻译、搜索、共享、语音和服务等操作。',
+      '保留 Void Calendar 自身的右键菜单，以及复制和粘贴的键盘快捷键。',
+    ],
+    itemsEn: [
+      'Disabled the default WebView context menu in production desktop builds, removing actions such as Look Up, Translate, Search, Share, Speech, and Services.',
+      'Preserved Void Calendar’s own right-click menus and keyboard shortcuts for copying and pasting.',
+    ],
+    notes: [
+      '网页和开发构建仍保留默认右键菜单。',
+      '这是测试版，欢迎反馈使用中遇到的问题。',
+    ],
+    notesEn: [
+      'Web and development builds retain their default context menus.',
+      'This is a beta release. Please report any issues you encounter.',
+    ],
+  },
+  {
     version: '0.1.0-beta.1',
     published: '2026-10-08',
     summary: 'Void Calendar 是一款本地优先的日历与项目排程应用，主要为 macOS 打造。',
