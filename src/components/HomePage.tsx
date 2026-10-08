@@ -10,12 +10,12 @@ import { DemoCapture, DemoCaptureResult } from './DemoCapture'
 import { ComparisonBlog } from './ComparisonBlog'
 import { SiteFooter } from './SiteFooter'
 import { SiteHeader } from './SiteHeader'
-import { macDownloadUrl } from '../lib/download'
+import { downloadPath } from '../lib/download'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
 
 function Logo({ className = 'size-full object-contain' }: { className?: string }) {
-  return <img src="/logo.png" alt="Void Calendar" width={256} height={256} decoding="async" className={className} />
+  return <img src="/logo-128.png" alt="Void Calendar" width={128} height={128} decoding="async" className={className} />
 }
 
 export function HomePage() {
@@ -30,8 +30,11 @@ export function HomePage() {
       <main>
       <section id="top" className="px-[clamp(20px,5vw,72px)] pt-[clamp(88px,11vw,152px)]">
         <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-7 text-center">
+          <p className="m-0 -mb-3 text-sm font-medium tracking-[0.01em] text-[#1463d9]">
+            {lang === 'en' ? 'AI calendar & time-blocking app for Mac' : 'Mac 上的 AI 日历与时间盒'}
+          </p>
           <h1 className="m-0 text-[clamp(42px,5.8vw,78px)] leading-[1.14] font-medium tracking-[-0.035em] text-balance">
-            你的每一天，
+            你的每一天，{' '}
             <br />
             从这里开始。
           </h1>
@@ -39,14 +42,18 @@ export function HomePage() {
             AI、日历、任务、笔记与专注，在同一个地方。用时间盒安排每一天，用插件连接更多可能。
           </p>
           <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
-            <motion.a href={macDownloadUrl} whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
+            <motion.a href={downloadPath} whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
               下载 macOS 版
             </motion.a>
             <motion.a href="#flow" whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#f3f2ef] px-6 text-[15.5px] font-medium text-[#1c1c1e] hover:bg-[#e9e7e3] hover:text-[#1c1c1e]">
               看看怎么用
             </motion.a>
           </div>
-          <div className="text-[13px] text-[#8e8e93]">支持 macOS 13 及以上 · 可同步 iCloud、Google 日历</div>
+          <div className="text-[13px] text-[#8e8e93]">
+            {lang === 'en'
+              ? 'Public beta · Apple silicon Macs, macOS 13 or later · Syncs with iCloud and Google Calendar'
+              : '公开测试版 · 适用于 Apple 芯片 Mac，macOS 13 及以上 · 可同步 iCloud、Google 日历'}
+          </div>
         </div>
       </section>
 
@@ -665,7 +672,7 @@ function Disrupt({ v }: { v: View }) {
         <div data-rv="0" className="flex flex-col gap-[18px] pt-2">
           <div className="text-sm font-medium text-[#1463d9]">03 · 重排</div>
           <h2 className="m-0 text-[clamp(28px,3vw,40px)] leading-[1.25] font-normal tracking-[-0.02em] text-balance">
-            临时来了个会，
+            临时来了个会，{' '}
             <br />
             日历自己挪好。
           </h2>
@@ -1076,22 +1083,23 @@ function Plugins({ v }: { v: View }) {
 
 // 不依赖演示状态，避免随动画计时反复渲染。
 const Download = memo(function Download() {
+  const lang = useSiteLang()
   const tr = useTranslate()
   return tr(
     <section id="download" className="border-t border-[#f0efec] px-[clamp(20px,5vw,72px)] py-[clamp(96px,12vw,168px)] text-center">
       <div data-rv="0" className="mx-auto flex max-w-[720px] flex-col items-center gap-6">
         <span className="flex size-14 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white"><Logo /></span>
         <h2 className="m-0 text-[clamp(32px,4vw,56px)] leading-[1.18] font-medium tracking-[-0.03em] text-balance">
-          从这周开始，
+          从这周开始，{' '}
           <br />
           让每件事都有时间。
         </h2>
         <p className="m-0 text-[17px] text-[#6b6b70]">免费下载，接入现有日历账户即可使用。</p>
         <div className="mt-1 flex flex-wrap justify-center gap-3">
-          <motion.a href={macDownloadUrl} whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">下载 macOS 版</motion.a>
+          <motion.a href={downloadPath} whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">下载 macOS 版</motion.a>
           <motion.a href="#flow" whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#f3f2ef] px-6 text-[15.5px] font-medium text-[#1c1c1e] hover:bg-[#e9e7e3]">再看一遍</motion.a>
         </div>
-        <div className="text-[13px] text-[#8e8e93]">支持 macOS 13 及以上</div>
+        <div className="text-[13px] text-[#8e8e93]">{lang === 'en' ? 'For Apple silicon Macs, macOS 13 or later' : '适用于 Apple 芯片 Mac，macOS 13 及以上'}</div>
       </div>
     </section>
   )

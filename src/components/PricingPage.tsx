@@ -1,6 +1,6 @@
 import { LangLink } from './LangLink'
 import { SiteFrame, useEn } from './SiteFrame'
-import { macDownloadUrl } from '../lib/download'
+import { downloadPath } from '../lib/download'
 
 const monthlyCents = 499
 const annualCents = 2999
@@ -51,6 +51,10 @@ export function PricingPage() {
       answer: en ? `Twelve monthly payments total ${usd(monthlyCents * 12)}. Annual billing is ${usd(annualCents)}, saving ${usd(yearlySavings)} — about ${savingsPercent}%. The monthly equivalent is rounded; annual billing is charged by the year.` : `连续月付 12 个月共 ${usd(monthlyCents * 12)}，年付为 ${usd(annualCents)}，少 ${usd(yearlySavings)}，约省 ${savingsPercent}%。折合月价是四舍五入后的参考，年付按整年计费。`,
     },
     {
+      question: en ? 'Does AI cost extra?' : 'AI 需要另外付费吗？',
+      answer: en ? 'Void Calendar does not charge for AI. AI scheduling uses your own model endpoint and API key, so any usage fees come from the model provider you choose, at their prices.' : 'Void Calendar 不对 AI 收费。AI 排程使用你自己的模型接口和 API 密钥，用量费用由你选择的模型服务按其价格收取。',
+    },
+    {
       question: en ? 'What currency are these prices in?' : '价格是什么币种？',
       answer: en ? 'All three prices are in US dollars (USD).' : '三种方案均以美元（USD）标价。',
     },
@@ -76,7 +80,7 @@ export function PricingPage() {
           </div>
           <p className="m-0 text-sm text-[#6b6b70]">{en ? 'Calendars, tasks, projects, notes, AI, and focus — all available for normal use.' : '日历、任务、项目、笔记、AI 和专注，都可以正常使用。'}</p>
         </div>
-        <a href={macDownloadUrl} className="flex min-h-12 shrink-0 items-center justify-center rounded-[12px] bg-[#1c1c1e] px-5 text-sm font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
+        <a href={downloadPath} className="flex min-h-12 shrink-0 items-center justify-center rounded-[12px] bg-[#1c1c1e] px-5 text-sm font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
           {en ? 'Download for macOS' : '下载 macOS 版'}
         </a>
       </section>
@@ -112,7 +116,7 @@ export function PricingPage() {
           <h2 className="m-0 text-[18px] font-medium">{en ? 'Try it with your own day.' : '先用自己的一天试试看。'}</h2>
           <p className="m-0 text-sm text-[#6b6b70]">{en ? 'Pro purchases are not open yet. The Mac app is available to download.' : 'Pro 购买暂未开放，macOS 版可以先下载体验。'}</p>
         </div>
-        <a href={macDownloadUrl} className="flex min-h-12 shrink-0 items-center justify-center rounded-[12px] bg-[#1c1c1e] px-5 text-sm font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
+        <a href={downloadPath} className="flex min-h-12 shrink-0 items-center justify-center rounded-[12px] bg-[#1c1c1e] px-5 text-sm font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
           {en ? 'Download for macOS' : '下载 macOS 版'}
         </a>
       </div>

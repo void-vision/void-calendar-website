@@ -587,7 +587,7 @@ export function useDemo(lang: SiteLang) {
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    document.documentElement.lang = state.lang === 'en' ? 'en' : 'zh-CN'
+    document.documentElement.lang = state.lang === 'en' ? 'en' : 'zh-Hans'
     applyLang(root, state.lang === 'en')
   })
 

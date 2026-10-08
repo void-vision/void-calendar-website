@@ -4,7 +4,7 @@ import { posts } from '../content/posts'
 import { localizePath } from '../lib/lang'
 import { absoluteUrl, alternateLinks } from '../lib/seo'
 
-const latestPost = posts.map((post) => post.published).sort().at(-1)
+const latestPost = posts.map((post) => post.updated ?? post.published).sort().at(-1)
 
 // lastmod 只写确实知道的日期；不确定的页面不写，免得搜索引擎不再信任这个字段。
 const entries: { path: string; lastmod?: string }[] = [
@@ -12,7 +12,8 @@ const entries: { path: string; lastmod?: string }[] = [
   { path: '/pricing', lastmod: '2026-10-05' },
   { path: '/blog', lastmod: latestPost },
   { path: '/changelog', lastmod: releases[0].published },
-  ...posts.map((post) => ({ path: `/blog/${post.slug}`, lastmod: post.published })),
+  ...posts.map((post) => ({ path: `/blog/${post.slug}`, lastmod: post.updated ?? post.published })),
+  { path: '/about', lastmod: '2026-10-08' },
   { path: '/privacy', lastmod: '2026-09-30' },
   { path: '/terms', lastmod: '2026-09-30' },
 ]

@@ -1,5 +1,20 @@
 If [OmniFocus](/blog/void-calendar-vs-omnifocus) feels too complicated, you will probably consider Things 3. Both have excellent native interactions and their own philosophy of task management.
 
+**In short:** If you want to capture lightweight tasks quickly across iPhone, iPad, and Mac, in an elegant app you buy once, Things 3 is hard to beat. If your tasks need full notes, you need to know whether the day actually has room for them, and you want AI to place them into free time on your calendar, Void Calendar is the better fit.
+
+## At a glance
+
+| | Void Calendar | Things 3 |
+| --- | --- | --- |
+| Platforms | macOS (Apple silicon); mobile planned | Mac, iPhone, iPad, Watch, Vision Pro |
+| Price | Free with every feature; Pro sync not on sale yet | One-time purchase per platform, no subscription |
+| AI scheduling | Your own model, placed into free time | No built-in AI; extend via Shortcuts and more |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud | Shows Apple Calendar events, read-only |
+| Tasks & notes | Time boxes, tasks, linked notes, focus timer | Lists and tags; Markdown notes without images |
+| Where data lives | On your Mac; no company cloud copy | On each device, free sync via Things Cloud |
+
+*Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
+
 I like Things 3. My lightweight tasks still live there because it is simple enough to capture something the moment it comes to mind.
 
 ## Simplicity is why I like it
@@ -40,6 +55,20 @@ I still like Things 3 and use it for lightweight tasks. I also need a more capab
 
 Void Calendar is my answer.
 
+## Which one fits
+
+Choose Things 3 if:
+
+- You need native apps on iPhone, iPad, or Apple Watch today.
+- Most of your tasks are quick to-dos that don’t need long notes or images.
+- You prefer paying once over a subscription, and a list is all the planning you need.
+
+Choose Void Calendar if:
+
+- You mostly work on an Apple silicon Mac.
+- You want time boxes laid out next to your events, not only a list for today.
+- You want a full note behind every task, and AI that uses your own model to arrange time.
+
 [Explore Void Calendar’s tasks, notes, and calendar](/#showcase).
 
-Sources checked October 5, 2026.
+Sources checked October 8, 2026: [Things purchase information](https://culturedcode.com/things/mac/store/), [calendar connections](https://culturedcode.com/things/support/articles/2803583/), and [Things and third-party AI tools](https://culturedcode.com/things/support/articles/5510170/).

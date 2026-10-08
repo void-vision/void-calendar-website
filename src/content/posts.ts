@@ -34,6 +34,8 @@ export type Post = {
   slug: string
   /** ISO 日期，用于 sitemap、结构化数据和 <time dateTime>。 */
   published: string
+  /** 内容有实质更新时填写，用于 dateModified 和 sitemap lastmod。 */
+  updated?: string
   title: string
   titleEn: string
   description: string
@@ -61,6 +63,7 @@ export const posts: Post[] = [
   ...comparisons.map((post) => ({
     ...post,
     published: '2026-10-05',
+    updated: '2026-10-08',
     ...comparisonBodies[post.slug],
   })),
   {

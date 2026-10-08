@@ -32,7 +32,7 @@ export function BlogIndexPage() {
               <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm md:flex-col md:items-start md:gap-3">
                 <time dateTime={post.published} className="text-[#6b6b70]">{formatDate(post.published, en)}</time>
                 <span className="flex items-center gap-2 text-[#1c1c1e]">
-                  <img src="/logo.png" alt="" width={24} height={24} className="size-6 rounded-full border border-[#e8e6e2] bg-white object-contain" />
+                  <img src="/logo-128.png" alt="" width={24} height={24} className="size-6 rounded-full border border-[#e8e6e2] bg-white object-contain" />
                   <span className="font-medium">Void Calendar</span>
                 </span>
                 <span className="text-xs text-[#8e8e93]">{en ? 'Designer’s notes' : '设计者手记'} · {readingMinutes(body)} {en ? 'min read' : '分钟阅读'}</span>
@@ -43,7 +43,7 @@ export function BlogIndexPage() {
                   <div className="mb-1 w-full">
                     <LangLink to={`/blog/${post.slug}`} aria-label={`${en ? 'Read article: ' : '阅读全文：'}${title}`} className="block overflow-hidden rounded-[18px] border border-[#e8e6e2] bg-[#faf9f7]">
                       <div className="aspect-video">
-                        <img src={image[2]} alt={image[1]} loading="lazy" decoding="async" className="size-full object-contain" />
+                        <img src={thumbnails[image[2]]?.[0] ?? image[2]} alt={image[1]} width={thumbnails[image[2]]?.[1]} height={thumbnails[image[2]]?.[2]} loading="lazy" decoding="async" className="size-full object-contain" />
                       </div>
                     </LangLink>
                     <p className="mt-2 mb-0 text-xs leading-[1.6] text-[#8e8e93]">{previewCredit(image[2], en)}</p>
@@ -63,6 +63,13 @@ export function BlogIndexPage() {
       </section>
     </SiteFrame>
   )
+}
+
+// 目录卡片用 800px 宽的 WebP 缩略图，正文仍用原图。
+const thumbnails: Record<string, [string, number, number]> = {
+  '/blog/omnifocus-project-outline.png': ['/blog/thumbs/omnifocus-project-outline.webp', 800, 507],
+  '/blog/trello-board.jpg': ['/blog/thumbs/trello-board.webp', 800, 451],
+  '/blog/things-today.jpg': ['/blog/thumbs/things-today.webp', 800, 706],
 }
 
 function previewCredit(src: string, en: boolean) {

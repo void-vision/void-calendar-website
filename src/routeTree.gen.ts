@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AboutRouteImport } from './routes/about'
 import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -17,7 +18,9 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as DownloadMacRouteImport } from './routes/download/mac'
 import { Route as EnIndexRouteImport } from './routes/en/index'
+import { Route as EnAboutRouteImport } from './routes/en/about'
 import { Route as EnChangelogRouteImport } from './routes/en/changelog'
 import { Route as EnPricingRouteImport } from './routes/en/pricing'
 import { Route as EnPrivacyRouteImport } from './routes/en/privacy'
@@ -29,6 +32,11 @@ import { Route as EnBlogSlugRouteImport } from './routes/en/blog/$slug'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AboutRoute = AboutRouteImport.update({
+  id: '/about',
+  path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ChangelogRoute = ChangelogRouteImport.update({
@@ -66,9 +74,19 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DownloadMacRoute = DownloadMacRouteImport.update({
+  id: '/download/mac',
+  path: '/download/mac',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnIndexRoute = EnIndexRouteImport.update({
   id: '/en/',
   path: '/en/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnAboutRoute = EnAboutRouteImport.update({
+  id: '/en/about',
+  path: '/en/about',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnChangelogRoute = EnChangelogRouteImport.update({
@@ -109,12 +127,15 @@ const EnBlogSlugRoute = EnBlogSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/download/mac': typeof DownloadMacRoute
+  '/en/about': typeof EnAboutRoute
   '/en/changelog': typeof EnChangelogRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
@@ -127,12 +148,15 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/download/mac': typeof DownloadMacRoute
+  '/en/about': typeof EnAboutRoute
   '/en/changelog': typeof EnChangelogRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
@@ -146,12 +170,15 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/about': typeof AboutRoute
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/download/mac': typeof DownloadMacRoute
+  '/en/about': typeof EnAboutRoute
   '/en/changelog': typeof EnChangelogRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
@@ -166,12 +193,15 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/about'
     | '/changelog'
     | '/pricing'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
+    | '/download/mac'
+    | '/en/about'
     | '/en/changelog'
     | '/en/pricing'
     | '/en/privacy'
@@ -184,12 +214,15 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/about'
     | '/changelog'
     | '/pricing'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
+    | '/download/mac'
+    | '/en/about'
     | '/en/changelog'
     | '/en/pricing'
     | '/en/privacy'
@@ -202,12 +235,15 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/about'
     | '/changelog'
     | '/pricing'
     | '/privacy'
     | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
+    | '/download/mac'
+    | '/en/about'
     | '/en/changelog'
     | '/en/pricing'
     | '/en/privacy'
@@ -221,12 +257,15 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AboutRoute: typeof AboutRoute
   ChangelogRoute: typeof ChangelogRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  DownloadMacRoute: typeof DownloadMacRoute
+  EnAboutRoute: typeof EnAboutRoute
   EnChangelogRoute: typeof EnChangelogRoute
   EnPricingRoute: typeof EnPricingRoute
   EnPrivacyRoute: typeof EnPrivacyRoute
@@ -245,6 +284,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/about': {
+      id: '/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/changelog': {
@@ -296,11 +342,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/download/mac': {
+      id: '/download/mac'
+      path: '/download/mac'
+      fullPath: '/download/mac'
+      preLoaderRoute: typeof DownloadMacRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/en/': {
       id: '/en/'
       path: '/en'
       fullPath: '/en/'
       preLoaderRoute: typeof EnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/about': {
+      id: '/en/about'
+      path: '/en/about'
+      fullPath: '/en/about'
+      preLoaderRoute: typeof EnAboutRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/changelog': {
@@ -357,12 +417,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AboutRoute: AboutRoute,
   ChangelogRoute: ChangelogRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   BlogSlugRoute: BlogSlugRoute,
+  DownloadMacRoute: DownloadMacRoute,
+  EnAboutRoute: EnAboutRoute,
   EnChangelogRoute: EnChangelogRoute,
   EnPricingRoute: EnPricingRoute,
   EnPrivacyRoute: EnPrivacyRoute,

@@ -1,6 +1,5 @@
 import { Link } from '@tanstack/react-router'
-import { motion } from 'motion/react'
-import { macDownloadUrl } from '../lib/download'
+import { downloadPath } from '../lib/download'
 import { useAlternateLink, type SiteLang } from '../lib/lang'
 import { LangLink } from './LangLink'
 
@@ -14,7 +13,7 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
       <div className="home-header mx-auto flex h-[68px] max-w-[1360px] items-center gap-[clamp(16px,3vw,40px)] px-[clamp(16px,3vw,40px)]">
         <LangLink to="/" hash="top" className="home-brand flex shrink-0 items-center gap-2.5 text-[#1c1c1e]">
           <span className="flex size-8 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white">
-            <img src="/logo.png" alt="" width={256} height={256} decoding="async" className="size-full object-contain" />
+            <img src="/logo-128.png" alt="" width={128} height={128} decoding="async" className="size-full object-contain" />
           </span>
           <span className="text-base font-semibold tracking-[-0.01em] whitespace-nowrap">Void Calendar</span>
         </LangLink>
@@ -31,7 +30,7 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
             </svg>
             <span>{langLabel}</span>
           </Link>
-          <motion.a href={macDownloadUrl} whileTap={{ scale: 0.98 }} className="flex h-[38px] items-center rounded-[10px] bg-[#1c1c1e] px-4 text-sm font-medium whitespace-nowrap text-white hover:bg-[#3a3a3c] hover:text-white">{en ? 'Download' : '下载'}</motion.a>
+          <a href={downloadPath} className="transition-transform active:scale-[0.98] flex h-[38px] items-center rounded-[10px] bg-[#1c1c1e] px-4 text-sm font-medium whitespace-nowrap text-white hover:bg-[#3a3a3c] hover:text-white">{en ? 'Download' : '下载'}</a>
         </div>
       </div>
     </header>

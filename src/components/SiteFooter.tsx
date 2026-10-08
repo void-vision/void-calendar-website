@@ -14,7 +14,7 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
           <div className="flex flex-col items-start gap-3">
             <LangLink to="/" className="flex min-h-8 items-center gap-2.5 text-[#1c1c1e]">
               <span className="flex size-7 overflow-hidden rounded-full border border-[#e8e6e2] bg-white">
-                <img src="/logo.png" alt="" width={256} height={256} className="size-full object-contain" />
+                <img src="/logo-128.png" alt="" width={128} height={128} className="size-full object-contain" />
               </span>
               <span className="font-semibold">Void Calendar</span>
             </LangLink>
@@ -24,7 +24,7 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
           </div>
 
           <nav aria-labelledby="footer-product-heading" className="flex flex-col gap-1">
-            <h2 id="footer-product-heading" className={headingClass}>{en ? 'Product' : '产品'}</h2>
+            <p id="footer-product-heading" className={headingClass}>{en ? 'Product' : '产品'}</p>
             <LangLink to="/pricing" className={linkClass}>{en ? 'Pricing' : '定价'}</LangLink>
             <LangLink to="/" hash="ai" className={linkClass}>{en ? 'AI scheduling' : 'AI 排程'}</LangLink>
             <LangLink to="/" hash="capture" className={linkClass}>{en ? 'Capture' : '捕获'}</LangLink>
@@ -34,7 +34,7 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
           </nav>
 
           <nav aria-labelledby="footer-compare-heading" className="flex flex-col gap-1">
-            <h2 id="footer-compare-heading" className={headingClass}>{en ? 'Compare' : '对比'}</h2>
+            <p id="footer-compare-heading" className={headingClass}>{en ? 'Compare' : '对比'}</p>
             {comparisons.map((post) => (
               <LangLink key={post.slug} to={`/blog/${post.slug}`} className={linkClass}>
                 vs {post.product}
@@ -43,8 +43,9 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
           </nav>
 
           <nav aria-labelledby="footer-resources-heading" className="flex min-w-0 flex-col gap-1">
-            <h2 id="footer-resources-heading" className={headingClass}>{en ? 'Resources & support' : '资源与支持'}</h2>
+            <p id="footer-resources-heading" className={headingClass}>{en ? 'Resources & support' : '资源与支持'}</p>
             <LangLink to="/blog" className={linkClass}>{en ? 'Blog' : '博客'}</LangLink>
+            <LangLink to="/about" className={linkClass}>{en ? 'About' : '关于我们'}</LangLink>
             <LangLink to="/privacy" className={linkClass}>{en ? 'Privacy' : '隐私政策'}</LangLink>
             <LangLink to="/terms" className={linkClass}>{en ? 'Terms' : '服务条款'}</LangLink>
             <a href="mailto:support@voidvision.ai" className={`${linkClass} break-all`}>support@voidvision.ai</a>

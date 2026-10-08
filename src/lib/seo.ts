@@ -1,6 +1,6 @@
 import { releases } from '../content/changelog'
 import type { Post } from '../content/posts'
-import { macDownloadUrl } from './download'
+import { downloadPath } from './download'
 import { localizePath, type SiteLang } from './lang'
 
 /** Public site origin. Override with VITE_SITE_URL when the live domain is different. */
@@ -20,7 +20,7 @@ export const pages = {
     },
     en: {
       title: 'Void Calendar — AI calendar and time boxing for Mac',
-      description: 'Plan your week on Mac in one sentence. AI reads your existing schedule, places tasks into time that is actually free, and keeps focus and notes alongside. Syncs with iCloud and Google Calendar.',
+      description: 'Plan your week on Mac in one sentence. AI fits tasks into time that is actually free, with focus and notes alongside. Syncs iCloud and Google Calendar.',
     },
   },
   pricing: {
@@ -31,7 +31,7 @@ export const pages = {
     },
     en: {
       title: 'Pricing · Void Calendar',
-      description: 'The free version of Void Calendar includes every feature. Pro adds sync: US$4.99 monthly, US$29.99 yearly, or US$89.99 lifetime. Purchases are not open yet.',
+      description: 'Void Calendar is free with every feature. Pro adds sync: US$4.99 monthly, US$29.99 yearly, or US$89.99 lifetime. Purchases are not open yet.',
     },
   },
   changelog: {
@@ -56,6 +56,17 @@ export const pages = {
       description: 'Workflow comparisons between Void Calendar and Notion, Motion, Morgen, TickTick and more, plus guides to time boxing on Mac.',
     },
   },
+  about: {
+    path: '/about',
+    zh: {
+      title: '关于 · Void Calendar',
+      description: 'Void Calendar 由悉尼的 AI 产品公司 Void Vision 开发，是一款 Mac 上的 AI 日历与时间盒应用，目前为公开测试版。',
+    },
+    en: {
+      title: 'About · Void Calendar',
+      description: 'Void Calendar is an AI calendar and time-boxing app for Mac, built by Void Vision, an AI product company in Sydney. It is in public beta.',
+    },
+  },
   privacy: {
     path: '/privacy',
     zh: {
@@ -64,7 +75,7 @@ export const pages = {
     },
     en: {
       title: 'Privacy Policy · Void Calendar',
-      description: 'How VOID VISION PTY LTD handles data for the Void Calendar macOS app and this website: local schedules, calendar access, AI keys, and optional usage analytics.',
+      description: 'How Void Vision handles data for the Void Calendar Mac app and this site: local schedules, calendar access, AI keys, and optional usage analytics.',
     },
   },
   terms: {
@@ -147,13 +158,31 @@ export function staticPageHead(key: PageKey, lang: SiteLang, jsonLd: object[] = 
   return pageHead({ ...page[lang], path: page.path, lang, jsonLd })
 }
 
+/** 与母站 voidvision.ai 使用同一个组织实体，搜索引擎会把两个站点认作同一家公司。 */
 const organization = {
   '@type': 'Organization',
-  '@id': `${siteUrl}/#organization`,
-  name: 'VOID VISION PTY LTD',
-  email: 'support@voidvision.ai',
-  url: absoluteUrl('/'),
-  logo: absoluteUrl('/logo.png'),
+  '@id': 'https://voidvision.ai/#organization',
+  name: 'Void Vision',
+  legalName: 'Void Vision Pty Ltd',
+  url: 'https://voidvision.ai',
+  logo: 'https://voidvision.ai/images/vv-mark.png',
+}
+
+const appId = `${siteUrl}/#app`
+const websiteId = `${siteUrl}/#website`
+
+export function aboutJsonLd(lang: SiteLang) {
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'AboutPage',
+      url: absoluteUrl(localizePath('/about', lang)),
+      inLanguage: hreflang[lang],
+      isPartOf: { '@id': websiteId },
+      about: { '@id': appId },
+      publisher: organization,
+    },
+  ]
 }
 
 export function homeJsonLd(lang: SiteLang) {
@@ -161,23 +190,32 @@ export function homeJsonLd(lang: SiteLang) {
     {
       '@context': 'https://schema.org',
       '@type': 'SoftwareApplication',
+      '@id': appId,
       name: siteName,
-      applicationCategory: 'ProductivityApplication',
+      applicationCategory: 'BusinessApplication',
       operatingSystem: 'macOS 13 or later',
+      processorRequirements: 'Apple silicon (arm64)',
       softwareVersion: releases[0].version,
-      downloadUrl: macDownloadUrl,
+      downloadUrl: absoluteUrl(downloadPath),
       description: pages.home[lang].description,
       url: absoluteUrl(localizePath('/', lang)),
       image: absoluteUrl('/og.png'),
-      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+        availability: 'https://schema.org/InStock',
+        url: absoluteUrl(localizePath('/pricing', lang)),
+      },
       publisher: organization,
     },
     {
       '@context': 'https://schema.org',
       '@type': 'WebSite',
+      '@id': websiteId,
       name: siteName,
-      url: absoluteUrl(localizePath('/', lang)),
-      inLanguage: hreflang[lang],
+      url: absoluteUrl('/'),
+      inLanguage: [hreflang.zh, hreflang.en],
       publisher: { '@id': organization['@id'] },
     },
   ]
@@ -194,10 +232,12 @@ export function postHead(post: Post, lang: SiteLang) {
   const title = en ? post.titleEn : post.title
   const description = en ? post.descriptionEn : post.description
   const path = `/blog/${post.slug}`
+  const updated = post.updated ?? post.published
   const image = postImage(post, lang)
   const url = absoluteUrl(localizePath(path, lang))
   return pageHead({
-    title: `${title} · ${siteName}`,
+    // 对比文章标题已经以品牌开头，不再重复加后缀。
+    title: title.startsWith(siteName) ? title : `${title} · ${siteName}`,
     description,
     path,
     lang,
@@ -211,13 +251,15 @@ export function postHead(post: Post, lang: SiteLang) {
         headline: title,
         description,
         datePublished: post.published,
-        dateModified: post.published,
+        dateModified: updated,
         inLanguage: hreflang[lang],
         url,
         mainEntityOfPage: url,
         image: absoluteUrl(image ?? '/og.png'),
         author: organization,
         publisher: organization,
+        about: { '@id': appId },
+        isPartOf: { '@id': websiteId },
       },
       {
         '@context': 'https://schema.org',

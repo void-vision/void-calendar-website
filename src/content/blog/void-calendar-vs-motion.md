@@ -1,5 +1,20 @@
 我对 AI 排程的期待其实很简单：计划被打乱以后，别让我从头再想一遍。
 
+**一句话结论**：如果你希望系统按优先级和截止日期自动排满日程、变化后持续重排，还需要团队项目管理和手机端，Motion 更成熟。如果你用 Apple 芯片的 Mac，想用自己的 AI 模型排程、把执行步骤写进任务笔记，并让数据留在本机，可以试试 Void Calendar。
+
+## 一览对比
+
+| | Void Calendar | Motion |
+|---|---|---|
+| 平台 | macOS（Apple 芯片），公开测试版 | 网页、桌面端、iOS、Android |
+| 价格 | 免费版含全部功能；Pro 同步尚未开售 | 无免费版；按席位月付或年付，可免费试用 |
+| AI 排程 | 用自己的模型和 API Key，改动已有日程前先询问 | 按优先级、截止日期自动排程，变化后自动重排 |
+| 日历连接 | Apple 日历与提醒事项、Google、iCloud；Outlook 计划中 | Google、Outlook、iCloud |
+| 任务与笔记 | 每个任务都有笔记，支持 `[[ ]]` 链接 | 任务、项目，以及 AI 文档与笔记 |
+| 数据存放 | 存在你的 Mac 上，公司不留云端副本 | Motion 云端账户 |
+
+*竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
+
 比如准备雅思，周一安排听力，周三练口语，周五写作文。看起来很完整。但到了周三，多了一节课，口语没练完，周五又有作业要交。好看的周计划，很快就变成需要重新整理的东西。
 
 ![新增课程后调整口语练习时间的安排示意](/blog/schedule-changes.svg)
@@ -26,8 +41,22 @@ Void Calendar 也让 AI 参与安排，但我更在意任务背后的内容。�
 
 所以我看 AI 计划时，会留意它有没有把一天塞得太满，任务能不能拆小，计划被打断后还能不能开始。Void Calendar 的时间盒、笔记和排程偏好，都是围绕这些实际问题来做的。
 
+## 怎么选
+
+选 Motion，如果：
+
+- 你希望系统按优先级和截止日期自动排满，并在日程变化时持续重排。
+- 你需要团队项目管理，或者今天就要在手机上使用。
+- 你愿意按席位为一套托管的 AI 服务付费。
+
+选 Void Calendar，如果：
+
+- 你用 Apple 芯片的 Mac，想先看过方案，再让 AI 改动已有日程。
+- 你想用自己的模型和 API Key，请求从 Mac 直接发到你选的服务。
+- 你希望每个任务都有笔记，专注记录也能写回时间盒。
+
 如果你主要想减少每天挪任务的动作，Motion 值得认真看看。如果你还想把执行步骤、任务记录和自己的 AI 放在一起，Void Calendar 是另一种选择。
 
 [临时来了个会，时间盒怎样挪](/blog/when-a-meeting-appears)。
 
-资料核对：2026年10月5日。
+资料核对：2026年10月8日。参考：[Motion 价格](https://www.usemotion.com/pricing)、[Motion 自动排程说明](https://www.usemotion.com/help/time-management/auto-scheduling)、[Motion 日历连接说明](https://www.usemotion.com/help/time-management/all-things-calendars)。

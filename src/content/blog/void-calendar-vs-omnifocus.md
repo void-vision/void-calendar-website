@@ -1,5 +1,20 @@
 Omni 家的工具给我的印象，一直是复杂、强大，而且有自己的哲学。OmniFocus™ 也是如此。
 
+**一句话结论**：如果你践行 GTD，需要在 iPhone、iPad、Apple Watch 或网页上随时处理复杂项目，OmniFocus 依然是成熟可靠的选择。如果你主要在 Mac 上工作，想让 AI 把任务放进日历里真正空闲的时间，并给每个任务留一页完整的笔记，Void Calendar 更合适。
+
+## 一览对比
+
+| | Void Calendar | OmniFocus |
+| --- | --- | --- |
+| 平台 | macOS（Apple 芯片）；移动端计划中 | Mac、iPhone、iPad、Watch、Vision Pro、网页 |
+| 价格 | 免费版含全部功能；Pro 同步未开售 | 买断 US$74.99 起，或订阅 US$99.99/年 |
+| AI 排程 | 自带模型，排进真正空闲的时段 | 无自动排程；插件可调用 Apple 端侧模型 |
+| 日历连接 | Apple 日历与提醒事项、Google、iCloud | Forecast 显示系统日历事件，只读 |
+| 任务与笔记 | 时间盒、任务、同名笔记、专注计时 | 项目、标签、富文本备注与附件 |
+| 数据存放 | 存在本机，公司不保存云端副本 | 本机数据库，加密同步到 Omni 或自建 WebDAV |
+
+*竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
+
 我用它管理过很多复杂的事情：大学课程、自学课程、人生规划，还有雅思备考。任务加上大纲，能把一个很大的目标拆成清楚的层次，让我知道接下来要做什么。
 
 ![OmniFocus 4 在 Mac 上的项目与任务大纲](/blog/omnifocus-project-outline.png)
@@ -46,7 +61,7 @@ Idea 是任务尚未诞生时的雏形。你还没确定要不要做，只是脑
 
 ## 功能更多，操作却要更简单
 
-Void Calendar 也支持灵动岛，让你随时看见自己正在做什么，并随手捕捉新的想法。一个念头出现时，可以先记下，然后继续当前的事情。
+在 Mac 上，Void Calendar 会在菜单栏显示专注倒计时，让你随时看见自己正在做什么；按 C 打开捕捉模板，就能随手记下新的想法。一个念头出现时，可以先记下，然后继续当前的事情。iOS 客户端（包括灵动岛）目前还在计划中。
 
 我希望 Void Calendar 能容纳比 OmniFocus 更多的工作：从 Idea，到任务、笔记、日历，再到 AI 的整理和执行。与此同时，日常操作要保持轻巧，不能让更多功能变成更多负担。
 
@@ -54,6 +69,20 @@ Void Calendar 也支持灵动岛，让你随时看见自己正在做什么，并
 
 如果你觉得哪里不好用，欢迎加入用户群告诉我。我会第一时间思考，怎样把它改得更顺手。
 
+## 怎么选
+
+选 OmniFocus，如果：
+
+- 你现在就需要 iPhone、iPad、Apple Watch 或网页端。
+- 你习惯 GTD，需要成熟的项目、标签和视角体系。
+- 你更想一次性买断，而不是等待一个仍在测试中的应用。
+
+选 Void Calendar，如果：
+
+- 你主要在 Apple 芯片的 Mac 上工作。
+- 你希望 AI 用你自己的模型，把任务排进真正空闲的时间，改动已有日程前先问你。
+- 你想让任务、笔记、日历和专注计时放在一起，数据留在本机。
+
 [看看 Void Calendar 的 Idea、任务与笔记](/#showcase)。
 
-资料核对：2026年10月5日。
+资料核对：2026年10月8日。参考：[OmniFocus 官网](https://www.omnigroup.com/omnifocus/)、[OmniFocus 购买选项](https://www.omnigroup.com/omnifocus/buy)、[OmniFocus 与 Apple 端侧模型](https://www.omnigroup.com/blog/ready-for-os-26)、[Forecast 与日历事件](https://support.omnigroup.com/documentation/omnifocus/universal/4.9.3/en/perspectives/)。

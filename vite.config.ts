@@ -8,6 +8,10 @@ export default defineConfig({
   plugins: [
     tanstackStart(),
     nitro({
+      // 应用更新清单不需要被搜索引擎收录。
+      routeRules: {
+        '/updates/**': { headers: { 'X-Robots-Tag': 'noindex' } },
+      },
       vercel: {
         functions: {
           runtime: 'bun1.x',

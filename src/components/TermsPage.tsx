@@ -15,7 +15,7 @@ export function TermsPage() {
         <div className="mx-auto flex h-[68px] max-w-[800px] items-center gap-4 px-5">
           <LangLink to="/" className="flex items-center gap-2.5 text-[#1c1c1e]">
             <span className="flex size-8 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white">
-              <img src="/logo.png?v=circle" alt="" width={256} height={256} className="size-full object-contain" />
+              <img src="/logo-128.png" alt="" width={128} height={128} className="size-full object-contain" />
             </span>
             <span className="font-semibold">Void Calendar</span>
           </LangLink>

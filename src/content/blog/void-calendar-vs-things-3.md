@@ -1,5 +1,20 @@
 如果你觉得 [OmniFocus](/blog/void-calendar-vs-omnifocus) 太复杂，那么你大概率也会看看 Things 3。它们都有很好的原生交互体验，也都有自己的任务管理哲学。
 
+**一句话结论**：如果你要的是在 iPhone、iPad 和 Mac 上快速记下轻量任务，一次买断、界面优雅，Things 3 很难被替代。如果你的任务需要完整的笔记，还要知道一天里到底有没有时间做，想让 AI 把任务排进日历的空闲时段，Void Calendar 更合适。
+
+## 一览对比
+
+| | Void Calendar | Things 3 |
+| --- | --- | --- |
+| 平台 | macOS（Apple 芯片）；移动端计划中 | Mac、iPhone、iPad、Watch、Vision Pro |
+| 价格 | 免费版含全部功能；Pro 同步未开售 | 各平台分别一次性购买，无订阅 |
+| AI 排程 | 自带模型，排进真正空闲的时段 | 无内置 AI；可经快捷指令等扩展 |
+| 日历连接 | Apple 日历与提醒事项、Google、iCloud | 只读显示 Apple 日历事件 |
+| 任务与笔记 | 时间盒、任务、同名笔记、专注计时 | 清单与标签；Markdown 备注，不支持图片 |
+| 数据存放 | 存在本机，公司不保存云端副本 | 各设备本地，经 Things Cloud 免费同步 |
+
+*竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
+
 我很喜欢 Things 3。我的轻量任务一直都放在那里，因为它足够简单，想到一件事，随手记下来就行。
 
 ## 简单，是我喜欢它的原因
@@ -40,6 +55,20 @@ Void Calendar 的插件系统则可以把任务接着交给 AI：先拆分、再
 
 Void Calendar，就是我给出的答案。
 
+## 怎么选
+
+选 Things 3，如果：
+
+- 你需要 iPhone、iPad 或 Apple Watch 上的原生应用，现在就要。
+- 你的任务大多是轻量的待办，不需要长笔记或图片。
+- 你喜欢一次买断、不订阅，看清单就够了。
+
+选 Void Calendar，如果：
+
+- 你主要在 Apple 芯片的 Mac 上工作。
+- 你想看到时间盒和日程排在一起，而不只是一份今天的清单。
+- 你希望每个任务都有完整的笔记，并让 AI 用你自己的模型安排时间。
+
 [看看 Void Calendar 的任务、笔记与日历](/#showcase)。
 
-资料核对：2026年10月5日。
+资料核对：2026年10月8日。参考：[Things 购买说明](https://culturedcode.com/things/mac/store/)、[Things 日历连接说明](https://culturedcode.com/things/support/articles/2803583/)、[Things 第三方 AI 工具说明](https://culturedcode.com/things/support/articles/5510170/)。

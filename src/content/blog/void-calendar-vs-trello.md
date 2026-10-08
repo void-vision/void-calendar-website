@@ -1,5 +1,20 @@
 Trello 的看板很容易理解。待办放一列，正在做的放一列，做完再往右拖。几个人一起做课程报告时，看一眼就知道谁在查资料、谁在做展示。
 
+**一句话结论**：几个人一起推进项目、需要共同看见进度，Trello 的看板直观好用，团队协作继续交给它很合理。如果你想在 Mac 上把自己的那部分拆成具体步骤，配上笔记，再用自己的 AI 排进一天里真正空闲的时间，个人计划可以放在 Void Calendar。
+
+## 一览对比
+
+| | Void Calendar | Trello |
+| --- | --- | --- |
+| 平台 | macOS（Apple 芯片），公开测试版 | Web、Mac、Windows、iOS、Android |
+| 价格 | 免费版含全部功能；Pro 同步暂未开放 | 有免费版；Standard 年付每人每月 5 美元 |
+| AI 排程 | 用自己的模型，排进空闲时间 | 付费版 Smart Schedule 建议专注时间 |
+| 日历连接 | Apple、Google、iCloud 日历 | Planner 连接 Google、Outlook 日历 |
+| 任务与笔记 | 每个任务配笔记，支持 [[ ]] 链接 | 卡片含说明、附件和清单 |
+| 数据存放 | 存在你的 Mac 本地 | 云端看板，成员共享 |
+
+*竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
+
 但我看一块看板时，还会问一件事：卡片挪到“进行中”以后，今天有没有时间把它做完？
 
 ## 看见进度，是 Trello 的长处
@@ -28,8 +43,23 @@ Void Calendar 更关注我的整天：课程、个人计划、Idea、任务、�
 
 比如“想学摄影”还只是一个念头，可以先留在 Idea。课程报告则已经决定要做，进入项目、拆步骤、安排时间。它们不必占据同一种状态，也不必给未来的自己同样的压力。
 
+## 怎么选
+
+选 Trello，如果：
+
+- 你需要和同学或同事共用一块看板，随时看见谁在做什么；
+- 你们会用 Power-Ups 和自动化，把看板接进其他工具；
+- 团队成员用 Windows、手机或网页，需要同一个入口。
+
+选 Void Calendar，如果：
+
+- 你想安排的是自己的一整天，主要在 Apple 芯片的 Mac 上；
+- 你的那部分工作需要拆成有先后顺序的步骤，并配上笔记；
+- 你想用自己的模型和 API Key，让 AI 把任务排进空闲时间；
+- 你还没决定要做的念头，想先放进 Idea，不占用任务清单。
+
 团队用 Trello 看共同进度，个人用什么把一天安排清楚，是两件可以分别决定的事。对我来说，好的工具应该让它们接得顺，也让开始工作更容易。
 
 [看看 Idea 与任务为什么要分开](/blog/void-calendar-vs-omnifocus)。
 
-资料核对：2026年10月5日。
+资料核对：2026年10月8日。参考：[Trello 价格](https://trello.com/pricing)、[Trello 平台](https://trello.com/platforms)、[Planner 说明](https://support.atlassian.com/trello/docs/trello-planner/)、[Power-Ups](https://trello.com/power-ups)、[Trello 101](https://trello.com/guide/trello-101)。

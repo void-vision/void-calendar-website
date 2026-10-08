@@ -1,5 +1,20 @@
 Notion 和 Notion Calendar 是两个 app。你可以在 Notion 里写笔记、整理任务，再用 Notion Calendar 安排时间。如果还想接入其他 AI 工具替你管理日程，就需要再配置连接，把这些步骤串起来。
 
+**一句话结论**：如果你的笔记、文档和团队资料都在 Notion 里，还需要在 Windows 或手机上随时打开，Notion 加 Notion Calendar 更合适。如果你用 Apple 芯片的 Mac，希望任务、笔记和日历待在同一个应用里，并让自己选的 AI 把任务排进真正空闲的时间，可以试试 Void Calendar。
+
+## 一览对比
+
+| | Void Calendar | Notion |
+|---|---|---|
+| 平台 | macOS（Apple 芯片），公开测试版 | 网页、Mac、Windows、iOS、Android |
+| 价格 | 免费版含全部功能；Pro 同步尚未开售 | 有免费版；Plus 每人每月 US$10 起 |
+| AI 排程 | 用自己的模型和 API Key，排进空闲时间 | Notion AI 含于 Business 及以上方案 |
+| 日历连接 | Apple 日历与提醒事项、Google、iCloud；Outlook 计划中 | Notion Calendar：Google、Outlook、iCloud |
+| 任务与笔记 | 每个任务都有笔记，支持 `[[ ]]` 链接 | 页面与数据库，日程可关联页面 |
+| 数据存放 | 存在你的 Mac 上，公司不留云端副本 | Notion 云端，页面可设为离线可用 |
+
+*竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
+
 我更希望到了要做的时候，任务和笔记都已经在眼前，不用再找一遍。
 
 ## 打开任务，就知道怎么开始
@@ -34,9 +49,9 @@ Void Calendar 把任务的安排和任务的内容放在一起。你不用先找
 
 ## 已经在用的日历和待办，也可以带进来
 
-Notion Calendar 支持 Outlook、Apple iCloud 和 Google 日历。Void Calendar 也支持这些日历，还能连接 Microsoft To Do、Google Tasks 和 Todoist。[Notion Calendar 日历连接说明](https://www.notion.com/help/manage-your-calendars-and-events)。
+Notion Calendar 支持 Outlook、Apple iCloud 和 Google 日历。Void Calendar 目前可以连接 Google 日历和 iCloud 日历，读取 Apple 日历，并与选定的 Apple 提醒事项列表双向同步；Outlook 日历，以及 Microsoft To Do、Google Tasks 和 Todoist 的连接还在计划中。[Notion Calendar 日历连接说明](https://www.notion.com/help/manage-your-calendars-and-events)。
 
-比如，你的课表在 Google 日历里，作业记在 Todoist 里，还有一些待办放在 Microsoft To Do。你不用先把它们逐条抄到一个新清单里，可以连接已有的日历和任务服务，把要做的事带进来，再结合上课时间安排作业和复习。
+比如，你的课表在 Google 日历里，作业记在 Apple 提醒事项里。你不用先把它们逐条抄到一个新清单里，可以连接已有的日历和提醒事项列表，把要做的事带进来，再结合上课时间安排作业和复习。
 
 这样，你可以保留自己已经习惯的记录方式，让这些待办接着进入每天的安排。
 
@@ -48,8 +63,22 @@ Notion Calendar 支持 Outlook、Apple iCloud 和 Google 日历。Void Calendar 
 
 Notion 也能通过 MCP 连接外部 AI，让 Claude Code、Cursor 或 Codex 读取和修改 Notion 内容。而它在应用内提供的托管 Claude agents 使用 Notion credits，不能改用你自己的 Anthropic 账户。[Notion MCP 说明](https://developers.notion.com/guides/mcp/overview)、[Notion 托管 Claude agents 说明](https://www.notion.com/help/use-claude-agents-in-notion)。
 
+## 怎么选
+
+选 Notion，如果：
+
+- 你的笔记、文档和资料库已经在 Notion 里，还要和同学或同事一起编辑。
+- 你今天就需要在 Windows、iPhone 或 Android 上使用。
+- 你主要想在日历里查看日程、关联 Notion 页面，不需要 AI 替你排时间。
+
+选 Void Calendar，如果：
+
+- 你用 Apple 芯片的 Mac，希望任务、笔记和日历在同一个应用里。
+- 你想让自己选的 AI 模型把任务排进空闲时间，改动已有日程前先问你。
+- 你希望事件、任务、笔记和 AI 对话都留在自己的 Mac 上。
+
 我的想法很简单：已有的任务来源接着用，熟悉的 AI 也接着用。把资料写进去以后，它应该能帮我继续做下去。
 
 [在首页试试项目、笔记和日历](/#showcase)。
 
-资料核对：2026年10月5日。
+资料核对：2026年10月8日。参考：[Notion 价格](https://www.notion.com/pricing)、[Notion Calendar](https://www.notion.com/product/calendar)、[Notion 桌面与移动端](https://www.notion.com/desktop)、[Notion 离线使用说明](https://www.notion.com/help/guides/working-offline-in-notion-everything-you-need-to-know)。

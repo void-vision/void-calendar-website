@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"(PORT=4319 bun run .output/server/index.mjs > /tmp/vc-srv.log 2>&1 &) ; for i in $(seq 1 30); do curl -s -o /dev/null http://localhost:4319/ && break; perl -e 'select(undef,undef,undef,0.3...",
+  "error": "Exit code 1\n== /\nHTTP/1.1 200 OK\r\nContent-Type: text/html; charset=utf-8\r\nX-Content-Type-Options: nosniff\r\nX-Frame-Options: DENY\r\nVercel-CDN-Cache-Control: max-age=3600, stale-while-revalidate=86400\r\n== /blog/does-not-exist\nHTTP/1.1 404 Not Found\r\nContent-Type: text/html; charset=utf-8\r\nX-Content-Type-Options: nosniff\r\nX-Frame-Options: DENY\r\n== /en/blog/does-not-exist\nHTTP/1.1 404 Not Found\r\nContent-Type: text/html; charset=utf-8\r\nX-Content-Type-Options: nosniff\r\nX-Frame-Options: DENY\r\n== /nope\n...",
+  "timestamp": "2026-10-08T06:53:56.358Z",
+  "retry_count": 1
+}

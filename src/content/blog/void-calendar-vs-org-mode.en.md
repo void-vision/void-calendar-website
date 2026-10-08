@@ -1,5 +1,20 @@
 Org mode is powerful, and I used it regularly. Tasks, outlines, notes, and time records can live in Org files, with configuration that turns them into a working system of your own.
 
+**In short:** If you love plain text, don’t mind investing time in Emacs configuration, or need to work on Linux or Windows, Org mode is free, open, and almost limitlessly flexible. If you work on a Mac and want calendars, tasks, and notes that are ready when you open them, with AI placing tasks into free time instead of a setup you maintain yourself, Void Calendar is the better fit.
+
+## At a glance
+
+| | Void Calendar | Org mode |
+| --- | --- | --- |
+| Platforms | macOS (Apple silicon); other platforms planned | Wherever Emacs runs; community mobile apps |
+| Price | Free with every feature; Pro sync not on sale yet | Free and open source |
+| AI scheduling | Your own model, placed into free time | No built-in AI scheduling |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud | Agenda views; one-way iCalendar export |
+| Tasks & notes | Time boxes, tasks, linked notes, focus timer | Plain-text outlines, TODOs, clocking, attachments |
+| Where data lives | On your Mac; no company cloud copy | Plain-text files you manage yourself |
+
+*Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
+
 Over time, I also found myself spending a fair amount of effort maintaining that system. Moving between a computer and a phone meant thinking about file synchronization, mobile interactions, images, and attachments.
 
 ## A good web client still leaves synchronization to arrange
@@ -8,13 +23,13 @@ Org mode has excellent web clients such as [organice](https://github.com/200ok-c
 
 For me, opening a file in a browser did not solve everything. I still had to decide where files lived, how they synchronized, and how to continue editing on another device. Quickly capturing something on a phone and returning to it on a computer was less convenient than I wanted.
 
-Void Calendar has dedicated Android and iOS clients and supports macOS, Linux, and Windows. You can use calendars, tasks, and notes across devices, with native interactions suited to each platform.
+Today, Void Calendar is a Mac app for Apple silicon. Dedicated Android and iOS clients are planned, as are Windows and Linux versions. The goal is to use calendars, tasks, and notes across devices, with native interactions suited to each platform.
 
-For example, capture an assignment on your phone at school, then return to your computer to break it into steps and reserve time. I want to open the app and continue, without first thinking about how to move a file between devices.
+For example, I want to capture an assignment on my phone at school, then return to my computer to break it into steps and reserve time. I want to open the app and continue there, without first thinking about how to move a file between devices.
 
 ![Capture an assignment on a phone and continue on a computer](/blog/capture-and-continue.en.svg)
 
-*Continue the same piece of work across devices. Workflow illustration.*
+*The goal: continue the same piece of work across devices. Workflow illustration.*
 
 ## Pasting an image should not become another setup task
 
@@ -30,10 +45,24 @@ I left the Org mode workflow I had spent so much time configuring and moved to O
 
 Org mode remained powerful. At that point, I needed an application I could open and immediately use for task management. Less setup and maintenance left more attention for the work itself.
 
-That experience also shapes what I care about in Void Calendar: capture something on a phone, continue on a computer, and keep tasks, notes, and calendars together with interactions suited to the device.
+That experience also shapes what I care about in Void Calendar: keep tasks, notes, and calendars together in an app that is ready when you open it. Capturing on a phone and continuing on a computer is the step the planned mobile apps are meant to add.
 
 OmniFocus has its own pain points, of course. I will continue that discussion in [Void Calendar vs OmniFocus](/blog/void-calendar-vs-omnifocus).
 
+## Which one fits
+
+Choose Org mode if:
+
+- You already live in Emacs, or enjoy building and tuning your own system.
+- You need the same files on Linux, Windows, and Mac.
+- You want your data as plain text under version control, independent of any company.
+
+Choose Void Calendar if:
+
+- You mostly work on an Apple silicon Mac and want to start planning right away.
+- You want direct connections to Google, iCloud, and Apple calendars rather than exported files.
+- You want AI, running on your own model, to schedule tasks into time that is actually free.
+
 [Explore Void Calendar’s tasks, notes, and calendars](/#showcase).
 
-Sources checked October 5, 2026.
+Sources checked October 8, 2026: [Org mode](https://orgmode.org/), [iCalendar export](https://orgmode.org/manual/iCalendar-Export.html), and [GNU Emacs](https://www.gnu.org/software/emacs/).

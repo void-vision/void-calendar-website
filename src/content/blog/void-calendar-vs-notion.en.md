@@ -1,5 +1,20 @@
 Notion and Notion Calendar are two separate apps. You can write notes and organize tasks in Notion, then arrange time in Notion Calendar. If you also want another AI tool to manage your schedule, you need to configure the connection and bring those steps together.
 
+**In short:** If your notes, docs, and shared team pages already live in Notion and you need them on Windows or your phone, Notion plus Notion Calendar is the better fit. If you work on an Apple silicon Mac and want tasks, notes, and the calendar in one app, with an AI of your choice placing work into genuinely free time, try Void Calendar.
+
+## At a glance
+
+| | Void Calendar | Notion |
+|---|---|---|
+| Platforms | macOS (Apple silicon), public beta | Web, Mac, Windows, iOS, Android |
+| Price | Free with every feature; Pro sync not on sale yet | Free plan; Plus from US$10 per member/month |
+| AI scheduling | Your own model and API key; fills free time | Notion AI included from the Business plan |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Notion Calendar: Google, Outlook, iCloud |
+| Tasks & notes | Every task has a note with `[[ ]]` links | Pages and databases; events can link to pages |
+| Where data lives | On your Mac; no company cloud copy | Notion's cloud; pages can be kept offline |
+
+*Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
+
 When it is time to work, I want the task and its notes in front of me without another search.
 
 ## Open the task and know where to start
@@ -34,9 +49,9 @@ Ideas in your notes can move into action, and the notes you leave while working 
 
 ## Bring the calendars and task lists you already use
 
-Notion Calendar supports Outlook, Apple iCloud, and Google calendars. Void Calendar supports those calendars too, and also connects to Microsoft To Do, Google Tasks, and Todoist. See [Notion Calendar’s connection guide](https://www.notion.com/help/manage-your-calendars-and-events).
+Notion Calendar supports Outlook, Apple iCloud, and Google calendars. Void Calendar currently connects Google Calendar and iCloud Calendar, reads Apple Calendar, and syncs both ways with the Apple Reminders lists you choose. Outlook Calendar, Microsoft To Do, Google Tasks, and Todoist connections are planned. See [Notion Calendar’s connection guide](https://www.notion.com/help/manage-your-calendars-and-events).
 
-Your class timetable might be in Google Calendar, assignments in Todoist, and other tasks in Microsoft To Do. Connect those calendars and task services, bring in the work, and arrange assignments and revision around your classes. You do not need to copy each item into a new list first.
+Your class timetable might be in Google Calendar and your assignments in Apple Reminders. Connect that calendar and those Reminders lists, bring in the work, and arrange assignments and revision around your classes. You do not need to copy each item into a new list first.
 
 Keep the recording habits that work for you, and bring those tasks into your daily plan.
 
@@ -48,8 +63,22 @@ Choose the AI you know and ask it to break down an assignment, plan study time, 
 
 Notion also offers MCP connections for external AI clients such as Claude Code, Cursor, and Codex to read and update workspace content. Its hosted Claude agents use Notion credits rather than your own Anthropic account. See [Notion MCP](https://developers.notion.com/guides/mcp/overview) and [hosted Claude agents](https://www.notion.com/help/use-claude-agents-in-notion).
 
+## Which one fits
+
+Choose Notion if:
+
+- Your notes, docs, and databases already live in Notion and you edit them with classmates or colleagues.
+- You need Windows, iPhone, or Android apps today.
+- You mostly want to see your schedule and link Notion pages to it, without AI planning your time.
+
+Choose Void Calendar if:
+
+- You use an Apple silicon Mac and want tasks, notes, and the calendar in one app.
+- You want a model you pick to place tasks into free time and ask before changing existing events.
+- You want events, tasks, notes, and AI conversations to stay on your own Mac.
+
 I want existing task sources and a familiar AI to stay useful. Once the working material is there, the tool should help me continue.
 
 [Try projects, notes, and calendars in the demo](/#showcase).
 
-Sources checked October 5, 2026.
+Sources checked October 8, 2026: [Notion pricing](https://www.notion.com/pricing), [Notion Calendar](https://www.notion.com/product/calendar), [Notion desktop and mobile apps](https://www.notion.com/desktop), and [working offline in Notion](https://www.notion.com/help/guides/working-offline-in-notion-everything-you-need-to-know).
