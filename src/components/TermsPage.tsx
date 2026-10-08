@@ -121,7 +121,7 @@ const zhSections = [
   {
     title: '适用法律',
     body: [
-      '本条款适用澳大利亚法律。如有争议，请先发邮件到 support@voidvision.ai。我们会尽量直接解决。',
+      '本条款适用澳大利亚法律。如有争议，请先发邮件到 contact@voidvision.ai。我们会尽量直接解决。',
       '如果我们更新条款，会修改本页顶部的日期。更新后继续使用，即表示你接受新的条款。',
     ],
   },
@@ -185,7 +185,7 @@ const enSections = [
   {
     title: 'Law',
     body: [
-      'These terms follow the laws of Australia. If there is a dispute, email support@voidvision.ai first. We will try to resolve it directly.',
+      'These terms follow the laws of Australia. If there is a dispute, email contact@voidvision.ai first. We will try to resolve it directly.',
       'If we update the terms, we will change the date at the top of this page. Continuing to use the product after that means you accept the update.',
     ],
   },

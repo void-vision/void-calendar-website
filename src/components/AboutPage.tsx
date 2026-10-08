@@ -73,7 +73,7 @@ export function AboutPage() {
         <ul className="m-0 flex list-none flex-col gap-2 p-0 text-[#3a3a3c]">
           <li>
             {en ? 'Support and feedback: ' : '支持与反馈：'}
-            <a href="mailto:support@voidvision.ai" className="text-[#1463d9] hover:text-[#0d4fb3]">support@voidvision.ai</a>
+            <a href="mailto:contact@voidvision.ai" className="text-[#1463d9] hover:text-[#0d4fb3]">contact@voidvision.ai</a>
           </li>
           <li>
             {en ? 'Company: ' : '公司：'}

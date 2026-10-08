@@ -48,7 +48,7 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
             <LangLink to="/about" className={linkClass}>{en ? 'About' : '关于我们'}</LangLink>
             <LangLink to="/privacy" className={linkClass}>{en ? 'Privacy' : '隐私政策'}</LangLink>
             <LangLink to="/terms" className={linkClass}>{en ? 'Terms' : '服务条款'}</LangLink>
-            <a href="mailto:support@voidvision.ai" className={`${linkClass} break-all`}>support@voidvision.ai</a>
+            <a href="mailto:contact@voidvision.ai" className={`${linkClass} break-all`}>contact@voidvision.ai</a>
           </nav>
         </div>
         <div className="border-t border-[#e8e6e2] pt-6 text-[13px] text-[#8e8e93]">© 2026 VOID VISION PTY LTD</div>

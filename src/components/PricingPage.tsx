@@ -135,7 +135,7 @@ export function PricingPage() {
         <div className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-3 border-t border-[#f0efec] pt-6 text-sm text-[#6b6b70]">
           <LangLink to="/" hash="showcase" className="hover:text-[#1463d9]">{en ? 'Explore the demo' : '看看交互演示'} <span aria-hidden="true">→</span></LangLink>
           <LangLink to="/terms" className="hover:text-[#1463d9]">{en ? 'Terms' : '服务条款'}</LangLink>
-          <a href="mailto:support@voidvision.ai" className="hover:text-[#1463d9]">{en ? 'Contact us' : '联系我们'}</a>
+          <a href="mailto:contact@voidvision.ai" className="hover:text-[#1463d9]">{en ? 'Contact us' : '联系我们'}</a>
         </div>
       </div>
     </SiteFrame>

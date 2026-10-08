@@ -67,7 +67,7 @@ const zhSections = [
   {
     title: '我们是谁',
     body: [
-      'Void Calendar 由 VOID VISION PTY LTD 提供。产品是运行在你自己 Mac 上的桌面应用，用来安排时间盒、任务、笔记和专注。联系邮箱是 support@voidvision.ai。',
+      'Void Calendar 由 VOID VISION PTY LTD 提供。产品是运行在你自己 Mac 上的桌面应用，用来安排时间盒、任务、笔记和专注。联系邮箱是 contact@voidvision.ai。',
     ],
   },
   {
@@ -106,7 +106,7 @@ const zhSections = [
     title: '这个网站',
     body: [
       'void calendar 网站用来介绍产品。它不要求注册。语言和首页演示进度保存在你的浏览器本地，不上传给我们。',
-      '下载按钮目前不收集姓名或付款信息。你写给 support@voidvision.ai 的邮件由我们用来回复支持请求。',
+      '下载按钮目前不收集姓名或付款信息。你写给 contact@voidvision.ai 的邮件由我们用来回复支持请求。',
     ],
   },
   {
@@ -126,7 +126,7 @@ const zhSections = [
     title: '你可以怎么做',
     body: [
       '你可以在 macOS 系统设置里撤回日历和提醒事项权限，在应用里断开 Google、iCloud 和 AI 配置，并关闭使用统计。',
-      '如需访问、更正或删除我们实际持有的信息，或对这份协议有疑问，请发邮件到 support@voidvision.ai。我们会处理与 VOID VISION PTY LTD 直接相关的请求。日历服务和模型服务上的数据需要向对应公司提出。',
+      '如需访问、更正或删除我们实际持有的信息，或对这份协议有疑问，请发邮件到 contact@voidvision.ai。我们会处理与 VOID VISION PTY LTD 直接相关的请求。日历服务和模型服务上的数据需要向对应公司提出。',
     ],
   },
   {
@@ -143,7 +143,7 @@ const enSections = [
   {
     title: 'Who we are',
     body: [
-      'Void Calendar is provided by VOID VISION PTY LTD. It is a macOS app for time boxes, tasks, notes, and focus. Contact us at support@voidvision.ai.',
+      'Void Calendar is provided by VOID VISION PTY LTD. It is a macOS app for time boxes, tasks, notes, and focus. Contact us at contact@voidvision.ai.',
     ],
   },
   {
@@ -182,7 +182,7 @@ const enSections = [
     title: 'This website',
     body: [
       'This site introduces the product. It does not require an account. Language and the homepage demo position stay in your browser and are not uploaded to us.',
-      'The download buttons do not collect a name or payment. Email you send to support@voidvision.ai is used to answer that request.',
+      'The download buttons do not collect a name or payment. Email you send to contact@voidvision.ai is used to answer that request.',
     ],
   },
   {
@@ -200,7 +200,7 @@ const enSections = [
     title: 'Your choices',
     body: [
       'You can revoke Calendar and Reminders access in macOS Settings, disconnect Google, iCloud, and AI inside the app, and turn usage statistics off.',
-      'To access, correct, or delete information we actually hold, or to ask about this policy, email support@voidvision.ai. Data held by a calendar or model provider has to be requested from that company.',
+      'To access, correct, or delete information we actually hold, or to ask about this policy, email contact@voidvision.ai. Data held by a calendar or model provider has to be requested from that company.',
     ],
   },
   {

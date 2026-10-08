@@ -15,7 +15,7 @@ export function BlogIndexPage() {
           <nav aria-label={en ? 'Blog resources' : '博客相关入口'} className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-[#1463d9]">
             <a href="#articles" className="flex min-h-9 items-center hover:text-[#0d4fb3]">{en ? 'Browse articles' : '浏览文章'} <span aria-hidden="true" className="ml-1.5">↓</span></a>
             <LangLink to="/changelog" className="flex min-h-9 items-center hover:text-[#0d4fb3]">{en ? 'Changelog' : '更新日志'}</LangLink>
-            <a href="mailto:support@voidvision.ai" className="flex min-h-9 items-center hover:text-[#0d4fb3]">{en ? 'Send feedback' : '反馈建议'}</a>
+            <a href="mailto:contact@voidvision.ai" className="flex min-h-9 items-center hover:text-[#0d4fb3]">{en ? 'Send feedback' : '反馈建议'}</a>
           </nav>
         </div>
       </section>
