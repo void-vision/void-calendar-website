@@ -1,12 +1,14 @@
 import { Fragment } from 'react'
 import type { useDemo } from '../demo/useDemo'
 import { DemoIcon } from './DemoIcon'
+import { useTranslate } from '../demo/i18n'
 
 type View = ReturnType<typeof useDemo>
 const icons = { cal: 'calendar', inbox: 'inbox', tasks: 'tasks', proj: 'folder', memo: 'note' } as const
 
 export function DemoSidebar({ v }: { v: View }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <aside className="demo-sidebar flex w-44 shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-[#e8e6e2] bg-[#f6f5f3] px-2.5 py-3">
       <button type="button" onClick={v.openCap} className="mb-2.5 flex h-8 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border border-[#e6e4e0] bg-white px-2.5 text-left font-[inherit] hover:border-[#cfcdc8]"><DemoIcon name="capture" size={13} /><span className="flex-1">捕获想法</span><kbd className="rounded border border-[#e3e1dd] px-[5px] font-[inherit] text-[10px] text-[#8e8e93]">C</kbd></button>
       <div className="px-2.5 py-1 text-[11px] text-[#8e8e93]">工作区</div>

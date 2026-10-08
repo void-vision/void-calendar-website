@@ -1,8 +1,7 @@
 export const releases = [
   {
     version: '0.1.0-beta.1',
-    date: '2026年10月2日',
-    dateEn: 'October 2, 2026',
+    published: '2026-10-02',
     summary: '第一个可以下载的公开测试版。',
     summaryEn: 'The first public beta you can download.',
     items: [

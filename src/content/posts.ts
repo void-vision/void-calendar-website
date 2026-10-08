@@ -32,8 +32,8 @@ import obsidianEn from './blog/void-calendar-vs-obsidian-tasks.en.md?raw'
 
 export type Post = {
   slug: string
-  date: string
-  dateEn: string
+  /** ISO 日期，用于 sitemap、结构化数据和 <time dateTime>。 */
+  published: string
   title: string
   titleEn: string
   description: string
@@ -60,14 +60,12 @@ const comparisonBodies = {
 export const posts: Post[] = [
   ...comparisons.map((post) => ({
     ...post,
-    date: '2026年10月5日',
-    dateEn: 'October 5, 2026',
+    published: '2026-10-05',
     ...comparisonBodies[post.slug],
   })),
   {
     slug: 'mac-time-box',
-    date: '2026年10月2日',
-    dateEn: 'October 2, 2026',
+    published: '2026-10-02',
     title: '在 Mac 上用时间盒安排一天',
     titleEn: 'Plan a day on Mac with time boxes',
     description: '时间盒不是又一个待办。它是日历上一段真正空着的时间，用来做完一件事。',
@@ -77,8 +75,7 @@ export const posts: Post[] = [
   },
   {
     slug: 'google-calendar',
-    date: '2026年10月2日',
-    dateEn: 'October 2, 2026',
+    published: '2026-10-02',
     title: '已经在用 Google 日历时，时间盒放在哪里',
     titleEn: 'Where time boxes go if you already use Google Calendar',
     description: '不必丢掉现有日历。Void Calendar 读取 Google 日历，并把 AI 生成的时间盒单独存放。',
@@ -88,8 +85,7 @@ export const posts: Post[] = [
   },
   {
     slug: 'when-a-meeting-appears',
-    date: '2026年10月2日',
-    dateEn: 'October 2, 2026',
+    published: '2026-10-02',
     title: '临时来了个会，时间盒可以怎样挪',
     titleEn: 'A meeting just appeared. How a time box can move',
     description: '计划被打断时，Void Calendar 不会替你决定。你可以顺延、先问你，或拆成更短的一段时间。',
@@ -108,4 +104,10 @@ export function readingMinutes(markdown: string) {
   const chineseCharacters = text.match(/\p{Script=Han}/gu)?.length ?? 0
   const words = text.match(/[a-zA-Z]+(?:['’-][a-zA-Z]+)*/g)?.length ?? 0
   return Math.max(1, Math.ceil(chineseCharacters / 380 + words / 200))
+}
+
+export function formatDate(iso: string, en: boolean) {
+  const [year, month, day] = iso.split('-').map(Number)
+  if (!en) return `${year}年${month}月${day}日`
+  return new Date(Date.UTC(year, month - 1, day)).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })
 }

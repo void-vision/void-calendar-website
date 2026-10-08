@@ -1,11 +1,13 @@
 import type { useDemo } from '../demo/useDemo'
+import { useTranslate } from '../demo/i18n'
 
 type PluginView = Pick<ReturnType<typeof useDemo>, 'plugins' | 'selName' | 'selDesc' | 'selInk'>
 
 export function MobilePluginList({ v }: { v: PluginView }) {
   const plugins = v.plugins.filter((plugin) => plugin.pe === 'auto')
 
-  return (
+  const tr = useTranslate()
+  return tr(
     <div className="flex w-full min-w-0 flex-col gap-5 sm:hidden">
       <div aria-live="polite" className="flex flex-col gap-2 rounded-2xl border border-[#e8e6e2] bg-[#faf9f7] p-5">
         <div className="flex items-center gap-2 text-base font-medium">

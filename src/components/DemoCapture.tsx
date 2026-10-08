@@ -1,11 +1,13 @@
 import type { useDemo } from '../demo/useDemo'
 import { DemoIcon } from './DemoIcon'
+import { useTranslate } from '../demo/i18n'
 
 type View = ReturnType<typeof useDemo>
 
 export function DemoCapture({ v }: { v: View }) {
   const templates = v.captureStage === 'templates'
-  return (
+  const tr = useTranslate()
+  return tr(
     <div onMouseDown={v.closeCap} aria-hidden={!v.capUser} inert={!v.capUser} className="demo-capture-overlay absolute inset-0 z-15 flex items-start justify-center bg-[rgba(28,28,30,.14)] p-4" style={{ opacity: v.capOp, pointerEvents: v.capPE as 'auto' | 'none' }}>
       <div ref={v.refs.captureDialogRef} role="dialog" aria-label="捕获想法" tabIndex={-1} onMouseDown={(event) => event.stopPropagation()} className="demo-capture flex max-h-full w-[480px] max-w-full flex-col overflow-hidden rounded-[16px] border border-[#e6e4e0] bg-white shadow-[0_20px_60px_rgba(0,0,0,.18)] outline-none transition-transform duration-200" style={{ transform: `scale(${v.capSc})` }}>
         <header className="flex min-h-[48px] shrink-0 items-center gap-2 border-b border-[#e8e6e2] px-4 py-3">
@@ -33,5 +35,6 @@ export function DemoCapture({ v }: { v: View }) {
 
 export function DemoCaptureResult({ v }: { v: View }) {
   if (!v.captureResult) return null
-  return <div className="demo-workspace flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6"><div className="flex items-center gap-2"><DemoIcon name="note" /><h3 className="m-0 flex-1 text-lg font-semibold">{v.captureResult.target}</h3><button type="button" onClick={v.showCalendar} className="cursor-pointer text-xs text-[#8e8e93]">返回日历</button></div><span className="self-start rounded bg-[#f1f0ed] px-2 py-1 text-xs text-[#6b6b70]">{v.captureResult.status}</span><div data-no-translate className="text-sm leading-relaxed whitespace-pre-wrap">{v.captureResult.userText}</div></div>
+  const tr = useTranslate()
+  return tr(<div className="demo-workspace flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto p-6"><div className="flex items-center gap-2"><DemoIcon name="note" /><h3 className="m-0 flex-1 text-lg font-semibold">{v.captureResult.target}</h3><button type="button" onClick={v.showCalendar} className="cursor-pointer text-xs text-[#8e8e93]">返回日历</button></div><span className="self-start rounded bg-[#f1f0ed] px-2 py-1 text-xs text-[#6b6b70]">{v.captureResult.status}</span><div data-no-translate className="text-sm leading-relaxed whitespace-pre-wrap">{v.captureResult.userText}</div></div>)
 }

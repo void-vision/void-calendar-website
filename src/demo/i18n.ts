@@ -1,3 +1,5 @@
+import { cloneElement, isValidElement, type ReactNode } from 'react'
+import { useSiteLang } from '../lib/lang'
 import { I18K, I18N, I18R } from './catalog'
 
 const dict = I18N as Record<string, string>
@@ -32,7 +34,9 @@ export function trEN(s: string) {
       .replace(/）/g, ')')
       .replace(/\s+$/, s.match(/\s*$/)?.[0] ?? '')
   }
-  if (cache.size < 4000) cache.set(s, o)
+  // 满了就淘汰最早的一条，演示里不断变化的文案不会让缓存失效。
+  if (cache.size >= 4000) cache.delete(cache.keys().next().value!)
+  cache.set(s, o)
   return o
 }
 
@@ -73,6 +77,40 @@ export function trDeep(v: unknown, skip = SKIP): unknown {
     return o
   }
   return v
+}
+
+const TRANSLATED_PROPS = ['children', 'aria-label', 'title', 'alt', 'placeholder'] as const
+
+/** 在渲染阶段翻译 JSX 里的中文文案，让 /en 页面的服务端 HTML 直接是英文。只处理当前组件写出的元素，子组件内部仍由 applyLang 在客户端补齐。 */
+export function translateNode(node: ReactNode): ReactNode {
+  if (typeof node === 'string') return trEN(node)
+  if (Array.isArray(node)) return node.map(translateNode)
+  if (!isValidElement(node)) return node
+  const props = node.props as Record<string, unknown>
+  if (props['data-no-translate']) return node
+  const next: Record<string, unknown> = {}
+  let changed = false
+  for (const key of TRANSLATED_PROPS) {
+    if (props[key] === undefined) continue
+    const value = key === 'children' ? translateNode(props[key] as ReactNode) : typeof props[key] === 'string' ? trEN(props[key] as string) : props[key]
+    if (value !== props[key]) {
+      next[key] = value
+      changed = true
+    }
+  }
+  if (!changed) return node
+  // 多个子元素按参数传入，保持 JSX 静态子元素的语义，不会触发 key 警告。
+  const children = next.children
+  if (Array.isArray(children) && children.length > 1) {
+    delete next.children
+    return cloneElement(node, next, ...children)
+  }
+  return cloneElement(node, next)
+}
+
+/** 英文页面在渲染时翻译组件写出的中文文案；中文页面原样返回。 */
+export function useTranslate() {
+  return useSiteLang() === 'en' ? translateNode : (node: ReactNode) => node
 }
 
 type MarkedText = Text & { __zh?: string | null; __en?: string | null }

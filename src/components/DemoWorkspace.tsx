@@ -1,16 +1,19 @@
 import type { useDemo } from '../demo/useDemo'
 import type { Act } from '../demo/types'
 import { DemoIcon } from './DemoIcon'
+import { useTranslate } from '../demo/i18n'
 
 type View = ReturnType<typeof useDemo>
 
 function Check({ done, label, onClick }: { done: boolean; label: string; onClick: () => void }) {
-  return <button type="button" role="checkbox" aria-checked={done} aria-label={label} onClick={onClick} className="demo-check mt-1 flex size-3.5 shrink-0 cursor-pointer items-center justify-center rounded border" style={{ background: done ? '#3a9a5b' : 'white', borderColor: done ? '#3a9a5b' : '#c9c7c2', color: 'white' }}>{done ? <DemoIcon name="check" size={11} /> : null}</button>
+  const tr = useTranslate()
+  return tr(<button type="button" role="checkbox" aria-checked={done} aria-label={label} onClick={onClick} className="demo-check mt-1 flex size-3.5 shrink-0 cursor-pointer items-center justify-center rounded border" style={{ background: done ? '#3a9a5b' : 'white', borderColor: done ? '#3a9a5b' : '#c9c7c2', color: 'white' }}>{done ? <DemoIcon name="check" size={11} /> : null}</button>)
 }
 
 export function DemoProjects({ v }: { v: View }) {
   const project = v.activeProject
-  return (
+  const tr = useTranslate()
+  return tr(
     <div role="region" aria-label="项目预览" className="demo-workspace demo-projects vc-in flex min-h-0 flex-1 overflow-hidden bg-white">
       <aside className="demo-project-tree flex shrink-0 flex-col overflow-y-auto border-r border-[#ecebe8] bg-[#f6f5f3] px-2 py-2.5">
         <div className="mb-2 flex h-7 shrink-0 items-center gap-2 px-2">
@@ -83,7 +86,8 @@ export function DemoProjects({ v }: { v: View }) {
 
 export function DemoNotes({ v }: { v: View }) {
   const note = v.activeNote
-  return (
+  const tr = useTranslate()
+  return tr(
     <div role="region" aria-label="笔记预览" className="demo-workspace demo-notes vc-in flex min-h-0 flex-1 flex-col bg-white">
       <div className="flex h-9 shrink-0 items-center gap-2 px-4 text-xs">
         <button type="button" onClick={v.showCalendar} aria-label="返回日历" className="flex size-6 cursor-pointer items-center justify-center rounded text-[#8e8e93]"><DemoIcon name="back" size={13} /></button>
@@ -129,5 +133,6 @@ export function DemoNotes({ v }: { v: View }) {
 }
 
 export function DemoSamplePlan({ v, acts }: { v: View; acts: Act[] }) {
-  return <div className="overflow-hidden rounded-xl border border-[#e8e6e2] bg-white"><div className="flex items-center gap-2 border-b border-[#efeeeb] bg-[#faf9f7] px-2.5 py-2 text-[11px]"><b className="flex-1 font-medium">建议的时间盒</b><span className="text-[9px] text-[#8e8e93]">9 {v.lang === 'en' ? 'time boxes' : '个时间盒'}</span></div>{v.samplePlan.map((item) => <div key={item.title} className="flex items-start gap-1.5 border-b border-[#efeeeb] px-2.5 py-2.5"><span className="mt-0.5 flex size-3 shrink-0 items-center justify-center rounded-[3px] bg-[#1463d9] text-white"><DemoIcon name="check" size={9} /></span><span className="mt-1.5 size-1 shrink-0 rounded-full" style={{ background: item.color }} /><span className="min-w-0 flex-1"><span className="block text-[10.5px] font-medium leading-[1.5]">{item.title}</span><span className="block text-[9px] text-[#8e8e93]">{item.when}</span></span><span className="shrink-0 text-[9px] text-[#8e8e93]">{item.hours}</span></div>)}<div className="flex gap-1.5 p-2.5">{acts.map((action) => <button key={action.label} type="button" onClick={action.pick} disabled={action.disabled} className="min-h-7 flex-1 cursor-pointer rounded-md border px-2 text-[10.5px] whitespace-nowrap disabled:cursor-default" style={{ background: action.bg, color: action.fg, borderColor: action.bd }}>{action.label === '应用' || action.label === 'Apply' ? (v.lang === 'en' ? 'Add all to calendar' : '全部加入日历') : action.label === '再调整' || action.label === 'Adjust' ? (v.lang === 'en' ? 'Adjust individually' : '逐个调整') : action.label}</button>)}</div></div>
+  const tr = useTranslate()
+  return tr(<div className="overflow-hidden rounded-xl border border-[#e8e6e2] bg-white"><div className="flex items-center gap-2 border-b border-[#efeeeb] bg-[#faf9f7] px-2.5 py-2 text-[11px]"><b className="flex-1 font-medium">建议的时间盒</b><span className="text-[9px] text-[#8e8e93]">9 {v.lang === 'en' ? 'time boxes' : '个时间盒'}</span></div>{v.samplePlan.map((item) => <div key={item.title} className="flex items-start gap-1.5 border-b border-[#efeeeb] px-2.5 py-2.5"><span className="mt-0.5 flex size-3 shrink-0 items-center justify-center rounded-[3px] bg-[#1463d9] text-white"><DemoIcon name="check" size={9} /></span><span className="mt-1.5 size-1 shrink-0 rounded-full" style={{ background: item.color }} /><span className="min-w-0 flex-1"><span className="block text-[10.5px] font-medium leading-[1.5]">{item.title}</span><span className="block text-[9px] text-[#8e8e93]">{item.when}</span></span><span className="shrink-0 text-[9px] text-[#8e8e93]">{item.hours}</span></div>)}<div className="flex gap-1.5 p-2.5">{acts.map((action) => <button key={action.label} type="button" onClick={action.pick} disabled={action.disabled} className="min-h-7 flex-1 cursor-pointer rounded-md border px-2 text-[10.5px] whitespace-nowrap disabled:cursor-default" style={{ background: action.bg, color: action.fg, borderColor: action.bd }}>{action.label === '应用' || action.label === 'Apply' ? (v.lang === 'en' ? 'Add all to calendar' : '全部加入日历') : action.label === '再调整' || action.label === 'Adjust' ? (v.lang === 'en' ? 'Adjust individually' : '逐个调整') : action.label}</button>)}</div></div>)
 }

@@ -1,0 +1,7 @@
+{
+  "tool_name": "mcp__claude-in-chrome__navigate",
+  "tool_input_preview": "{\"url\":\"http://localhost:4317/en\"}",
+  "error": "Selected Chrome extension disconnected.",
+  "timestamp": "2026-10-08T05:38:42.441Z",
+  "retry_count": 1
+}

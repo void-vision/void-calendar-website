@@ -1,18 +1,8 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { HomePage } from '../components/HomePage'
-import { homeDescription, homeTitle, socialMeta, softwareJsonLd } from '../lib/seo'
-
-const social = socialMeta(homeTitle, homeDescription, '/')
+import { homeJsonLd, staticPageHead } from '../lib/seo'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
-  head: () => ({
-    ...social,
-    scripts: [
-      {
-        type: 'application/ld+json',
-        children: JSON.stringify(softwareJsonLd),
-      },
-    ],
-  }),
+  head: () => staticPageHead('home', 'zh', homeJsonLd('zh')),
 })

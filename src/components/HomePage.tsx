@@ -1,6 +1,8 @@
 import { motion } from 'motion/react'
-import { useEffect, useRef } from 'react'
+import { memo, useEffect, useRef } from 'react'
 import { useDemo } from '../demo/useDemo'
+import { useTranslate } from '../demo/i18n'
+import { useSiteLang } from '../lib/lang'
 import { MobilePluginList } from './MobilePluginList'
 import { DemoNotes, DemoProjects, DemoSamplePlan } from './DemoWorkspace'
 import { DemoSidebar } from './DemoSidebar'
@@ -17,11 +19,13 @@ function Logo({ className = 'size-full object-contain' }: { className?: string }
 }
 
 export function HomePage() {
-  const v = useDemo()
+  const lang = useSiteLang()
+  const v = useDemo(lang)
   const r = v.refs
-  return (
+  const tr = useTranslate()
+  return tr(
     <div ref={r.rootRef} className="min-h-screen bg-white text-[15px] leading-[1.6] text-[#1c1c1e]">
-      <SiteHeader lang={v.lang} onToggleLang={v.toggleLang} />
+      <SiteHeader lang={lang} />
 
       <main>
       <section id="top" className="px-[clamp(20px,5vw,72px)] pt-[clamp(88px,11vw,152px)]">
@@ -92,9 +96,9 @@ export function HomePage() {
       <Templates v={v} />
       <Plugins v={v} />
       <Download />
-      <ComparisonBlog lang={v.lang} />
+      <ComparisonBlog lang={lang} />
       </main>
-      <SiteFooter lang={v.lang} />
+      <SiteFooter lang={lang} />
     </div>
   )
 }
@@ -103,7 +107,8 @@ type View = ReturnType<typeof useDemo>
 
 function MenuBar({ v }: { v: View }) {
   const r = v.refs
-  return (
+  const tr = useTranslate()
+  return tr(
     <div className="demo-menubar relative z-20 flex h-7 items-center gap-4 border-b border-[rgba(28,28,30,.06)] bg-white/72 px-3.5 text-[12.5px] whitespace-nowrap backdrop-blur-[18px]">
       <svg width="13" height="15" viewBox="0 0 13 15" fill="#1c1c1e" aria-label="Apple" className="demo-menu-extra -mt-px shrink-0">
         <path d="M10.6 8c0-1.7 1.4-2.5 1.5-2.6-.8-1.2-2.1-1.3-2.5-1.4-1.1-.1-2.1.6-2.6.6-.6 0-1.4-.6-2.3-.6C3.5 4 2.4 4.7 1.8 5.8c-1.3 2.2-.3 5.5.9 7.3.6.9 1.3 1.9 2.3 1.8.9 0 1.2-.6 2.3-.6s1.4.6 2.3.6c1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2.1 0 0-1.9-.7-2.2-3zM8.9 2.9c.5-.6.8-1.4.7-2.2-.7 0-1.5.5-2 1.1-.4.5-.8 1.3-.7 2.1.8.1 1.5-.4 2-1z" />
@@ -175,7 +180,8 @@ function MenuBar({ v }: { v: View }) {
 }
 
 function NextRow({ time, color, title }: { time: string; color: string; title: string }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <div className="grid grid-cols-[44px_8px_minmax(0,1fr)] items-center gap-x-2.5 py-[7px]">
       <span className="text-[#8e8e93] tabular-nums">{time}</span>
       <span className="size-1.5 rounded-full" style={{ background: color }} />
@@ -217,7 +223,8 @@ function DemoChrome({ v }: { v: View }) {
     calendar.scrollLeft += rect.left + rect.width / 2 - calendar.getBoundingClientRect().left - calendar.clientWidth / 2
   }, [v.selectedEvent?.id])
 
-  return (
+  const tr = useTranslate()
+  return tr(
     <>
       <div className="demo-toolbar relative z-12 flex h-11 items-center gap-[7px] border-b border-[#e8e6e2] bg-[#f6f5f3] px-3 pl-4 text-xs">
         <span className="demo-toolbar-extra size-3 rounded-full bg-[#ff5f57]" />
@@ -425,7 +432,8 @@ function DemoChrome({ v }: { v: View }) {
 }
 
 function DemoCollection({ v }: { v: View }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <div className="demo-collection flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto bg-white p-4">
       <div className="flex items-center gap-2 border-b border-[#efeeeb] pb-3">
         <span className="flex-1 text-sm font-semibold">{v.collectionTitle}</span>
@@ -446,14 +454,16 @@ function DemoCollection({ v }: { v: View }) {
 }
 
 function DayHead({ label, n }: { label: string; n: string }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <div className="px-2 py-1.5 text-[#6b6b70]">
       {label} <b className="text-[#1c1c1e]">{n}</b>
     </div>
   )
 }
 
-function Flow() {
+// 不依赖演示状态，避免随动画计时反复渲染。
+const Flow = memo(function Flow() {
   const steps = [
     ['#capture', '01', '捕获想法', '按 C 选择模板，先记下。', '#1c1c1e'],
     ['#ai', '02', '变成任务', 'AI 把目标拆成合适长度的任务。', '#dddbd6'],
@@ -461,7 +471,8 @@ function Flow() {
     ['#focus', '04', '开始专注', '菜单栏倒计时，结束后自动记录。', '#dddbd6'],
     ['#focus', '05', '留下笔记', '用 [[ ]] 把笔记连到任务。', '#dddbd6'],
   ]
-  return (
+  const tr = useTranslate()
+  return tr(
     <section id="flow" className="px-[clamp(20px,5vw,72px)] pt-[clamp(72px,9vw,128px)] pb-[clamp(40px,5vw,64px)]">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(40px,5vw,64px)]">
         <div data-rv="0" className="flex max-w-[640px] flex-col gap-4">
@@ -480,10 +491,12 @@ function Flow() {
       </div>
     </section>
   )
-}
+})
 
-function Capture() {
-  return (
+// 不依赖演示状态，避免随动画计时反复渲染。
+const Capture = memo(function Capture() {
+  const tr = useTranslate()
+  return tr(
     <section id="capture" className="px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
       <div className="mx-auto grid max-w-[1200px] grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] items-center gap-[clamp(40px,7vw,112px)]">
         <div data-rv="0" className="flex flex-col gap-[18px]">
@@ -520,10 +533,11 @@ function Capture() {
       </div>
     </section>
   )
-}
+})
 
 function InboxRow({ title, when, fresh }: { title: string; when: string; fresh?: boolean }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <div className={`flex items-center gap-2.5 border-t border-[#efeeeb] px-1 py-2.5 ${fresh ? '' : 'text-[#48484a]'}`}>
       <span className="size-1.5 rounded-full" style={{ background: fresh ? '#1463d9' : '#d2d0cb' }} />
       <span className="flex-1">{title}</span>
@@ -532,7 +546,8 @@ function InboxRow({ title, when, fresh }: { title: string; when: string; fresh?:
   )
 }
 
-function AiSection() {
+// 不依赖演示状态，避免随动画计时反复渲染。
+const AiSection = memo(function AiSection() {
   const tasks = [
     ['#7c5cc9', 'PRD v2 · 第一段', '1.5 h'],
     ['#7c5cc9', 'PRD v2 · 第二段', '1.5 h'],
@@ -541,7 +556,8 @@ function AiSection() {
     ['#e0782f', '分享彩排', '1.5 h'],
     ['#3a9a5b', '健身 × 4', '1 h'],
   ]
-  return (
+  const tr = useTranslate()
+  return tr(
     <section id="ai" className="px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(40px,5vw,64px)]">
         <div data-rv="0" className="flex flex-wrap items-end justify-between gap-x-16 gap-y-5">
@@ -593,7 +609,7 @@ function AiSection() {
       </div>
     </section>
   )
-}
+})
 
 function MiniWeek() {
   const col = (blocks: { top: string; h: string; bg: string; fg: string; t: string }[]) => (
@@ -605,7 +621,8 @@ function MiniWeek() {
       ))}
     </div>
   )
-  return (
+  const tr = useTranslate()
+  return tr(
     <>
       <div className="grid grid-cols-[28px_repeat(3,minmax(0,1fr))] text-[11.5px] text-[#8e8e93]">
         <span />
@@ -641,7 +658,8 @@ function MiniWeek() {
 }
 
 function Disrupt({ v }: { v: View }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <section id="disrupt" className="px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
       <div className="mx-auto grid max-w-[1200px] grid-cols-[repeat(auto-fit,minmax(min(100%,360px),1fr))] items-start gap-[clamp(40px,6vw,96px)]">
         <div data-rv="0" className="flex flex-col gap-[18px] pt-2">
@@ -741,7 +759,8 @@ function Disrupt({ v }: { v: View }) {
 
 function Focus({ v }: { v: View }) {
   const r = v.refs
-  return (
+  const tr = useTranslate()
+  return tr(
     <section id="focus" className="border-y border-[#f0efec] bg-[#fafaf9] px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(40px,5vw,64px)]">
         <div data-rv="0" className="flex max-w-[640px] flex-col gap-[18px]">
@@ -823,7 +842,8 @@ function Focus({ v }: { v: View }) {
 }
 
 function Tomato({ v }: { v: View }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <div className="mx-auto size-[196px] shrink-0">
       <svg width="196" height="196" viewBox="0 0 120 120" aria-hidden="true">
         <circle cx="60" cy="60" r="50" fill="none" stroke="#f0ede8" strokeWidth="1.6" />
@@ -851,7 +871,8 @@ function Tomato({ v }: { v: View }) {
 }
 
 function Templates({ v }: { v: View }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <section className="px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(32px,4vw,48px)]">
         <div data-rv="0" className="flex flex-wrap items-end justify-between gap-x-16 gap-y-4">
@@ -923,7 +944,8 @@ function Templates({ v }: { v: View }) {
 }
 
 function Stat({ n, l }: { n: string; l: string }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <div className="flex flex-col gap-0.5">
       <span className="text-[22px] font-normal tracking-[-0.02em] whitespace-nowrap tabular-nums">{n}</span>
       <span className="text-xs whitespace-nowrap text-[#8e8e93]">{l}</span>
@@ -932,7 +954,8 @@ function Stat({ n, l }: { n: string; l: string }) {
 }
 
 function Legend({ bg, bd, label }: { bg: string; bd: string; label: string }) {
-  return (
+  const tr = useTranslate()
+  return tr(
     <span className="flex items-center gap-1.5">
       <span className="size-2.5 rounded-[3px] border" style={{ background: bg, borderColor: bd }} />
       {label}
@@ -951,7 +974,8 @@ const HIVE = [
 
 function Plugins({ v }: { v: View }) {
   const r = v.refs
-  return (
+  const tr = useTranslate()
+  return tr(
     <section id="plugins" className="border-t border-[#f0efec] px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
       <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(36px,4vw,56px)]">
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] items-center gap-[clamp(32px,6vw,96px)]">
@@ -1050,8 +1074,10 @@ function Plugins({ v }: { v: View }) {
   )
 }
 
-function Download() {
-  return (
+// 不依赖演示状态，避免随动画计时反复渲染。
+const Download = memo(function Download() {
+  const tr = useTranslate()
+  return tr(
     <section id="download" className="border-t border-[#f0efec] px-[clamp(20px,5vw,72px)] py-[clamp(96px,12vw,168px)] text-center">
       <div data-rv="0" className="mx-auto flex max-w-[720px] flex-col items-center gap-6">
         <span className="flex size-14 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white"><Logo /></span>
@@ -1069,4 +1095,4 @@ function Download() {
       </div>
     </section>
   )
-}
+})

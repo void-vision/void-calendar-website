@@ -5,7 +5,7 @@ import { applyLang, trDeep, trEN } from './i18n'
 import { createDemoEvent } from './events'
 import { captureTemplates, type CaptureTemplateId } from './captureTemplates'
 import { dayLabels, eventTime } from './events'
-import { getSiteLang, setSiteLang, subscribeSiteLang, type SiteLang } from '../lib/lang'
+import type { SiteLang } from '../lib/lang'
 import {
   DEFAULT_NOTE_BODY,
   DEFAULT_NOTE_TITLE,
@@ -18,10 +18,10 @@ import {
 
 const dict = I18N as Record<string, string>
 
-export function useDemo() {
+export function useDemo(lang: SiteLang) {
   const [state, setState] = useState<DemoState>(() => {
     const initial = initialState()
-    if (getSiteLang() !== 'en') return initial
+    if (lang !== 'en') return initial
     return {
       ...initial,
       lang: 'en',
@@ -328,29 +328,11 @@ export function useDemo() {
     [fitNote, set],
   )
 
-  const toggleLang = useCallback(() => {
-    const next = stateRef.current.lang === 'en' ? 'zh' : 'en'
-    setSiteLang(next)
-    applySiteLang(next)
-  }, [applySiteLang])
-
   useEffect(() => {
     reduced.current = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     try {
       const sc = (Number(localStorage.getItem('vc-hero-scene')) || 0) % 4
-      const stored = localStorage.getItem('vc-lang') === 'en' ? 'en' : 'zh'
-      setSiteLang(stored)
-      if (stored === 'en') {
-        set({
-          lang: 'en',
-          scene: sc,
-          t: 0,
-          nTitle: dict[DEFAULT_NOTE_TITLE],
-          nBody: dict[DEFAULT_NOTE_BODY],
-        })
-      } else {
-        set({ scene: sc, t: 0 })
-      }
+      set({ scene: sc, t: 0 })
     } catch {
       /* ignore */
     }
@@ -591,17 +573,16 @@ export function useDemo() {
       setDisMode: (id) => setDisMode(id),
       startDis,
       goScene,
-      toggleLang,
       fitAi,
       fitNote,
       closeMb,
       sceneSeconds: SCENE_SECONDS,
       mem: mem.current,
     }),
-    [adjustSuggestions, applySuggestions, closeCap, closeMb, fitAi, fitNote, flash, goScene, openCap, openProjectCapture, pickPlugin, prepareProjectPlan, saveCap, selectCaptureTemplate, sendAi, set, setDisMode, startDis, toggleLang],
+    [adjustSuggestions, applySuggestions, closeCap, closeMb, fitAi, fitNote, flash, goScene, openCap, openProjectCapture, pickPlugin, prepareProjectPlan, saveCap, selectCaptureTemplate, sendAi, set, setDisMode, startDis],
   )
 
-  useEffect(() => subscribeSiteLang(() => applySiteLang(getSiteLang())), [applySiteLang])
+  useEffect(() => applySiteLang(lang), [applySiteLang, lang])
 
   useEffect(() => {
     const root = rootRef.current

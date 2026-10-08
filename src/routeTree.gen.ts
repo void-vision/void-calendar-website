@@ -13,10 +13,18 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as EnIndexRouteImport } from './routes/en/index'
+import { Route as EnChangelogRouteImport } from './routes/en/changelog'
+import { Route as EnPricingRouteImport } from './routes/en/pricing'
+import { Route as EnPrivacyRouteImport } from './routes/en/privacy'
+import { Route as EnTermsRouteImport } from './routes/en/terms'
 import { Route as UpdatesStableDotjsonRouteImport } from './routes/updates.stable[.]json'
+import { Route as EnBlogIndexRouteImport } from './routes/en/blog/index'
+import { Route as EnBlogSlugRouteImport } from './routes/en/blog/$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -38,6 +46,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -53,9 +66,44 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnIndexRoute = EnIndexRouteImport.update({
+  id: '/en/',
+  path: '/en/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnChangelogRoute = EnChangelogRouteImport.update({
+  id: '/en/changelog',
+  path: '/en/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnPricingRoute = EnPricingRouteImport.update({
+  id: '/en/pricing',
+  path: '/en/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnPrivacyRoute = EnPrivacyRouteImport.update({
+  id: '/en/privacy',
+  path: '/en/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnTermsRoute = EnTermsRouteImport.update({
+  id: '/en/terms',
+  path: '/en/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UpdatesStableDotjsonRoute = UpdatesStableDotjsonRouteImport.update({
   id: '/updates/stable.json',
   path: '/updates/stable.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnBlogIndexRoute = EnBlogIndexRouteImport.update({
+  id: '/en/blog/',
+  path: '/en/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnBlogSlugRoute = EnBlogSlugRouteImport.update({
+  id: '/en/blog/$slug',
+  path: '/en/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -64,20 +112,36 @@ export interface FileRoutesByFullPath {
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/en/changelog': typeof EnChangelogRoute
+  '/en/pricing': typeof EnPricingRoute
+  '/en/privacy': typeof EnPrivacyRoute
+  '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog/': typeof BlogIndexRoute
+  '/en/': typeof EnIndexRoute
+  '/en/blog/$slug': typeof EnBlogSlugRoute
+  '/en/blog/': typeof EnBlogIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/en/changelog': typeof EnChangelogRoute
+  '/en/pricing': typeof EnPricingRoute
+  '/en/privacy': typeof EnPrivacyRoute
+  '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog': typeof BlogIndexRoute
+  '/en': typeof EnIndexRoute
+  '/en/blog/$slug': typeof EnBlogSlugRoute
+  '/en/blog': typeof EnBlogIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -85,10 +149,18 @@ export interface FileRoutesById {
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
+  '/en/changelog': typeof EnChangelogRoute
+  '/en/pricing': typeof EnPricingRoute
+  '/en/privacy': typeof EnPrivacyRoute
+  '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog/': typeof BlogIndexRoute
+  '/en/': typeof EnIndexRoute
+  '/en/blog/$slug': typeof EnBlogSlugRoute
+  '/en/blog/': typeof EnBlogIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,30 +169,54 @@ export interface FileRouteTypes {
     | '/changelog'
     | '/pricing'
     | '/privacy'
+    | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
+    | '/en/changelog'
+    | '/en/pricing'
+    | '/en/privacy'
+    | '/en/terms'
     | '/updates/stable.json'
     | '/blog/'
+    | '/en/'
+    | '/en/blog/$slug'
+    | '/en/blog/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/changelog'
     | '/pricing'
     | '/privacy'
+    | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
+    | '/en/changelog'
+    | '/en/pricing'
+    | '/en/privacy'
+    | '/en/terms'
     | '/updates/stable.json'
     | '/blog'
+    | '/en'
+    | '/en/blog/$slug'
+    | '/en/blog'
   id:
     | '__root__'
     | '/'
     | '/changelog'
     | '/pricing'
     | '/privacy'
+    | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
+    | '/en/changelog'
+    | '/en/pricing'
+    | '/en/privacy'
+    | '/en/terms'
     | '/updates/stable.json'
     | '/blog/'
+    | '/en/'
+    | '/en/blog/$slug'
+    | '/en/blog/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -128,10 +224,18 @@ export interface RootRouteChildren {
   ChangelogRoute: typeof ChangelogRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   BlogSlugRoute: typeof BlogSlugRoute
+  EnChangelogRoute: typeof EnChangelogRoute
+  EnPricingRoute: typeof EnPricingRoute
+  EnPrivacyRoute: typeof EnPrivacyRoute
+  EnTermsRoute: typeof EnTermsRoute
   UpdatesStableDotjsonRoute: typeof UpdatesStableDotjsonRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  EnIndexRoute: typeof EnIndexRoute
+  EnBlogSlugRoute: typeof EnBlogSlugRoute
+  EnBlogIndexRoute: typeof EnBlogIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -164,6 +268,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -185,11 +296,60 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/': {
+      id: '/en/'
+      path: '/en'
+      fullPath: '/en/'
+      preLoaderRoute: typeof EnIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/changelog': {
+      id: '/en/changelog'
+      path: '/en/changelog'
+      fullPath: '/en/changelog'
+      preLoaderRoute: typeof EnChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/pricing': {
+      id: '/en/pricing'
+      path: '/en/pricing'
+      fullPath: '/en/pricing'
+      preLoaderRoute: typeof EnPricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/privacy': {
+      id: '/en/privacy'
+      path: '/en/privacy'
+      fullPath: '/en/privacy'
+      preLoaderRoute: typeof EnPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/terms': {
+      id: '/en/terms'
+      path: '/en/terms'
+      fullPath: '/en/terms'
+      preLoaderRoute: typeof EnTermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/updates/stable.json': {
       id: '/updates/stable.json'
       path: '/updates/stable.json'
       fullPath: '/updates/stable.json'
       preLoaderRoute: typeof UpdatesStableDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/blog/': {
+      id: '/en/blog/'
+      path: '/en/blog'
+      fullPath: '/en/blog/'
+      preLoaderRoute: typeof EnBlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/blog/$slug': {
+      id: '/en/blog/$slug'
+      path: '/en/blog/$slug'
+      fullPath: '/en/blog/$slug'
+      preLoaderRoute: typeof EnBlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -200,10 +360,18 @@ const rootRouteChildren: RootRouteChildren = {
   ChangelogRoute: ChangelogRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   BlogSlugRoute: BlogSlugRoute,
+  EnChangelogRoute: EnChangelogRoute,
+  EnPricingRoute: EnPricingRoute,
+  EnPrivacyRoute: EnPrivacyRoute,
+  EnTermsRoute: EnTermsRoute,
   UpdatesStableDotjsonRoute: UpdatesStableDotjsonRoute,
   BlogIndexRoute: BlogIndexRoute,
+  EnIndexRoute: EnIndexRoute,
+  EnBlogSlugRoute: EnBlogSlugRoute,
+  EnBlogIndexRoute: EnBlogIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

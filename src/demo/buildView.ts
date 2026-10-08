@@ -41,7 +41,6 @@ export type DemoApi = {
   setDisMode: (id: 'shift' | 'ask' | 'split') => void
   startDis: () => void
   goScene: (i: number) => void
-  toggleLang: () => void
   fitAi: () => void
   fitNote: () => void
   closeMb: () => void
@@ -99,9 +98,6 @@ export function buildView(state: DemoState, api: DemoApi) {
   return {
     ...hero,
     lang: state.lang,
-    langLabel: state.lang === 'en' ? '中文' : 'EN',
-    langAria: state.lang === 'en' ? '切换到中文' : 'Switch to English',
-    toggleLang: api.toggleLang,
     heroAlign: 'center' as const,
     heroText: 'center' as const,
     showPlugins: true,

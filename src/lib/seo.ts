@@ -1,68 +1,238 @@
+import { releases } from '../content/changelog'
+import type { Post } from '../content/posts'
+import { macDownloadUrl } from './download'
+import { localizePath, type SiteLang } from './lang'
+
 /** Public site origin. Override with VITE_SITE_URL when the live domain is different. */
 export const siteUrl = (import.meta.env.VITE_SITE_URL || 'https://calendar.voidvision.ai').replace(/\/$/, '')
 
 export const siteName = 'Void Calendar'
 
-export const homeTitle = 'Void Calendar — Mac 上的 AI 日历与时间盒'
-export const homeDescription =
-  '在 Mac 上用一句话安排一周。AI 读取已有日程，把任务放进真正空着的时间，并和专注、笔记放在一起。可同步 iCloud 与 Google 日历。'
+type Copy = { title: string; description: string }
+type PageCopy = { path: string; zh: Copy; en: Copy }
 
-export const privacyTitle = '隐私协议 · Void Calendar'
-export const privacyDescription =
-  'VOID VISION PTY LTD 对 Void Calendar macOS 应用和本网站的隐私说明：本地日程、日历授权、AI 密钥与可选使用统计。'
+export const pages = {
+  home: {
+    path: '/',
+    zh: {
+      title: 'Void Calendar — Mac 上的 AI 日历与时间盒',
+      description: '在 Mac 上用一句话安排一周。AI 读取已有日程，把任务放进真正空着的时间，并和专注、笔记放在一起。可同步 iCloud 与 Google 日历。',
+    },
+    en: {
+      title: 'Void Calendar — AI calendar and time boxing for Mac',
+      description: 'Plan your week on Mac in one sentence. AI reads your existing schedule, places tasks into time that is actually free, and keeps focus and notes alongside. Syncs with iCloud and Google Calendar.',
+    },
+  },
+  pricing: {
+    path: '/pricing',
+    zh: {
+      title: '定价 · Void Calendar',
+      description: 'Void Calendar 免费版正常使用全部功能，Pro 提供同步：月付 US$4.99、年付 US$29.99、终生 US$89.99。购买暂未开放。',
+    },
+    en: {
+      title: 'Pricing · Void Calendar',
+      description: 'The free version of Void Calendar includes every feature. Pro adds sync: US$4.99 monthly, US$29.99 yearly, or US$89.99 lifetime. Purchases are not open yet.',
+    },
+  },
+  changelog: {
+    path: '/changelog',
+    zh: {
+      title: '更新日志 · Void Calendar',
+      description: `Void Calendar 已经发布的版本。当前公开测试版是 ${releases[0].version}。`,
+    },
+    en: {
+      title: 'Changelog · Void Calendar',
+      description: `Versions of Void Calendar that have shipped. The current public beta is ${releases[0].version}.`,
+    },
+  },
+  blog: {
+    path: '/blog',
+    zh: {
+      title: '博客 · Void Calendar',
+      description: 'Void Calendar 与 Notion、Motion、Morgen、TickTick 等工具的工作流对比，以及 Mac 时间盒使用指南。',
+    },
+    en: {
+      title: 'Blog · Void Calendar',
+      description: 'Workflow comparisons between Void Calendar and Notion, Motion, Morgen, TickTick and more, plus guides to time boxing on Mac.',
+    },
+  },
+  privacy: {
+    path: '/privacy',
+    zh: {
+      title: '隐私协议 · Void Calendar',
+      description: 'VOID VISION PTY LTD 对 Void Calendar macOS 应用和本网站的隐私说明：本地日程、日历授权、AI 密钥与可选使用统计。',
+    },
+    en: {
+      title: 'Privacy Policy · Void Calendar',
+      description: 'How VOID VISION PTY LTD handles data for the Void Calendar macOS app and this website: local schedules, calendar access, AI keys, and optional usage analytics.',
+    },
+  },
+  terms: {
+    path: '/terms',
+    zh: {
+      title: '服务条款 · Void Calendar',
+      description: '使用 Void Calendar macOS 应用和本网站的条款：本地数据、日历连接、AI 排程，以及按现状提供的软件。',
+    },
+    en: {
+      title: 'Terms of Service · Void Calendar',
+      description: 'Terms for using the Void Calendar macOS app and this website: local data, calendar connections, AI scheduling, and software provided as is.',
+    },
+  },
+} satisfies Record<string, PageCopy>
 
-export const termsTitle = '服务条款 · Void Calendar'
-export const termsDescription =
-  '使用 Void Calendar macOS 应用和本网站的条款：本地数据、日历连接、AI 排程，以及按现状提供的软件。'
+export type PageKey = keyof typeof pages
+
+const hreflang = { zh: 'zh-Hans', en: 'en' } as const
+const ogLocale = { zh: 'zh_CN', en: 'en_US' } as const
 
 export function absoluteUrl(path: string) {
   return `${siteUrl}${path.startsWith('/') ? path : `/${path}`}`
 }
 
-export function socialMeta(title: string, description: string, path: string) {
-  const url = absoluteUrl(path)
-  const image = absoluteUrl('/og.png')
+/** 中英文两个版本互相声明；不认识的语言默认给英文版。 */
+export function alternateLinks(path: string) {
+  return [
+    { rel: 'alternate', hrefLang: hreflang.zh, href: absoluteUrl(localizePath(path, 'zh')) },
+    { rel: 'alternate', hrefLang: hreflang.en, href: absoluteUrl(localizePath(path, 'en')) },
+    { rel: 'alternate', hrefLang: 'x-default', href: absoluteUrl(localizePath(path, 'en')) },
+  ]
+}
+
+type HeadInput = Copy & {
+  /** 中文站路径，英文路径由 lang 推出。 */
+  path: string
+  lang: SiteLang
+  type?: 'website' | 'article'
+  publishedTime?: string
+  image?: string
+  jsonLd?: object[]
+}
+
+export function pageHead({ title, description, path, lang, type = 'website', publishedTime, image = '/og.png', jsonLd = [] }: HeadInput) {
+  const url = absoluteUrl(localizePath(path, lang))
+  const imageUrl = absoluteUrl(image)
+  const other = lang === 'en' ? 'zh' : 'en'
   return {
     meta: [
       { title },
       { name: 'description', content: description },
       { name: 'robots', content: 'index,follow' },
       { property: 'og:site_name', content: siteName },
-      { property: 'og:locale', content: 'zh_CN' },
-      { property: 'og:type', content: path === '/' || path === '/pricing' ? 'website' : 'article' },
+      { property: 'og:locale', content: ogLocale[lang] },
+      { property: 'og:locale:alternate', content: ogLocale[other] },
+      { property: 'og:type', content: type },
       { property: 'og:title', content: title },
       { property: 'og:description', content: description },
       { property: 'og:url', content: url },
-      { property: 'og:image', content: image },
-      { property: 'og:image:width', content: '1200' },
-      { property: 'og:image:height', content: '630' },
+      { property: 'og:image', content: imageUrl },
+      ...(image === '/og.png'
+        ? [
+            { property: 'og:image:width', content: '1200' },
+            { property: 'og:image:height', content: '630' },
+          ]
+        : []),
+      ...(publishedTime ? [{ property: 'article:published_time', content: publishedTime }] : []),
       { name: 'twitter:card', content: 'summary_large_image' },
       { name: 'twitter:title', content: title },
       { name: 'twitter:description', content: description },
-      { name: 'twitter:image', content: image },
+      { name: 'twitter:image', content: imageUrl },
     ],
-    links: [{ rel: 'canonical', href: url }],
+    links: [{ rel: 'canonical', href: url }, ...alternateLinks(path)],
+    scripts: jsonLd.map((data) => ({ type: 'application/ld+json', children: JSON.stringify(data) })),
   }
 }
 
-export const softwareJsonLd = {
-  '@context': 'https://schema.org',
-  '@type': 'SoftwareApplication',
-  name: siteName,
-  applicationCategory: 'ProductivityApplication',
-  operatingSystem: 'macOS 13 or later',
-  description: homeDescription,
+export function staticPageHead(key: PageKey, lang: SiteLang, jsonLd: object[] = []) {
+  const page = pages[key]
+  return pageHead({ ...page[lang], path: page.path, lang, jsonLd })
+}
+
+const organization = {
+  '@type': 'Organization',
+  '@id': `${siteUrl}/#organization`,
+  name: 'VOID VISION PTY LTD',
+  email: 'support@voidvision.ai',
   url: absoluteUrl('/'),
-  image: absoluteUrl('/og.png'),
-  offers: {
-    '@type': 'Offer',
-    price: '0',
-    priceCurrency: 'USD',
-  },
-  publisher: {
-    '@type': 'Organization',
-    name: 'VOID VISION PTY LTD',
-    email: 'support@voidvision.ai',
-    url: absoluteUrl('/'),
-  },
+  logo: absoluteUrl('/logo.png'),
+}
+
+export function homeJsonLd(lang: SiteLang) {
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: siteName,
+      applicationCategory: 'ProductivityApplication',
+      operatingSystem: 'macOS 13 or later',
+      softwareVersion: releases[0].version,
+      downloadUrl: macDownloadUrl,
+      description: pages.home[lang].description,
+      url: absoluteUrl(localizePath('/', lang)),
+      image: absoluteUrl('/og.png'),
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+      publisher: organization,
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteName,
+      url: absoluteUrl(localizePath('/', lang)),
+      inLanguage: hreflang[lang],
+      publisher: { '@id': organization['@id'] },
+    },
+  ]
+}
+
+/** 文章的第一张位图，用作分享图和结构化数据配图；示意图是 SVG，搜索引擎不一定支持。 */
+export function postImage(post: Post, lang: SiteLang) {
+  const body = lang === 'en' ? post.bodyEn : post.body
+  return body.match(/!\[[^\]]*\]\((\/blog\/[^)\s]+\.(?:png|jpe?g|webp))\)/)?.[1]
+}
+
+export function postHead(post: Post, lang: SiteLang) {
+  const en = lang === 'en'
+  const title = en ? post.titleEn : post.title
+  const description = en ? post.descriptionEn : post.description
+  const path = `/blog/${post.slug}`
+  const image = postImage(post, lang)
+  const url = absoluteUrl(localizePath(path, lang))
+  return pageHead({
+    title: `${title} · ${siteName}`,
+    description,
+    path,
+    lang,
+    type: 'article',
+    publishedTime: post.published,
+    image,
+    jsonLd: [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: title,
+        description,
+        datePublished: post.published,
+        dateModified: post.published,
+        inLanguage: hreflang[lang],
+        url,
+        mainEntityOfPage: url,
+        image: absoluteUrl(image ?? '/og.png'),
+        author: organization,
+        publisher: organization,
+      },
+      {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { name: siteName, path: '/' },
+          { name: en ? 'Blog' : '博客', path: '/blog' },
+          { name: title, path },
+        ].map((item, index) => ({
+          '@type': 'ListItem',
+          position: index + 1,
+          name: item.name,
+          item: absoluteUrl(localizePath(item.path, lang)),
+        })),
+      },
+    ],
+  })
 }

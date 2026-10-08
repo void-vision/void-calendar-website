@@ -1,49 +1,30 @@
-import { useEffect, useSyncExternalStore } from 'react'
+import { useRouterState } from '@tanstack/react-router'
 
 export type SiteLang = 'zh' | 'en'
 
-const KEY = 'vc-lang'
-let lang: SiteLang = 'zh'
-const listeners = new Set<() => void>()
-
-function readStored(): SiteLang {
-  try {
-    return localStorage.getItem(KEY) === 'en' ? 'en' : 'zh'
-  } catch {
-    return 'zh'
-  }
+/** 语言由 URL 决定：/en 开头是英文，其余是中文。服务端渲染和搜索引擎看到的是同一份内容。 */
+export function langFromPath(pathname: string): SiteLang {
+  return pathname === '/en' || pathname.startsWith('/en/') ? 'en' : 'zh'
 }
 
-export function getSiteLang(): SiteLang {
-  return lang
+/** 把中文站路径（如 /pricing、/blog/x）换成指定语言的路径。 */
+export function localizePath(path: string, lang: SiteLang) {
+  if (lang === 'zh') return path
+  return path === '/' ? '/en' : `/en${path}`
 }
 
-export function subscribeSiteLang(listener: () => void) {
-  listeners.add(listener)
-  return () => {
-    listeners.delete(listener)
-  }
+/** 当前页面在另一种语言下的路径，用于语言切换。 */
+export function alternatePath(pathname: string) {
+  if (langFromPath(pathname) === 'zh') return localizePath(pathname, 'en')
+  return pathname.slice(3) || '/'
 }
 
-export function setSiteLang(next: SiteLang) {
-  try {
-    localStorage.setItem(KEY, next)
-  } catch {
-    /* ignore */
-  }
-  if (lang === next) return
-  lang = next
-  listeners.forEach((listener) => listener())
+/** 语言切换链接的目标：同一页面的另一种语言，保留锚点。 */
+export function useAlternateLink() {
+  const { pathname, hash } = useRouterState({ select: (state) => state.location })
+  return { to: alternatePath(pathname) as never, hash: hash || undefined }
 }
 
-export function hydrateSiteLang() {
-  setSiteLang(readStored())
-}
-
-export function useSiteLang() {
-  const value = useSyncExternalStore(subscribeSiteLang, getSiteLang, () => 'zh' as SiteLang)
-  useEffect(() => {
-    hydrateSiteLang()
-  }, [])
-  return value
+export function useSiteLang(): SiteLang {
+  return langFromPath(useRouterState({ select: (state) => state.location.pathname }))
 }
