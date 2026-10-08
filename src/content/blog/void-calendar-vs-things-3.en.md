@@ -1,21 +1,21 @@
 If [OmniFocus](/blog/void-calendar-vs-omnifocus) feels too complicated, you will probably consider Things 3. Both have excellent native interactions and their own philosophy of task management.
 
+I like Things 3. My lightweight tasks still live there because it is simple enough to capture something the moment it comes to mind.
+
 **In short:** If you want to capture lightweight tasks quickly across iPhone, iPad, and Mac, in an elegant app you buy once, Things 3 is hard to beat. If your tasks need full notes, you need to know whether the day actually has room for them, and you want AI to place them into free time on your calendar, Void Calendar is the better fit.
 
 ## At a glance
 
 | | Void Calendar | Things 3 |
 | --- | --- | --- |
-| Platforms | macOS (Apple silicon); mobile planned | Mac, iPhone, iPad, Watch, Vision Pro |
+| Platforms | macOS (Apple silicon), public beta | Mac, iPhone, iPad, Watch, Vision Pro |
 | Price | Free with every feature; Pro sync not on sale yet | One-time purchase per platform, no subscription |
-| AI scheduling | Your own model, placed into free time | No built-in AI; extend via Shortcuts and more |
-| Calendar connections | Apple Calendar and Reminders, Google, iCloud | Shows Apple Calendar events, read-only |
-| Tasks & notes | Time boxes, tasks, linked notes, focus timer | Lists and tags; Markdown notes without images |
+| AI scheduling | Your own model and API key; fits tasks into free time | No built-in AI; extend via Shortcuts and more |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Shows Apple Calendar events, read-only |
+| Tasks & notes | Every task has a note with `[[ ]]` links | Lists and tags; Markdown notes without images |
 | Where data lives | On your Mac; no company cloud copy | On each device, free sync via Things Cloud |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-I like Things 3. My lightweight tasks still live there because it is simple enough to capture something the moment it comes to mind.
 
 ## Simplicity is why I like it
 

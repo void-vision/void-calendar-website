@@ -1,21 +1,21 @@
 我很喜欢“想到哪里，就记在哪里”的方式。读书时记一个要查的问题，上课时记一个要补的知识点，不用先退出笔记，再去另一个应用写待办。
 
+Obsidian Tasks 的思路就很适合这种习惯：任务留在 Markdown 笔记里，再用查询把它们找出来。
+
 **一句话结论**：如果你的资料已经在 Obsidian 的 vault 里，希望任务就写在笔记中，并在手机和各种电脑上使用，Obsidian Tasks 是自然又免费的选择。如果你需要的不只是把任务查出来，还要把它们排进日历里真正空闲的时间，并在 Mac 上配合专注计时去完成，Void Calendar 更合适。
 
 ## 一览对比
 
 | | Void Calendar | Obsidian Tasks |
 | --- | --- | --- |
-| 平台 | macOS（Apple 芯片）；移动端计划中 | Windows、macOS、Linux、iOS、Android |
-| 价格 | 免费版含全部功能；Pro 同步未开售 | Obsidian、Tasks 免费；Sync US$4/月起 |
-| AI 排程 | 自带模型，排进真正空闲的时段 | 无内置 AI；可借社区插件扩展 |
-| 日历连接 | Apple 日历与提醒事项、Google、iCloud | 按日期查询；日历视图靠其他插件 |
-| 任务与笔记 | 时间盒、任务、同名笔记、专注计时 | 任务写在 Markdown 笔记里，用查询汇总 |
-| 数据存放 | 存在本机，公司不保存云端副本 | 本机 Markdown 文件；Sync 端到端加密 |
+| 平台 | macOS（Apple 芯片），公开测试版 | Windows、macOS、Linux、iOS、Android |
+| 价格 | 免费版含全部功能；Pro 同步暂未开售 | Obsidian、Tasks 免费；Sync 按年付 US$4/月起 |
+| AI 排程 | 用你自己的模型和 API Key，排进空闲时间 | 无内置 AI；可借社区插件扩展 |
+| 日历连接 | Apple 日历与提醒事项、Google、iCloud；Outlook 计划中 | 按日期查询；日历视图靠其他插件 |
+| 任务与笔记 | 每个任务配一页笔记，支持 `[[ ]]` 链接 | 任务写在 Markdown 笔记里，用查询汇总 |
+| 数据存放 | 存在你的 Mac 上，公司不保留云端副本 | 本机 Markdown 文件；Sync 端到端加密 |
 
 *竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
-
-Obsidian Tasks 的思路就很适合这种习惯：任务留在 Markdown 笔记里，再用查询把它们找出来。
 
 ## 任务可以留在产生它的地方
 

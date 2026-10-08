@@ -1,5 +1,11 @@
 What I want from AI scheduling is fairly simple: when a plan changes, I do not want to rethink the whole week.
 
+Take IELTS preparation. Listening on Monday, speaking on Wednesday, writing on Friday. Then Wednesday gets another class, speaking runs over, and Friday also has an assignment due. The tidy plan needs attention again.
+
+![Speaking practice moved after an extra class is added](/blog/schedule-changes.en.svg)
+
+*An IELTS example: preserve the working context when the schedule changes. Planning illustration.*
+
 **In short:** If you want a system that fills your calendar by priority and deadline and keeps rescheduling as things change, with team project management and mobile apps, Motion is the more mature choice. If you work on an Apple silicon Mac and want to schedule with your own AI model, keep working steps in task notes, and keep your data on your machine, try Void Calendar.
 
 ## At a glance
@@ -8,18 +14,12 @@ What I want from AI scheduling is fairly simple: when a plan changes, I do not w
 |---|---|---|
 | Platforms | macOS (Apple silicon), public beta | Web, desktop, iOS, Android |
 | Price | Free with every feature; Pro sync not on sale yet | No free plan; per-seat monthly or annual, free trial |
-| AI scheduling | Your own model and API key; asks before moving events | Auto-schedules by priority and deadline, then reschedules |
+| AI scheduling | Your own model and API key; fits tasks into free time | Auto-schedules by priority and deadline, then reschedules |
 | Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Google, Outlook, iCloud |
 | Tasks & notes | Every task has a note with `[[ ]]` links | Tasks, projects, and AI docs and notes |
 | Where data lives | On your Mac; no company cloud copy | Your Motion cloud account |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-Take IELTS preparation. Listening on Monday, speaking on Wednesday, writing on Friday. Then Wednesday gets another class, speaking runs over, and Friday also has an assignment due. The tidy plan needs attention again.
-
-![Speaking practice moved after an extra class is added](/blog/schedule-changes.en.svg)
-
-*An IELTS example: preserve the working context when the schedule changes. Planning illustration.*
 
 ## Motion takes rescheduling seriously
 

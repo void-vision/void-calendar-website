@@ -1,5 +1,7 @@
 Trello’s board is easy to understand: work to do, work in progress, then move a card right when it is finished. For a group assignment, everyone can see who is researching and who is preparing the presentation.
 
+I also ask whether a card moved into “In progress” has actual time in today’s calendar.
+
 **In short:** When several people move a project forward together and need to see progress at a glance, Trello’s board is clear and effective, so keep the team’s collaboration there. If you want to break your own part into concrete steps on a Mac, give each one a note, and let your own AI place them into the free time in your day, your personal plan can live in Void Calendar.
 
 ## At a glance
@@ -7,15 +9,13 @@ Trello’s board is easy to understand: work to do, work in progress, then move 
 | | Void Calendar | Trello |
 | --- | --- | --- |
 | Platforms | macOS (Apple silicon), public beta | Web, Mac, Windows, iOS, Android |
-| Price | Free with all features; Pro sync not on sale yet | Free plan; Standard US$5/user/month billed yearly |
-| AI scheduling | Your own model, fits tasks into free time | Smart Schedule suggests focus time (paid plans) |
-| Calendar connections | Apple, Google, and iCloud Calendar | Planner connects Google and Outlook calendars |
-| Tasks & notes | Every task has a note, with [[ ]] links | Cards with descriptions, attachments, checklists |
-| Where data lives | Locally on your Mac | Cloud boards shared with members |
+| Price | Free with every feature; Pro sync not on sale yet | Free plan; Standard US$5/user/month billed yearly |
+| AI scheduling | Your own model and API key; fits tasks into free time | Smart Schedule suggests focus time (paid plans) |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Planner connects Google and Outlook calendars |
+| Tasks & notes | Every task has a note with `[[ ]]` links | Cards with descriptions, attachments, checklists |
+| Where data lives | On your Mac; no company cloud copy | Cloud boards shared with members |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-I also ask whether a card moved into “In progress” has actual time in today’s calendar.
 
 ## Shared progress is Trello’s strength
 

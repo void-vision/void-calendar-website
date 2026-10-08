@@ -1,5 +1,7 @@
 Notion 和 Notion Calendar 是两个 app。你可以在 Notion 里写笔记、整理任务，再用 Notion Calendar 安排时间。如果还想接入其他 AI 工具替你管理日程，就需要再配置连接，把这些步骤串起来。
 
+我更希望到了要做的时候，任务和笔记都已经在眼前，不用再找一遍。
+
 **一句话结论**：如果你的笔记、文档和团队资料都在 Notion 里，还需要在 Windows 或手机上随时打开，Notion 加 Notion Calendar 更合适。如果你用 Apple 芯片的 Mac，希望任务、笔记和日历待在同一个应用里，并让自己选的 AI 把任务排进真正空闲的时间，可以试试 Void Calendar。
 
 ## 一览对比
@@ -7,15 +9,13 @@ Notion 和 Notion Calendar 是两个 app。你可以在 Notion 里写笔记、�
 | | Void Calendar | Notion |
 |---|---|---|
 | 平台 | macOS（Apple 芯片），公开测试版 | 网页、Mac、Windows、iOS、Android |
-| 价格 | 免费版含全部功能；Pro 同步尚未开售 | 有免费版；Plus 每人每月 US$10 起 |
-| AI 排程 | 用自己的模型和 API Key，排进空闲时间 | Notion AI 含于 Business 及以上方案 |
+| 价格 | 免费版含全部功能；Pro 同步暂未开售 | 有免费版；Plus 每人每月 US$10 起 |
+| AI 排程 | 用你自己的模型和 API Key，排进空闲时间 | Notion AI 含于 Business 及以上方案 |
 | 日历连接 | Apple 日历与提醒事项、Google、iCloud；Outlook 计划中 | Notion Calendar：Google、Outlook、iCloud |
-| 任务与笔记 | 每个任务都有笔记，支持 `[[ ]]` 链接 | 页面与数据库，日程可关联页面 |
-| 数据存放 | 存在你的 Mac 上，公司不留云端副本 | Notion 云端，页面可设为离线可用 |
+| 任务与笔记 | 每个任务配一页笔记，支持 `[[ ]]` 链接 | 页面与数据库，日程可关联页面 |
+| 数据存放 | 存在你的 Mac 上，公司不保留云端副本 | Notion 云端，页面可设为离线可用 |
 
 *竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
-
-我更希望到了要做的时候，任务和笔记都已经在眼前，不用再找一遍。
 
 ## 打开任务，就知道怎么开始
 

@@ -1,5 +1,7 @@
 Notion and Notion Calendar are two separate apps. You can write notes and organize tasks in Notion, then arrange time in Notion Calendar. If you also want another AI tool to manage your schedule, you need to configure the connection and bring those steps together.
 
+When it is time to work, I want the task and its notes in front of me without another search.
+
 **In short:** If your notes, docs, and shared team pages already live in Notion and you need them on Windows or your phone, Notion plus Notion Calendar is the better fit. If you work on an Apple silicon Mac and want tasks, notes, and the calendar in one app, with an AI of your choice placing work into genuinely free time, try Void Calendar.
 
 ## At a glance
@@ -8,14 +10,12 @@ Notion and Notion Calendar are two separate apps. You can write notes and organi
 |---|---|---|
 | Platforms | macOS (Apple silicon), public beta | Web, Mac, Windows, iOS, Android |
 | Price | Free with every feature; Pro sync not on sale yet | Free plan; Plus from US$10 per member/month |
-| AI scheduling | Your own model and API key; fills free time | Notion AI included from the Business plan |
+| AI scheduling | Your own model and API key; fits tasks into free time | Notion AI included from the Business plan |
 | Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Notion Calendar: Google, Outlook, iCloud |
 | Tasks & notes | Every task has a note with `[[ ]]` links | Pages and databases; events can link to pages |
 | Where data lives | On your Mac; no company cloud copy | Notion's cloud; pages can be kept offline |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-When it is time to work, I want the task and its notes in front of me without another search.
 
 ## Open the task and know where to start
 

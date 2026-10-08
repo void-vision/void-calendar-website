@@ -1,5 +1,7 @@
 My Day in Microsoft To Do has an idea I like: choose today’s priorities afresh.
 
+Old unfinished work does not have to crowd into every new day. Picking a few things to advance feels lighter than facing one endlessly growing list.
+
 **In short:** If you already work in Outlook and Microsoft 365 and need your to-dos on Windows, your phone, and the web, Microsoft To Do is free, light, and a good fit. If you plan your day on a Mac and want large tasks broken into steps that fit today, each with its own notes, and AI on your own model placing them into free time, consider Void Calendar.
 
 ## At a glance
@@ -7,15 +9,13 @@ My Day in Microsoft To Do has an idea I like: choose today’s priorities afresh
 | | Void Calendar | Microsoft To Do |
 | --- | --- | --- |
 | Platforms | macOS (Apple silicon), public beta | Windows, Mac, iOS, Android, web |
-| Price | Free with all features; Pro sync not on sale yet | Free with a personal Microsoft account |
-| AI scheduling | Your own model, fits tasks into free time | My Day suggests tasks |
-| Calendar connections | Apple, Google, and iCloud Calendar | Works with Outlook tasks and calendar |
-| Tasks & notes | Every task has a note, with [[ ]] links | Lists and My Day, shared with Outlook Tasks |
-| Where data lives | Locally on your Mac | Your Exchange Online mailbox |
+| Price | Free with every feature; Pro sync not on sale yet | Free with a personal Microsoft account |
+| AI scheduling | Your own model and API key; fits tasks into free time | My Day suggests tasks |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Works with Outlook tasks and calendar |
+| Tasks & notes | Every task has a note with `[[ ]]` links | Lists and My Day, shared with Outlook Tasks |
+| Where data lives | On your Mac; no company cloud copy | Your Exchange Online mailbox |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-Old unfinished work does not have to crowd into every new day. Picking a few things to advance feels lighter than facing one endlessly growing list.
 
 ## Priorities still need a capacity check
 

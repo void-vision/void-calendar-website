@@ -1,5 +1,7 @@
 My basic requirement for a list tool is simple: easy to capture, easy to find later.
 
+Todoist’s projects, labels, and filters help organize many tasks. An organized list can still ask too much of today. Marking ten tasks for today does not create extra hours.
+
 **In short:** If you capture tasks across phone, desktop, and web, and organize a long list with projects, labels, and filters, Todoist is mature and worth keeping. If you work on a Mac and want each task to carry its own notes and material, with AI on your own model placing work into time that is actually free and the data staying on your machine, Void Calendar is worth a try.
 
 ## At a glance
@@ -7,15 +9,13 @@ My basic requirement for a list tool is simple: easy to capture, easy to find la
 | | Void Calendar | Todoist |
 | --- | --- | --- |
 | Platforms | macOS (Apple silicon), public beta | Web, Mac, Windows, Linux, iOS, Android |
-| Price | Free with all features; Pro sync not on sale yet | Free plan; Pro US$5/month billed yearly |
-| AI scheduling | Your own model, fits tasks into free time | Todoist Assist and Ramble voice capture |
-| Calendar connections | Apple, Google, and iCloud Calendar | Syncs to Google and Outlook calendars |
-| Tasks & notes | Every task has a note, with [[ ]] links | Projects, labels, filters, task durations |
-| Where data lives | Locally on your Mac | Cloud account synced across devices |
+| Price | Free with every feature; Pro sync not on sale yet | Free plan; Pro US$5/month billed yearly |
+| AI scheduling | Your own model and API key; fits tasks into free time | Todoist Assist and Ramble voice capture |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Syncs to Google and Outlook calendars |
+| Tasks & notes | Every task has a note with `[[ ]]` links | Projects, labels, filters, task durations |
+| Where data lives | On your Mac; no company cloud copy | Cloud account synced across devices |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-Todoist’s projects, labels, and filters help organize many tasks. An organized list can still ask too much of today. Marking ten tasks for today does not create extra hours.
 
 ## Todoist already brings lists into calendars
 

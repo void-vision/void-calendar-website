@@ -1,21 +1,21 @@
 I like recording an action where the thought occurs: a question while reading, or something to revisit in class notes. There is no need to leave the note just to capture a task elsewhere.
 
+Obsidian Tasks suits that habit. Tasks stay in Markdown notes, and queries gather them.
+
 **In short:** If your material already lives in an Obsidian vault, you want tasks written inside your notes, and you need them on your phone and any computer, Obsidian Tasks is a natural, free choice. If you need more than finding tasks, and want them placed into time that is actually free on your calendar and worked through with a focus timer on your Mac, Void Calendar is the better fit.
 
 ## At a glance
 
 | | Void Calendar | Obsidian Tasks |
 | --- | --- | --- |
-| Platforms | macOS (Apple silicon); mobile planned | Windows, macOS, Linux, iOS, Android |
+| Platforms | macOS (Apple silicon), public beta | Windows, macOS, Linux, iOS, Android |
 | Price | Free with every feature; Pro sync not on sale yet | Free; Sync from US$4/month, billed yearly |
-| AI scheduling | Your own model, placed into free time | No built-in AI; community plugins can add it |
-| Calendar connections | Apple Calendar and Reminders, Google, iCloud | Date-based queries; calendar views need other plugins |
-| Tasks & notes | Time boxes, tasks, linked notes, focus timer | Tasks inside Markdown notes, gathered by queries |
+| AI scheduling | Your own model and API key; fits tasks into free time | No built-in AI; community plugins can add it |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Date-based queries; calendar views need other plugins |
+| Tasks & notes | Every task has a note with `[[ ]]` links | Tasks inside Markdown notes, gathered by queries |
 | Where data lives | On your Mac; no company cloud copy | Local Markdown files; Sync is end-to-end encrypted |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-Obsidian Tasks suits that habit. Tasks stay in Markdown notes, and queries gather them.
 
 ## Keep a task with the note that produced it
 

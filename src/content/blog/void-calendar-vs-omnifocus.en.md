@@ -1,20 +1,5 @@
 Omni’s tools have always struck me as complex, powerful, and guided by their own philosophy. OmniFocus™ is no exception.
 
-**In short:** If you practice GTD and need to work through complex projects on iPhone, iPad, Apple Watch, or the web, OmniFocus remains a mature, dependable choice. If you mostly work on a Mac and want AI to place tasks into time that is actually free, with a full note behind every task, Void Calendar is the better fit.
-
-## At a glance
-
-| | Void Calendar | OmniFocus |
-| --- | --- | --- |
-| Platforms | macOS (Apple silicon); mobile planned | Mac, iPhone, iPad, Watch, Vision Pro, web |
-| Price | Free with every feature; Pro sync not on sale yet | One-time from US$74.99, or US$99.99/year |
-| AI scheduling | Your own model, placed into free time | No auto-scheduling; plug-ins can query Apple's on-device model |
-| Calendar connections | Apple Calendar and Reminders, Google, iCloud | Forecast shows system calendar events, read-only |
-| Tasks & notes | Time boxes, tasks, linked notes, focus timer | Projects, tags, rich-text notes, attachments |
-| Where data lives | On your Mac; no company cloud copy | Local database, encrypted sync to Omni or your WebDAV |
-
-*Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
 I used it to manage university courses, self-study, life plans, and IELTS preparation. Tasks arranged in an outline made large goals easier to break into clear levels and next actions.
 
 ![OmniFocus 4 project and task outline on Mac](/blog/omnifocus-project-outline.png)
@@ -22,6 +7,21 @@ I used it to manage university courses, self-study, life plans, and IELTS prepar
 *Official OmniFocus 4 project outline screenshot. Image courtesy of the Omni Group. [Source and usage information](https://www.omnigroup.com/press/). OmniFocus is a trademark of the Omni Group.*
 
 If you have read Getting Things Done and want a mature tool for practicing GTD, you will probably consider OmniFocus. If configuration and plain-text workflows appeal to you, you might also explore [Org mode](/blog/void-calendar-vs-org-mode).
+
+**In short:** If you practice GTD and need to work through complex projects on iPhone, iPad, Apple Watch, or the web, OmniFocus remains a mature, dependable choice. If you mostly work on a Mac and want AI to place tasks into time that is actually free, with a full note behind every task, Void Calendar is the better fit.
+
+## At a glance
+
+| | Void Calendar | OmniFocus |
+| --- | --- | --- |
+| Platforms | macOS (Apple silicon), public beta | Mac, iPhone, iPad, Watch, Vision Pro, web |
+| Price | Free with every feature; Pro sync not on sale yet | One-time from US$74.99, or US$99.99/year |
+| AI scheduling | Your own model and API key; fits tasks into free time | No auto-scheduling; plug-ins can query Apple's on-device model |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Forecast shows system calendar events, read-only |
+| Tasks & notes | Every task has a note with `[[ ]]` links | Projects, tags, rich-text notes, attachments |
+| Where data lives | On your Mac; no company cloud copy | Local database, encrypted sync to Omni or your WebDAV |
+
+*Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
 
 ## A powerful system also needs maintenance
 

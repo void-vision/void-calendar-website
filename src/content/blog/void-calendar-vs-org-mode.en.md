@@ -1,21 +1,21 @@
 Org mode is powerful, and I used it regularly. Tasks, outlines, notes, and time records can live in Org files, with configuration that turns them into a working system of your own.
 
+Over time, I also found myself spending a fair amount of effort maintaining that system. Moving between a computer and a phone meant thinking about file synchronization, mobile interactions, images, and attachments.
+
 **In short:** If you love plain text, don’t mind investing time in Emacs configuration, or need to work on Linux or Windows, Org mode is free, open, and almost limitlessly flexible. If you work on a Mac and want calendars, tasks, and notes that are ready when you open them, with AI placing tasks into free time instead of a setup you maintain yourself, Void Calendar is the better fit.
 
 ## At a glance
 
 | | Void Calendar | Org mode |
 | --- | --- | --- |
-| Platforms | macOS (Apple silicon); other platforms planned | Wherever Emacs runs; community mobile apps |
+| Platforms | macOS (Apple silicon), public beta | Wherever Emacs runs; community mobile apps |
 | Price | Free with every feature; Pro sync not on sale yet | Free and open source |
-| AI scheduling | Your own model, placed into free time | No built-in AI scheduling |
-| Calendar connections | Apple Calendar and Reminders, Google, iCloud | Agenda views; one-way iCalendar export |
-| Tasks & notes | Time boxes, tasks, linked notes, focus timer | Plain-text outlines, TODOs, clocking, attachments |
+| AI scheduling | Your own model and API key; fits tasks into free time | No built-in AI scheduling |
+| Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Agenda views; one-way iCalendar export |
+| Tasks & notes | Every task has a note with `[[ ]]` links | Plain-text outlines, TODOs, clocking, attachments |
 | Where data lives | On your Mac; no company cloud copy | Plain-text files you manage yourself |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-Over time, I also found myself spending a fair amount of effort maintaining that system. Moving between a computer and a phone meant thinking about file synchronization, mobile interactions, images, and attachments.
 
 ## A good web client still leaves synchronization to arrange
 

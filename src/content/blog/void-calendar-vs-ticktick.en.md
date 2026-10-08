@@ -1,5 +1,7 @@
 TickTick already brings tasks and calendars together. You can capture work and reserve time for it.
 
+Some tasks cannot begin together. A school assignment needs research before an outline, and an outline before the draft. Putting every step on a calendar does not automatically move the work through that sequence.
+
 **In short:** If you want a mature, cross-platform to-do list and calendar whose free plan covers daily use, especially for quick capture on your phone, TickTick is the safer pick. If you use an Apple silicon Mac, your tasks follow a clear order, and you want task notes, focus records, and your own AI together, try Void Calendar.
 
 ## At a glance
@@ -8,14 +10,12 @@ TickTick already brings tasks and calendars together. You can capture work and r
 |---|---|---|
 | Platforms | macOS (Apple silicon), public beta | iOS, Android, Mac, Windows, Linux, web |
 | Price | Free with every feature; Pro sync not on sale yet | Free plan; Premium US$49.99/year |
-| AI scheduling | Your own model and API key; asks before moving events | Built-in AI Assistant helps break down and schedule; MCP |
+| AI scheduling | Your own model and API key; fits tasks into free time | Built-in AI Assistant helps break down and schedule; MCP |
 | Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Subscribes to Google, Outlook, iCloud, CalDAV, and more |
 | Tasks & notes | Every task has a note with `[[ ]]` links | Lists, Kanban, and calendar views |
 | Where data lives | On your Mac; no company cloud copy | TickTick's cloud, synced across devices |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-Some tasks cannot begin together. A school assignment needs research before an outline, and an outline before the draft. Putting every step on a calendar does not automatically move the work through that sequence.
 
 ## Start outlining when the research is ready
 

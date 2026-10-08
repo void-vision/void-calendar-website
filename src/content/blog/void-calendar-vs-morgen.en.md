@@ -1,5 +1,7 @@
 What appeals to me about Morgen is the ordinary problem it takes seriously: more than one calendar, and tasks in more than one place.
 
+Classes might live in Google Calendar, other commitments in Outlook, and tasks in another app. Seeing the whole day already requires switching.
+
 **In short:** If your calendars and to-dos are spread across Google, Outlook, Todoist, Notion, and more, and you need Windows, Linux, or mobile apps, Morgen is built to pull them together. If you use an Apple silicon Mac, keep your schedule in Apple Calendar, Reminders, Google, or iCloud, and want task notes and scheduling in one place, try Void Calendar.
 
 ## At a glance
@@ -8,14 +10,12 @@ What appeals to me about Morgen is the ordinary problem it takes seriously: more
 |---|---|---|
 | Platforms | macOS (Apple silicon), public beta | Windows, macOS, Linux, mobile, web |
 | Price | Free with every feature; Pro sync not on sale yet | No free plan; individual $15/month billed yearly, 14-day trial |
-| AI scheduling | Your own model and API key; asks before moving events | AI Planner proposes sessions in Frames for you to accept |
+| AI scheduling | Your own model and API key; fits tasks into free time | AI Planner proposes sessions in Frames for you to accept |
 | Calendar connections | Apple Calendar and Reminders, Google, iCloud; Outlook planned | Google, Outlook, iCloud, Fastmail, and more |
 | Tasks & notes | Every task has a note with `[[ ]]` links | Built-in tasks plus Todoist, Notion, and others |
 | Where data lives | On your Mac; no company cloud copy | Events synced to your device; Morgen tasks in its cloud |
 
 *Competitor details checked October 8, 2026; see their official sites. Void Calendar is in public beta.*
-
-Classes might live in Google Calendar, other commitments in Outlook, and tasks in another app. Seeing the whole day already requires switching.
 
 ## Bring scattered commitments together
 

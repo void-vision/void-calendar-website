@@ -1,5 +1,7 @@
 Microsoft To Do 的 My Day，有一个我很喜欢的思路：今天做什么，可以今天重新选。
 
+过去没做完的事情，不必一打开应用就全部挤过来。先挑今天想推进的几件事，这比永远面对一个越来越长的清单轻松。
+
 **一句话结论**：已经在 Outlook 和 Microsoft 365 里工作，需要在 Windows、手机和网页上同步待办，Microsoft To Do（微软待办）免费、轻巧，很合适。如果你在 Mac 上安排一天，想把大任务拆成今天真正做得完的一小步，并给每一步配上笔记，再让 AI 用你自己的模型排进空闲时间，可以考虑 Void Calendar。
 
 ## 一览对比
@@ -7,15 +9,13 @@ Microsoft To Do 的 My Day，有一个我很喜欢的思路：今天做什么，
 | | Void Calendar | Microsoft To Do |
 | --- | --- | --- |
 | 平台 | macOS（Apple 芯片），公开测试版 | Windows、Mac、iOS、Android、Web |
-| 价格 | 免费版含全部功能；Pro 同步暂未开放 | 个人微软账户免费 |
-| AI 排程 | 用自己的模型，排进空闲时间 | My Day 提供任务建议 |
-| 日历连接 | Apple、Google、iCloud 日历 | 配合 Outlook 的任务与日历 |
-| 任务与笔记 | 每个任务配笔记，支持 [[ ]] 链接 | 清单、My Day，与 Outlook 任务互通 |
-| 数据存放 | 存在你的 Mac 本地 | 存在 Exchange Online 邮箱 |
+| 价格 | 免费版含全部功能；Pro 同步暂未开售 | 个人微软账户免费 |
+| AI 排程 | 用你自己的模型和 API Key，排进空闲时间 | My Day 提供任务建议 |
+| 日历连接 | Apple 日历与提醒事项、Google、iCloud；Outlook 计划中 | 配合 Outlook 的任务与日历 |
+| 任务与笔记 | 每个任务配一页笔记，支持 `[[ ]]` 链接 | 清单、My Day，与 Outlook 任务互通 |
+| 数据存放 | 存在你的 Mac 上，公司不保留云端副本 | 存在 Exchange Online 邮箱 |
 
 *竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
-
-过去没做完的事情，不必一打开应用就全部挤过来。先挑今天想推进的几件事，这比永远面对一个越来越长的清单轻松。
 
 ## 选出了重点，还要看看今天剩下多少时间
 

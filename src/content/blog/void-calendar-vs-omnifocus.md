@@ -1,20 +1,5 @@
 Omni 家的工具给我的印象，一直是复杂、强大，而且有自己的哲学。OmniFocus™ 也是如此。
 
-**一句话结论**：如果你践行 GTD，需要在 iPhone、iPad、Apple Watch 或网页上随时处理复杂项目，OmniFocus 依然是成熟可靠的选择。如果你主要在 Mac 上工作，想让 AI 把任务放进日历里真正空闲的时间，并给每个任务留一页完整的笔记，Void Calendar 更合适。
-
-## 一览对比
-
-| | Void Calendar | OmniFocus |
-| --- | --- | --- |
-| 平台 | macOS（Apple 芯片）；移动端计划中 | Mac、iPhone、iPad、Watch、Vision Pro、网页 |
-| 价格 | 免费版含全部功能；Pro 同步未开售 | 买断 US$74.99 起，或订阅 US$99.99/年 |
-| AI 排程 | 自带模型，排进真正空闲的时段 | 无自动排程；插件可调用 Apple 端侧模型 |
-| 日历连接 | Apple 日历与提醒事项、Google、iCloud | Forecast 显示系统日历事件，只读 |
-| 任务与笔记 | 时间盒、任务、同名笔记、专注计时 | 项目、标签、富文本备注与附件 |
-| 数据存放 | 存在本机，公司不保存云端副本 | 本机数据库，加密同步到 Omni 或自建 WebDAV |
-
-*竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
-
 我用它管理过很多复杂的事情：大学课程、自学课程、人生规划，还有雅思备考。任务加上大纲，能把一个很大的目标拆成清楚的层次，让我知道接下来要做什么。
 
 ![OmniFocus 4 在 Mac 上的项目与任务大纲](/blog/omnifocus-project-outline.png)
@@ -22,6 +7,21 @@ Omni 家的工具给我的印象，一直是复杂、强大，而且有自己的
 *OmniFocus 4 官方项目大纲截图。Image courtesy of the Omni Group. [图片来源与使用说明](https://www.omnigroup.com/press/)。OmniFocus 是 Omni Group 的商标。*
 
 如果你读过《Getting Things Done》，想用一套成熟的工具践行 GTD，大概率会考虑 OmniFocus。如果你也喜欢配置和纯文本工作流，可能还会去试试 [Org mode](/blog/void-calendar-vs-org-mode)。
+
+**一句话结论**：如果你践行 GTD，需要在 iPhone、iPad、Apple Watch 或网页上随时处理复杂项目，OmniFocus 依然是成熟可靠的选择。如果你主要在 Mac 上工作，想让 AI 把任务放进日历里真正空闲的时间，并给每个任务留一页完整的笔记，Void Calendar 更合适。
+
+## 一览对比
+
+| | Void Calendar | OmniFocus |
+| --- | --- | --- |
+| 平台 | macOS（Apple 芯片），公开测试版 | Mac、iPhone、iPad、Watch、Vision Pro、网页 |
+| 价格 | 免费版含全部功能；Pro 同步暂未开售 | 买断 US$74.99 起，或订阅 US$99.99/年 |
+| AI 排程 | 用你自己的模型和 API Key，排进空闲时间 | 无自动排程；插件可调用 Apple 端侧模型 |
+| 日历连接 | Apple 日历与提醒事项、Google、iCloud；Outlook 计划中 | Forecast 显示系统日历事件，只读 |
+| 任务与笔记 | 每个任务配一页笔记，支持 `[[ ]]` 链接 | 项目、标签、富文本备注与附件 |
+| 数据存放 | 存在你的 Mac 上，公司不保留云端副本 | 本机数据库，加密同步到 Omni 或自建 WebDAV |
+
+*竞品信息核对于 2026 年 10 月 8 日，以官网为准；Void Calendar 为公开测试版。*
 
 ## 强大，也意味着要花时间管理它
 
