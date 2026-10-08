@@ -1,14 +1,18 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { macDownloadUrl } from '../../lib/download'
+import { getMacDownloadUrl } from '../../lib/download'
 
-// 下载按钮和结构化数据都指向这里，换存储位置时只改 macDownloadUrl。
+// 使用 Vercel 的 IP 国家标头，不将网站语言当作访问地区。
 export const Route = createFileRoute('/download/mac')({
   server: {
     handlers: {
-      GET: () =>
+      GET: ({ request }) =>
         new Response(null, {
           status: 302,
-          headers: { Location: macDownloadUrl, 'Cache-Control': 'no-store', 'X-Robots-Tag': 'noindex' },
+          headers: {
+            Location: getMacDownloadUrl(request.headers.get('x-vercel-ip-country')),
+            'Cache-Control': 'no-store',
+            'X-Robots-Tag': 'noindex',
+          },
         }),
     },
   },

@@ -24,9 +24,16 @@ export function ChangelogPage() {
             <time dateTime={release.published} className="text-sm text-[#8e8e93]">{formatDate(release.published, en)}</time>
           </div>
           <p className="m-0 text-[#3a3a3c]">{en ? release.summaryEn : release.summary}</p>
+          <h3 className="m-0 text-lg font-medium">{en ? 'Features' : '功能'}</h3>
           <ul className="m-0 flex list-disc flex-col gap-2 pl-5 text-[#3a3a3c]">
             {(en ? release.itemsEn : release.items).map((item) => (
               <li key={item}>{item}</li>
+            ))}
+          </ul>
+          <h3 className="m-0 text-lg font-medium">{en ? 'Beta Notes' : 'Beta 注意事项'}</h3>
+          <ul className="m-0 flex list-disc flex-col gap-2 pl-5 text-[#3a3a3c]">
+            {(en ? release.notesEn : release.notes).map((note) => (
+              <li key={note}>{note}</li>
             ))}
           </ul>
         </article>
