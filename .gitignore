@@ -7,6 +7,5 @@ dist
 .DS_Store
 .tanstack
 
-# 工具在子目录运行时生成的状态文件，不能进仓库或网站构建
-public/.omc/
-src/**/.omc/
+# oh-my-claudecode 的本地状态文件（任意目录），不进仓库也不进网站构建
+.omc/
