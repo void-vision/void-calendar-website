@@ -1,1 +1,11 @@
-null
+{
+  "version": "0.1.0-beta.2",
+  "notes": "This update improves the macOS desktop experience by removing browser-specific right-click menus while preserving Void Calendar’s own menus and copy/paste shortcuts.",
+  "pub_date": "2026-10-08T13:29:02Z",
+  "platforms": {
+    "darwin-aarch64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZHRzbnFpRzdQOFJKQ1ZHSHY0Zyt5cUwxNTRnQmhWamtwWjZTc3c0a0YxUXFUNHgyRzBzZHl0WGxaNWZyM2NRY3QwS3Y0NDRzZnVjd043N0E2ZDZpY3dMNkt4TjNndHdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxNDY1NzQ1CWZpbGU6Vm9pZCBDYWxlbmRhci5hcHAudGFyLmd6CXZlcnNpb246MC4xLjAtYmV0YS4yCkVCRzdCQjN6eUVJYnRmRk9xYWZFZzNGQmk3ZnBFeXQzVjR3bzNwYzBLaWRnR1hORGF3Z3poSDd0c3pkSzZzVDZ0NkVUZStFNHJvVndRMk1sV0dvdEFBPT0K",
+      "url": "https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.2/Void.Calendar.app.tar.gz"
+    }
+  }
+}
