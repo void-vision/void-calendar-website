@@ -9,7 +9,7 @@ const latestPost = posts.map((post) => post.updated ?? post.published).sort().at
 // lastmod 只写确实知道的日期；不确定的页面不写，免得搜索引擎不再信任这个字段。
 const entries: { path: string; lastmod?: string }[] = [
   { path: '/' },
-  { path: '/pricing', lastmod: '2026-10-05' },
+  { path: '/pricing', lastmod: '2026-10-08' },
   { path: '/blog', lastmod: latestPost },
   { path: '/changelog', lastmod: releases[0].published },
   ...posts.map((post) => ({ path: `/blog/${post.slug}`, lastmod: post.updated ?? post.published })),

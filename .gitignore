@@ -6,3 +6,7 @@ dist
 *.local
 .DS_Store
 .tanstack
+
+# 工具在子目录运行时生成的状态文件，不能进仓库或网站构建
+public/.omc/
+src/**/.omc/

@@ -5,8 +5,8 @@ import appCss from '../styles.css?url'
 
 export const Route = createRootRoute({
   head: ({ matches }) => {
-    // 没有子路由匹配，或子路由抛出 notFound 时，给 404 页面单独的标题并禁止收录。
-    const notFound = matches.length === 1 || matches.some((match) => match.status === 'notFound')
+    // 没有子路由匹配，或子路由（如不存在的文章）抛出 notFound 时，由根路由渲染 404；这时给单独的标题并禁止收录。
+    const notFound = matches.some((match) => match._notFound || match.status === 'notFound')
     return {
     meta: [
       { charSet: 'utf-8' },

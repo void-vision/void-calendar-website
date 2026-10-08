@@ -17,10 +17,10 @@ export default createServerEntry({
   async fetch(request, ...rest) {
     const url = new URL(request.url)
 
-    // 带尾斜杠的地址永久跳到规范地址，避免框架默认的临时跳转。
+    // 带尾斜杠的地址永久跳到规范地址；合并连续斜杠并用同源绝对地址，避免 //evil.com/ 变成站外跳转。
     if (url.pathname.length > 1 && url.pathname.endsWith('/')) {
-      url.pathname = url.pathname.replace(/\/+$/, '')
-      return new Response(null, { status: 308, headers: { Location: url.pathname + url.search } })
+      url.pathname = url.pathname.replace(/\/{2,}/g, '/').replace(/\/+$/, '') || '/'
+      return Response.redirect(url.href, 308)
     }
 
     const response = await handler(acceptHtml(request), ...rest)

@@ -176,6 +176,8 @@ export function aboutJsonLd(lang: SiteLang) {
     {
       '@context': 'https://schema.org',
       '@type': 'AboutPage',
+      name: pages.about[lang].title,
+      description: pages.about[lang].description,
       url: absoluteUrl(localizePath('/about', lang)),
       inLanguage: hreflang[lang],
       isPartOf: { '@id': websiteId },
