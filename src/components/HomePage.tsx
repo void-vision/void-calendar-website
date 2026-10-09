@@ -29,30 +29,6 @@ export function HomePage() {
   const r = v.refs
   const tr = useTranslate()
 
-  useEffect(() => {
-    let disposed = false
-    let lenis: { destroy: () => void } | undefined
-    const desktop = window.matchMedia('(min-width: 768px)')
-    const syncScroll = async () => {
-      if (!desktop.matches) {
-        lenis?.destroy()
-        lenis = undefined
-        return
-      }
-      if (lenis) return
-      const { default: Lenis } = await import('lenis')
-      if (disposed || !desktop.matches || lenis) return
-      lenis = new Lenis({ autoRaf: true, anchors: true, allowNestedScroll: true, lerp: 0.18, stopInertiaOnNavigate: true })
-    }
-    desktop.addEventListener('change', syncScroll)
-    void syncScroll()
-    return () => {
-      disposed = true
-      desktop.removeEventListener('change', syncScroll)
-      lenis?.destroy()
-    }
-  }, [])
-
   return tr(
     <div ref={r.rootRef} className="min-h-screen bg-white text-[15px] leading-[1.6] text-[#1c1c1e]">
       <MemoSiteHeader lang={lang} />
@@ -89,10 +65,11 @@ export function HomePage() {
 
       <section id="showcase" className="relative mt-[clamp(48px,6vw,80px)] h-[300vh]">
         <div className="showcase-content sticky top-[68px] flex h-[calc(100vh-68px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
-          <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] will-change-transform [transform:translate3d(0,24px,0)_scale(.84)]">
+          <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] transition-transform duration-180 ease-out will-change-transform [transform:translate3d(0,24px,0)_scale(.84)]">
             <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[18px] border border-[#e3e1dd] bg-linear-to-b from-[#f2f4f7] to-[#e9ecf1] text-[#1c1c1e] shadow-[0_20px_60px_rgba(28,28,30,.08)]">
               <ShowcaseProgress />
               <MenuBar v={v} />
+              <MemoVoidIslandDemo lang={lang} onExpandedChange={v.holdIsland} />
               <div className="demo-window-padding px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)]">
                 <div className="w-full overflow-hidden rounded-xl border border-[rgba(28,28,30,.1)] bg-white text-[#1c1c1e] shadow-[0_18px_50px_rgba(28,28,30,.12),0_2px_6px_rgba(28,28,30,.05)]">
                   <DemoChrome v={v} />
@@ -131,7 +108,6 @@ export function HomePage() {
       <AiSection />
       <Disrupt v={v} />
       <Focus v={v} />
-      <MemoVoidIslandDemo lang={lang} />
       <Templates v={v} />
       <Plugins v={v} />
       <Download />
@@ -187,7 +163,7 @@ function ShowcaseProgress() {
 
   return (
     <div ref={trackRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-30 h-[3px] bg-[#e8e6e2]" style={{ opacity: 0 }}>
-      <div ref={fillRef} className="h-full origin-left bg-[#1c1c1e]" style={{ transform: 'scaleX(0)' }} />
+      <div ref={fillRef} className="h-full origin-left bg-[#1c1c1e] transition-transform duration-180 ease-out" style={{ transform: 'scaleX(0)' }} />
     </div>
   )
 }
@@ -196,12 +172,12 @@ function MenuBar({ v }: { v: View }) {
   const r = v.refs
   const tr = useTranslate()
   return tr(
-    <div className="demo-menubar relative z-20 flex h-7 items-center gap-4 border-b border-[rgba(28,28,30,.06)] bg-white/72 px-3.5 text-[12.5px] whitespace-nowrap backdrop-blur-[18px]">
-      <svg width="13" height="15" viewBox="0 0 13 15" fill="#1c1c1e" aria-label="Apple" className="demo-menu-extra -mt-px shrink-0">
+    <div className="demo-menubar relative z-20 flex h-[26px] items-center gap-4 bg-[#0a0a0c] px-3.5 text-[12.5px] whitespace-nowrap text-[#f5f5f7]">
+      <svg width="13" height="15" viewBox="0 0 13 15" fill="currentColor" aria-label="Apple" className="demo-menu-extra -mt-px shrink-0">
         <path d="M10.6 8c0-1.7 1.4-2.5 1.5-2.6-.8-1.2-2.1-1.3-2.5-1.4-1.1-.1-2.1.6-2.6.6-.6 0-1.4-.6-2.3-.6C3.5 4 2.4 4.7 1.8 5.8c-1.3 2.2-.3 5.5.9 7.3.6.9 1.3 1.9 2.3 1.8.9 0 1.2-.6 2.3-.6s1.4.6 2.3.6c1 0 1.6-.9 2.2-1.8.7-1 1-2 1-2.1 0 0-1.9-.7-2.2-3zM8.9 2.9c.5-.6.8-1.4.7-2.2-.7 0-1.5.5-2 1.1-.4.5-.8 1.3-.7 2.1.8.1 1.5-.4 2-1z" />
       </svg>
       <b className="font-semibold">Void Calendar</b>
-      <span className="demo-menu-extra">文件</span><span className="demo-menu-extra">编辑</span><span className="demo-menu-extra">显示</span><span className="demo-menu-extra">窗口</span><span className="demo-menu-extra">帮助</span>
+      <span className="demo-menu-extra">文件</span><span className="demo-menu-extra">编辑</span><span className="demo-menu-extra">显示</span><span className="demo-menu-extra">前往</span><span className="demo-menu-extra">窗口</span><span className="demo-menu-extra">帮助</span>
       <span className="flex-1" />
       <span className="relative flex">
         <button
@@ -211,10 +187,10 @@ function MenuBar({ v }: { v: View }) {
           onClick={v.toggleMb}
           aria-expanded={v.mbExpanded === 'true'}
           aria-label="当前时间盒"
-          className="flex h-[22px] cursor-pointer items-center gap-1.5 rounded-[5px] border-0 px-2 font-[inherit] text-[12.5px] text-[#1c1c1e] tabular-nums transition-colors hover:bg-[rgba(28,28,30,.06)]"
+          className="flex h-[22px] cursor-pointer items-center gap-1.5 rounded-[5px] border-0 px-2 font-[inherit] text-[12.5px] text-[#f5f5f7] tabular-nums transition-colors hover:bg-white/12"
           style={{ background: v.mbPillBg }}
         >
-          <span className="size-[7px] rounded-[2px] transition-colors" style={{ background: v.mbDot }} />
+          <svg width="13" height="13" viewBox="0 0 20 20" fill="none" strokeWidth="1.8" strokeLinejoin="round" className="shrink-0" style={{ stroke: v.mbDot }} aria-hidden="true"><path d="M10 2.5l1.6 4.4 4.4 1.6-4.4 1.6L10 14.5l-1.6-4.4L4 8.5l4.4-1.6z" /></svg>
           <span data-no-translate={v.mbUserText ? true : undefined} className="min-w-0 truncate">{v.mbUserText ?? v.mbText}</span>
         </button>
         <div
@@ -253,14 +229,16 @@ function MenuBar({ v }: { v: View }) {
           </div>
         </div>
       </span>
-      <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="#1c1c1e" strokeWidth="1.4" strokeLinecap="round" className="demo-menu-extra shrink-0">
+      <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" className="demo-menu-extra shrink-0">
         <path d="M1 3.8a9 9 0 0 1 13 0M3.3 6.2a5.6 5.6 0 0 1 8.4 0M5.6 8.5a2.3 2.3 0 0 1 3.8 0" />
       </svg>
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.4" className="demo-menu-extra shrink-0" aria-hidden="true"><path d="M14.5 12.5A6 6 0 0 1 7.5 5.5a6 6 0 1 0 7 7z" /></svg>
       <svg width="22" height="11" viewBox="0 0 22 11" fill="none" className="demo-menu-extra shrink-0">
-        <rect x=".6" y=".6" width="18.4" height="9.8" rx="2.6" stroke="#1c1c1e" strokeOpacity=".45" strokeWidth="1.2" />
-        <rect x="2.2" y="2.2" width="12" height="6.6" rx="1.4" fill="#1c1c1e" />
-        <path d="M20.4 3.8v3.4" stroke="#1c1c1e" strokeOpacity=".45" strokeWidth="1.4" strokeLinecap="round" />
+        <rect x=".6" y=".6" width="18.4" height="9.8" rx="2.6" stroke="currentColor" strokeOpacity=".45" strokeWidth="1.2" />
+        <rect x="2.2" y="2.2" width="12" height="6.6" rx="1.4" fill="currentColor" />
+        <path d="M20.4 3.8v3.4" stroke="currentColor" strokeOpacity=".45" strokeWidth="1.4" strokeLinecap="round" />
       </svg>
+      <svg width="15" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="demo-menu-extra shrink-0" aria-hidden="true"><rect x="3" y="4" width="14" height="5" rx="2.5" /><circle cx="6.5" cy="6.5" r="1.4" fill="currentColor" stroke="none" /><rect x="3" y="11" width="14" height="5" rx="2.5" /><circle cx="13.5" cy="13.5" r="1.4" fill="currentColor" stroke="none" /></svg>
       <span className="demo-menu-extra tabular-nums">9月30日 周三 11:20</span>
     </div>
   )

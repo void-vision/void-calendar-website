@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import 'lenis/dist/lenis.css';
 
 html,
 body {
@@ -597,16 +596,6 @@ button[data-mb]:focus-visible {
 
 nav::-webkit-scrollbar {
   display: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-html.lenis {
-  scroll-behavior: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {

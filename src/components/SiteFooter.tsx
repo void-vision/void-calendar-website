@@ -29,7 +29,6 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
             <LangLink to="/" hash="ai" className={linkClass}>{en ? 'AI scheduling' : 'AI 排程'}</LangLink>
             <LangLink to="/" hash="capture" className={linkClass}>{en ? 'Capture' : '捕获'}</LangLink>
             <LangLink to="/" hash="focus" className={linkClass}>{en ? 'Focus & notes' : '专注与笔记'}</LangLink>
-            <LangLink to="/" hash="void-island" className={linkClass}>Void Island</LangLink>
             <LangLink to="/" hash="plugins" className={linkClass}>{en ? 'Plugins' : '插件市场'}</LangLink>
             <LangLink to="/changelog" className={linkClass}>{en ? 'Changelog' : '更新日志'}</LangLink>
           </nav>
