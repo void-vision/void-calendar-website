@@ -59,32 +59,14 @@ function DoneMarker() {
   return <svg className="vi-done-marker" viewBox="0 0 16 20" shapeRendering="crispEdges" aria-hidden="true"><path fill="#788f84" d="M6 7h4v10H6zM3 17h10v2H3z" /><path fill="#39ba68" d="M9 3h3v2H9zM8 5h6v3H8z" /><path fill="#d4d7d1" d="M3 12h4v4H3z" /></svg>
 }
 
-type CatFrame = 'idle' | 'blink' | 'wink' | 'ear'
-
-const catFrameImages: Record<CatFrame, string> = {
-  idle: '/void-island-pixel-cat.png',
-  blink: '/void-island-pixel-cat-blink.png',
-  wink: '/void-island-pixel-cat-wink.png',
-  ear: '/void-island-pixel-cat-ear.png',
-}
-
 function PixelCat({ en }: { en: boolean }) {
-  const [frame, setFrame] = useState<CatFrame>('idle')
-  useEffect(() => {
-    for (const src of Object.values(catFrameImages)) { const image = new Image(); image.src = src }
-    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const update = () => {
-      if (motion.matches) { setFrame('idle'); return }
-      const time = Date.now() / 1000
-      setFrame(time % 4.2 > 4 ? 'blink' : time % 11 > 10.6 ? 'wink' : time % 6.4 > 6.05 ? 'ear' : 'idle')
-    }
-    update()
-    const timer = window.setInterval(update, 150)
-    motion.addEventListener('change', update)
-    return () => { window.clearInterval(timer); motion.removeEventListener('change', update) }
-  }, [])
-  return <div className="vi-pixel-cat" role="img" aria-label={en ? 'Pixel cat' : '像素小猫'} data-cat-frame={frame}>
-    <img src={catFrameImages[frame]} alt="" />
+  const catImage = '/void-island-pixel-cat-reference.png?v=2'
+  return <div className="vi-pixel-cat" role="img" aria-label={en ? 'Pixel cat' : '像素小猫'}>
+    <img className="vi-cat-body" src={catImage} alt="" />
+    <span className="vi-cat-ear vi-cat-ear-left" aria-hidden="true"><img src={catImage} alt="" /></span>
+    <span className="vi-cat-ear vi-cat-ear-right" aria-hidden="true"><img src={catImage} alt="" /></span>
+    <span className="vi-cat-eye vi-cat-eye-left" aria-hidden="true" />
+    <span className="vi-cat-eye vi-cat-eye-right" aria-hidden="true" />
   </div>
 }
 
