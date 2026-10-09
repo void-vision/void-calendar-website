@@ -59,6 +59,35 @@ function DoneMarker() {
   return <svg className="vi-done-marker" viewBox="0 0 16 20" shapeRendering="crispEdges" aria-hidden="true"><path fill="#788f84" d="M6 7h4v10H6zM3 17h10v2H3z" /><path fill="#39ba68" d="M9 3h3v2H9zM8 5h6v3H8z" /><path fill="#d4d7d1" d="M3 12h4v4H3z" /></svg>
 }
 
+type CatFrame = 'idle' | 'blink' | 'wink' | 'ear'
+
+const catFrameImages: Record<CatFrame, string> = {
+  idle: '/void-island-pixel-cat.png',
+  blink: '/void-island-pixel-cat-blink.png',
+  wink: '/void-island-pixel-cat-wink.png',
+  ear: '/void-island-pixel-cat-ear.png',
+}
+
+function PixelCat({ en }: { en: boolean }) {
+  const [frame, setFrame] = useState<CatFrame>('idle')
+  useEffect(() => {
+    for (const src of Object.values(catFrameImages)) { const image = new Image(); image.src = src }
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const update = () => {
+      if (motion.matches) { setFrame('idle'); return }
+      const time = Date.now() / 1000
+      setFrame(time % 4.2 > 4 ? 'blink' : time % 11 > 10.6 ? 'wink' : time % 6.4 > 6.05 ? 'ear' : 'idle')
+    }
+    update()
+    const timer = window.setInterval(update, 150)
+    motion.addEventListener('change', update)
+    return () => { window.clearInterval(timer); motion.removeEventListener('change', update) }
+  }, [])
+  return <div className="vi-pixel-cat" role="img" aria-label={en ? 'Pixel cat' : '像素小猫'} data-cat-frame={frame}>
+    <img src={catFrameImages[frame]} alt="" />
+  </div>
+}
+
 export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onExpandedChange: (expanded: boolean) => void }) {
   const en = lang === 'en'
   const islandRef = useRef<HTMLDivElement>(null)
@@ -151,6 +180,8 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
   }
   const labels = en ? { map: 'Map', focus: 'Focus', journal: 'Notes', cat: 'Cat' } : { map: '地图', focus: '专注', journal: '记录', cat: '小猫' }
   const personas = en ? { camus: 'Camus', psych: 'Psychology', friend: 'Friend' } : { camus: '加缪', psych: '心理学', friend: '朋友' }
+  const personaDescriptions = en ? { camus: 'Clear and gentle · original thoughts', psych: 'Accept emotions, take small steps', friend: 'Here with you' } : { camus: '清醒，但温柔 · 原创短句', psych: '接纳情绪，小步行动', friend: '朴素地陪着你' }
+  const personaColors = { camus: '#ff9233', psych: '#5ac8fa', friend: '#34d158' }
   const catMessage = persona === 'camus' ? catLines[lang][catIndex] : persona === 'psych'
     ? (en ? 'It is okay to feel stuck. Pick the smallest next step and start there.' : '觉得卡住也没关系。先选最小的一步，从那里开始。')
     : (en ? 'I am here with you. Let us do this one thing together.' : '我在这里陪着你。我们先把这一件事做完。')
@@ -188,10 +219,10 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
           {tab === 'focus' && <div className="vi-focus-panel" role="tabpanel" aria-label={labels.focus}><div><div className="vi-clock">{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</div><div className="vi-durations">{[5, 15, 25, 45].map((minutes) => <button key={minutes} type="button" className={duration === minutes ? 'vi-duration-active' : ''} onClick={() => setFocusDuration(minutes)}>{minutes}</button>)}</div><small>{en ? '20 minutes focused today · 1 session' : '今天已专注 20 分钟 · 1 轮'}</small></div><div className="vi-focus-task"><span>{en ? 'CURRENT TASK' : '当前任务'}</span><strong>{en ? activeTask.en : activeTask.zh}</strong><span>→ {en ? activeTask.stepEn : activeTask.stepZh}</span><button type="button" onClick={() => { if (seconds === 0) setSeconds(duration * 60); setRunning((value) => !value) }}>{running ? (en ? 'Pause' : '暂停') : (en ? 'Start focus' : '开始专注')}</button></div></div>}
           {tab === 'journal' && <div className="vi-journal-panel" role="tabpanel" aria-label={labels.journal}><div className="vi-note-entry"><textarea value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) { event.preventDefault(); saveNote() } }} placeholder={en ? 'Write anything… Mention a task with [[ ]]' : '随手记点什么，可以多行；输入 [[ ]] 引用任务'} aria-label={en ? 'New note' : '新记录'} rows={2} /><button type="button" onClick={saveNote} disabled={!draft.trim()}>{en ? 'Save' : '记下'}</button></div><div className="vi-note-list">{notes.map((note, index) => <p key={`${index}-${note}`}><time>{en ? 'Now' : '刚刚'}</time>{note}</p>)}<p><time>10:05</time>{en ? 'Check Friday’s meeting before replying to Mia.' : '回复 Mia 的排期邮件前，先确认周五的会还在不在。'}</p><p><time>09:40</time>{en ? 'Three pages have inconsistent button spacing.' : '走查截图里的问题：三页按钮间距不一致。'}</p><p><time>09:12</time>{en ? 'Start with the design review checklist today.' : '今天先把整理设计走查问题清单做掉。'}</p></div></div>}
           {tab === 'cat' && <div className="vi-cat-panel" role="tabpanel" aria-label={labels.cat}>
-            <div className="vi-pixel-cat" role="img" aria-label={en ? 'Pixel cat' : '像素小猫'}><img src="/void-island-pixel-cat.png" alt="" /><span className="vi-cat-eyelid vi-cat-eyelid-left" aria-hidden="true" /><span className="vi-cat-eyelid vi-cat-eyelid-right" aria-hidden="true" /></div>
+            <PixelCat en={en} />
             <div className="vi-cat-message"><div><span><i className="vi-cat-status" />{en ? `Cat · ${personas[persona]}` : `喵 · ${personas[persona]}视角`}</span><button type="button" onClick={() => setCatIndex((index) => (index + 1) % catLines.zh.length)}>{en ? 'Another thought' : '再说一句'}</button></div><p>{catMessage}</p></div>
             <div className="vi-cat-prompts">{(en ? ['Talk with me', 'I feel tired', 'Encourage me', 'Something else'] : ['陪我聊两句', '我有点累', '夸夸我', '说点别的']).map((prompt, index) => <button key={prompt} type="button" onClick={() => setCatIndex((index + 1) % catLines.zh.length)}>{index + 1} {prompt}</button>)}</div>
-            <div className="vi-persona"><button type="button" aria-expanded={personaOpen} onClick={() => setPersonaOpen((value) => !value)}><i className="vi-cat-status" />{personas[persona]}⌄</button>{personaOpen && <div className="vi-persona-list">{(['camus', 'psych', 'friend'] as const).map((item) => <button key={item} type="button" onClick={() => { setPersona(item); setPersonaOpen(false) }}>{personas[item]}</button>)}</div>}</div>
+            <div className="vi-persona"><button type="button" aria-label={en ? 'Quote persona' : '箴言人格'} aria-expanded={personaOpen} aria-haspopup="listbox" onClick={() => setPersonaOpen((value) => !value)}><i className="vi-persona-dot" style={{ background: personaColors[persona] }} /><span>{personas[persona]}</span><svg className="vi-persona-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg></button>{personaOpen && <div className="vi-persona-list" role="listbox" aria-label={en ? 'Quote persona' : '箴言人格'}>{(['camus', 'psych', 'friend'] as const).map((item) => <button key={item} type="button" role="option" aria-selected={persona === item} onClick={() => { setPersona(item); setPersonaOpen(false) }}><i className="vi-persona-dot" style={{ background: personaColors[item] }} /><span className="vi-persona-option-text"><span>{personas[item]}</span><small>{personaDescriptions[item]}</small></span>{persona === item && <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" /></svg>}</button>)}</div>}</div>
           </div>}
         </> : <button type="button" className="vi-island-collapsed" onClick={() => setExpanded(true)} aria-label={en ? 'Expand Void Island' : '展开灵动岛'}><IslandIcon name="cat" /><span>{en ? activeTask.en : activeTask.zh}</span><b>{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</b></button>}
       </div>
