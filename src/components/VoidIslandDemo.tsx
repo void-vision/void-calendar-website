@@ -26,28 +26,6 @@ const catLines = {
   en: ['The world may not give you an answer. “List the first three issues” is a step that belongs to you.', 'The stone will not get lighter while you wait. Pick one and begin.', 'You do not need to find meaning before taking the first step.'],
 }
 
-const blackCatRows = [
-  '.....K.........K........', '....KKK.......KKK.......', '....KCKK.....KKCK.......',
-  '...KKCCKK...KKCCKK......', '...KCCCKKKKKKKCCCK......', '...KKKKKKKKKKKKKKK......',
-  '..KKKKKKKKKKKKKKKKK.....', '..KKKKKKKKKKKKKKKKK.....', '..KKKKKKKKKKKKKKKKK.....',
-  '..KKCKKCKKKKKCKKCKK.....', '..KKCKKCKKKKKCKKCKK.....', '..KKKCCKKKKKKKCCKKK.....',
-  '.WKKKKKKKKKKKKKKKKKW....', 'W.KKKKKKKKKKKKKKKKK.W...', '.TKKKKKKKKKKKKKKKKKTTTD.',
-  '.CCCCCCCCCCCCCCCCCCCCDD.', '.LLLLLLLLLLLLLLLLLLLLDD.', '.CCCCCCCCCCCCCCCCCCCCDD.',
-  '.CCCGGGGCGGGGCGGGGCCCDD.', '.CCCGGGGCGGGGCGGGGCCCDD.', '.CCCCCCCCCCCCCCCCCCCCDD.',
-  '.CCCGGGGCGGGGCXXXCCCCDD.', '.CCCGGGGCGGGGCCXCXCCCDD.', '.CCCGGGGCGGGGCXCXXCCCD..',
-  '.CCCCCCCCCCCCCCCCCCCCD..',
-]
-const blackCatColors: Record<string, string> = { K: '#0c0c0e', R: '#3a3a3e', C: '#f6f1e4', T: '#e3e3e6', D: '#cfcfd2', L: '#c9c5ba', G: '#c4c4c8', X: '#78787c', W: '#8e8e93' }
-
-function BlackCatSprite() {
-  const cells = blackCatRows.flatMap((row, y) => [...row].map((cell, x) => {
-    if (cell === '.') return null
-    const edge = cell === 'K' && y < 14 && (row[x - 1] === '.' || row[x + 1] === '.' || blackCatRows[y - 1]?.[x] === '.')
-    return <rect key={`${x}-${y}`} x={x} y={y} width="1" height="1" fill={blackCatColors[edge ? 'R' : cell]} />
-  }))
-  return <svg viewBox={`0 0 ${blackCatRows[0].length} ${blackCatRows.length}`} shapeRendering="crispEdges" aria-hidden="true">{cells}<g className="vi-cat-blink">{[4, 7, 13, 16].map((x) => <rect key={x} x={x} y="9" width="1" height="1" fill="#0c0c0e" />)}</g></svg>
-}
-
 function IslandIcon({ name }: { name: 'cat' | 'sound' | 'muted' | 'settings' | 'chat' | 'switch' }) {
   if (name === 'cat') {
     const rows = ['#.....#..', '##...##..', '#######..', '#.###.#..', '###+###..', '.#####..#', '.#####.#.', '.######..']
@@ -210,7 +188,7 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
           {tab === 'focus' && <div className="vi-focus-panel" role="tabpanel" aria-label={labels.focus}><div><div className="vi-clock">{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</div><div className="vi-durations">{[5, 15, 25, 45].map((minutes) => <button key={minutes} type="button" className={duration === minutes ? 'vi-duration-active' : ''} onClick={() => setFocusDuration(minutes)}>{minutes}</button>)}</div><small>{en ? '20 minutes focused today · 1 session' : '今天已专注 20 分钟 · 1 轮'}</small></div><div className="vi-focus-task"><span>{en ? 'CURRENT TASK' : '当前任务'}</span><strong>{en ? activeTask.en : activeTask.zh}</strong><span>→ {en ? activeTask.stepEn : activeTask.stepZh}</span><button type="button" onClick={() => { if (seconds === 0) setSeconds(duration * 60); setRunning((value) => !value) }}>{running ? (en ? 'Pause' : '暂停') : (en ? 'Start focus' : '开始专注')}</button></div></div>}
           {tab === 'journal' && <div className="vi-journal-panel" role="tabpanel" aria-label={labels.journal}><div className="vi-note-entry"><textarea value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) { event.preventDefault(); saveNote() } }} placeholder={en ? 'Write anything… Mention a task with [[ ]]' : '随手记点什么，可以多行；输入 [[ ]] 引用任务'} aria-label={en ? 'New note' : '新记录'} rows={2} /><button type="button" onClick={saveNote} disabled={!draft.trim()}>{en ? 'Save' : '记下'}</button></div><div className="vi-note-list">{notes.map((note, index) => <p key={`${index}-${note}`}><time>{en ? 'Now' : '刚刚'}</time>{note}</p>)}<p><time>10:05</time>{en ? 'Check Friday’s meeting before replying to Mia.' : '回复 Mia 的排期邮件前，先确认周五的会还在不在。'}</p><p><time>09:40</time>{en ? 'Three pages have inconsistent button spacing.' : '走查截图里的问题：三页按钮间距不一致。'}</p><p><time>09:12</time>{en ? 'Start with the design review checklist today.' : '今天先把整理设计走查问题清单做掉。'}</p></div></div>}
           {tab === 'cat' && <div className="vi-cat-panel" role="tabpanel" aria-label={labels.cat}>
-            <div className="vi-pixel-cat" role="img" aria-label={en ? 'Pixel cat' : '像素小猫'}><BlackCatSprite /></div>
+            <div className="vi-pixel-cat" role="img" aria-label={en ? 'Pixel cat' : '像素小猫'}><img src="/void-island-pixel-cat.png" alt="" /><span className="vi-cat-eyelid vi-cat-eyelid-left" aria-hidden="true" /><span className="vi-cat-eyelid vi-cat-eyelid-right" aria-hidden="true" /></div>
             <div className="vi-cat-message"><div><span><i className="vi-cat-status" />{en ? `Cat · ${personas[persona]}` : `喵 · ${personas[persona]}视角`}</span><button type="button" onClick={() => setCatIndex((index) => (index + 1) % catLines.zh.length)}>{en ? 'Another thought' : '再说一句'}</button></div><p>{catMessage}</p></div>
             <div className="vi-cat-prompts">{(en ? ['Talk with me', 'I feel tired', 'Encourage me', 'Something else'] : ['陪我聊两句', '我有点累', '夸夸我', '说点别的']).map((prompt, index) => <button key={prompt} type="button" onClick={() => setCatIndex((index + 1) % catLines.zh.length)}>{index + 1} {prompt}</button>)}</div>
             <div className="vi-persona"><button type="button" aria-expanded={personaOpen} onClick={() => setPersonaOpen((value) => !value)}><i className="vi-cat-status" />{personas[persona]}⌄</button>{personaOpen && <div className="vi-persona-list">{(['camus', 'psych', 'friend'] as const).map((item) => <button key={item} type="button" onClick={() => { setPersona(item); setPersonaOpen(false) }}>{personas[item]}</button>)}</div>}</div>

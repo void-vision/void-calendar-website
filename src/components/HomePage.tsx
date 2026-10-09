@@ -162,7 +162,7 @@ function ShowcaseProgress() {
   }, [])
 
   return (
-    <div ref={trackRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-30 h-[3px] bg-[#e8e6e2]" style={{ opacity: 0 }}>
+    <div ref={trackRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-60 h-[3px] bg-[#e8e6e2]" style={{ opacity: 0 }}>
       <div ref={fillRef} className="h-full origin-left bg-[#1c1c1e] transition-transform duration-180 ease-out" style={{ transform: 'scaleX(0)' }} />
     </div>
   )

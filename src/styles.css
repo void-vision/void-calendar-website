@@ -278,8 +278,7 @@ section[id],
   }
 
   .demo-menubar > b {
-    flex-shrink: 0;
-    font-size: 11px;
+    display: none;
   }
 
   .demo-menu-extra,
