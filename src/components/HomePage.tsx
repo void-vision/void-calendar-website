@@ -10,12 +10,14 @@ import { DemoCapture, DemoCaptureResult } from './DemoCapture'
 import { ComparisonBlog } from './ComparisonBlog'
 import { SiteFooter } from './SiteFooter'
 import { SiteHeader } from './SiteHeader'
+import { VoidIslandDemo } from './VoidIslandDemo'
 import { downloadPath } from '../lib/download'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
 const MemoSiteHeader = memo(SiteHeader)
 const MemoSiteFooter = memo(SiteFooter)
 const MemoComparisonBlog = memo(ComparisonBlog)
+const MemoVoidIslandDemo = memo(VoidIslandDemo)
 
 function Logo({ className = 'size-full object-contain' }: { className?: string }) {
   return <img src="/logo-128.png" alt="Void Calendar" width={128} height={128} decoding="async" className={className} />
@@ -129,6 +131,7 @@ export function HomePage() {
       <AiSection />
       <Disrupt v={v} />
       <Focus v={v} />
+      <MemoVoidIslandDemo lang={lang} />
       <Templates v={v} />
       <Plugins v={v} />
       <Download />

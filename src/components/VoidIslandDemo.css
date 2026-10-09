@@ -1,0 +1,275 @@
+.vi-section {
+  padding: clamp(64px, 8vw, 112px) clamp(16px, 3vw, 40px);
+  background: #f8f8f7;
+  color: #1c1c1e;
+}
+
+.vi-section-heading {
+  max-width: 760px;
+  margin: 0 auto 36px;
+  text-align: center;
+}
+
+.vi-eyebrow {
+  color: #1463d9;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
+
+.vi-section-heading h2 {
+  margin: 12px 0;
+  font-size: clamp(30px, 4vw, 48px);
+  font-weight: 500;
+  letter-spacing: -.035em;
+  line-height: 1.16;
+}
+
+.vi-section-heading p {
+  margin: 0;
+  color: #6b6b70;
+  font-size: clamp(15px, 1.5vw, 18px);
+  line-height: 1.7;
+}
+
+.vi-scene {
+  position: relative;
+  height: clamp(510px, 55vw, 650px);
+  max-width: 1200px;
+  margin: auto;
+  overflow: hidden;
+  border: 1px solid #e3e1dd;
+  border-radius: 20px;
+  background: linear-gradient(#efefec, #e6e8ed);
+  box-shadow: 0 26px 75px rgba(28, 28, 30, .1);
+}
+
+.vi-os-menu {
+  display: flex;
+  height: 32px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 17px;
+  background: rgba(250, 250, 249, .9);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.vi-calendar {
+  position: absolute;
+  inset: 60px 48px 38px;
+  display: flex;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, .08);
+  border-radius: 14px;
+  background: white;
+  box-shadow: 0 18px 45px rgba(28, 28, 30, .12);
+  font-size: 12px;
+}
+
+.vi-calendar-sidebar {
+  display: flex;
+  width: 190px;
+  flex: none;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px;
+  border-right: 1px solid #e8e6e2;
+  background: #f6f5f3;
+}
+
+.vi-calendar-sidebar > span:not(.vi-traffic) {
+  display: flex;
+  min-height: 29px;
+  align-items: center;
+  gap: 8px;
+  padding: 0 10px;
+  border-radius: 6px;
+}
+
+.vi-calendar-sidebar .vi-calendar-current {
+  background: #e4ecfb;
+  color: #1463d9;
+}
+
+.vi-calendar-sidebar small {
+  margin: 16px 10px 5px;
+  color: #8e8e93;
+}
+
+.vi-traffic {
+  display: flex;
+  gap: 6px;
+  padding: 0 10px 10px;
+}
+
+.vi-traffic i {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ff5f57;
+}
+
+.vi-traffic i:nth-child(2) { background: #febc2e; }
+.vi-traffic i:nth-child(3) { background: #28c840; }
+
+.vi-cal-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 3px;
+  background: #3981dc;
+}
+
+.vi-cal-dot-1 { background: #8068d4; }
+.vi-cal-dot-2 { background: #38a266; }
+.vi-cal-dot-3 { background: #dd813f; }
+
+.vi-calendar-main { display: flex; min-width: 0; flex: 1; flex-direction: column; }
+.vi-calendar-toolbar { display: flex; height: 46px; flex: none; align-items: center; gap: 12px; padding: 0 16px; border-bottom: 1px solid #eeece9; white-space: nowrap; }
+.vi-calendar-toolbar strong { font-size: 14px; }
+.vi-calendar-toolbar > span { color: #8e8e93; }
+.vi-calendar-toolbar .vi-calendar-toolbar-spacer { flex: 1; }
+.vi-calendar-toolbar .vi-calendar-today { padding: 4px 9px; border: 1px solid #e3e1dd; border-radius: 6px; color: #3a3a3c; }
+.vi-calendar-days { display: grid; height: 44px; flex: none; grid-template-columns: repeat(7, 1fr); border-bottom: 1px solid #eeece9; }
+.vi-calendar-days span { display: flex; align-items: center; justify-content: center; color: #74747a; }
+.vi-calendar-days .vi-calendar-day-current { color: #1463d9; font-weight: 700; }
+.vi-calendar-grid { display: grid; min-height: 0; flex: 1; grid-template-columns: repeat(7, 1fr); }
+.vi-calendar-column { position: relative; border-left: 1px solid #f0efec; background-image: repeating-linear-gradient(to bottom, transparent 0, transparent calc(10% - 1px), #f0efec calc(10% - 1px), #f0efec 10%); }
+.vi-calendar-column-today { background-color: #f8faff; }
+.vi-calendar-event { position: absolute; right: 3px; left: 3px; overflow: hidden; border-radius: 5px; padding: 5px 7px; font-size: 11px; line-height: 1.3; }
+.vi-calendar-event-blue { background: #e4ecfb; color: #376bb7; }
+.vi-calendar-event-purple { background: #eee7f8; color: #7256b2; }
+.vi-calendar-event-green { background: #e3f2e8; color: #357c52; }
+
+.vi-island {
+  position: absolute;
+  z-index: 5;
+  top: 0;
+  left: 50%;
+  width: min(560px, calc(100% - 28px));
+  transform: translateX(-50%);
+  overflow: hidden;
+  border-radius: 0 0 27px 27px;
+  background: #030304;
+  box-shadow: 0 22px 48px rgba(0, 0, 0, .38);
+  color: #f5f5f7;
+  font-size: 12px;
+}
+
+.vi-island button { cursor: pointer; font: inherit; }
+.vi-island button:focus-visible, .vi-bottom-controls button:focus-visible { outline: 2px solid #7cafff; outline-offset: 2px; }
+.vi-island-menu { display: flex; height: 38px; align-items: center; justify-content: space-between; gap: 8px; padding: 0 11px; }
+.vi-island-tabs, .vi-island-tools { display: flex; align-items: center; gap: 2px; }
+.vi-island-tabs button { display: flex; height: 25px; align-items: center; gap: 5px; border: 0; border-radius: 7px; background: transparent; padding: 0 9px; color: #8e8e93; white-space: nowrap; }
+.vi-island-tabs button:hover, .vi-island-tools button:hover { background: #222225; color: white; }
+.vi-island-tabs .vi-tab-active { background: #252527; color: #f5f5f7; font-weight: 600; }
+.vi-island-tabs svg { width: 14px; height: 14px; }
+.vi-island-tools button { display: grid; width: 28px; height: 26px; place-items: center; border: 0; border-radius: 7px; background: transparent; color: #a1a1a6; }
+.vi-island-tools svg { width: 16px; height: 16px; }
+.vi-settings { position: absolute; z-index: 10; top: 34px; right: 8px; display: flex; min-width: 154px; flex-direction: column; gap: 8px; border: 1px solid #333338; border-radius: 9px; background: #1c1c1f; padding: 10px; box-shadow: 0 12px 30px #0008; }
+.vi-settings span { color: #8e8e93; }
+.vi-settings button { border: 0; border-radius: 5px; background: #303035; padding: 6px 8px; color: white; text-align: left; }
+
+.vi-map-panel { padding: 0 17px 15px; }
+.vi-map { position: relative; height: 257px; overflow: hidden; border: 1px solid #131b1c; border-radius: 13px; background: radial-gradient(circle at 37% 27%, #172125 0, transparent 48%), repeating-linear-gradient(0deg, transparent 0 15px, #14202366 16px), repeating-linear-gradient(90deg, #071013 0 15px, #14202366 16px); }
+.vi-map::after { position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 45px 20px #020606; content: ''; pointer-events: none; }
+.vi-map-world { position: absolute; inset: 0; transform-origin: center; transition: transform .25s ease; }
+.vi-zone { position: absolute; display: flex; align-items: flex-end; border-radius: 3px; padding: 8px; font-size: 11px; font-weight: 700; letter-spacing: .12em; }
+.vi-zone-today { top: 8%; left: 28%; width: 48%; height: 63%; border: 1px solid #b4805e; background: #6b3e2955; color: #d6a27e; box-shadow: inset 0 0 25px #e5926144, 0 0 20px #e5926122; }
+.vi-zone-week { top: 24%; left: 66%; width: 29%; height: 68%; border: 1px solid #477e92; background: #1b6b8366; color: #83b2bf; box-shadow: inset 0 0 25px #50bcd944; }
+.vi-zone-due { top: 69%; left: 33%; width: 29%; height: 24%; border: 1px solid #a74531; background: #651a16aa; color: #d76b51; box-shadow: inset 0 0 20px #ed4b2d44, 0 0 18px #ed4b2d44; }
+.vi-map-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.vi-map-lines path { fill: none; stroke: #b7b4b477; stroke-width: .45; stroke-dasharray: 1 1; }
+.vi-map-node { position: absolute; z-index: 2; display: grid; width: 40px; height: 40px; transform: translate(-50%, -50%); place-items: center; border: 0; background: transparent; padding: 0; color: #a58bf7; filter: drop-shadow(0 0 7px currentColor) drop-shadow(0 0 12px currentColor); transition: scale .18s ease; }
+.vi-pixel-star { width: 100%; height: 100%; image-rendering: pixelated; }
+.vi-map-node:hover, .vi-map-node.vi-node-selected { scale: 1.18; }
+.vi-node-selected::after { position: absolute; inset: 1px; border: 1px dashed #eee9; border-radius: 50%; content: ''; }
+.vi-node-blue { width: 34px; height: 34px; color: #56a0f3; }
+.vi-node-green { width: 32px; height: 32px; color: #49d078; }
+.vi-map-caption { position: absolute; z-index: 3; top: 12px; left: 12px; color: #a1a1a6; font-family: ui-monospace, Menlo, monospace; font-size: 11px; }
+.vi-map-zoom { position: absolute; z-index: 3; top: 10px; right: 10px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #273033; border-radius: 9px; background: #030809dd; }
+.vi-map-zoom button { width: 25px; height: 25px; border: 0; border-bottom: 1px solid #273033; background: transparent; color: #d1d1d6; font-size: 17px; }
+.vi-map-zoom button:last-child { border-bottom: 0; }
+.vi-map-zoom button:hover { background: #1e2c2e; }
+.vi-task-action { display: flex; min-height: 62px; align-items: center; gap: 9px; padding-top: 8px; }
+.vi-task-action > div { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 1px; }
+.vi-task-action strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
+.vi-task-action span { overflow: hidden; color: #8e8e93; text-overflow: ellipsis; white-space: nowrap; }
+.vi-switch { display: grid; width: 34px; height: 34px; flex: none; place-items: center; border: 0; border-radius: 9px; background: #202023; color: #d1d1d6; }
+.vi-switch svg { width: 18px; height: 18px; }
+.vi-primary { height: 36px; flex: none; border: 0; border-radius: 10px; background: #f5f5f7; padding: 0 15px; color: #161618; font-size: 13px; font-weight: 700; }
+.vi-primary:hover { background: white; }
+
+.vi-focus-panel { display: grid; min-height: 166px; grid-template-columns: 175px 1fr; gap: 18px; padding: 10px 20px 22px; }
+.vi-clock { font-family: ui-monospace, Menlo, monospace; font-size: 44px; line-height: 1.1; letter-spacing: -.055em; }
+.vi-durations { display: flex; gap: 3px; margin-top: 10px; }
+.vi-durations button { min-width: 25px; height: 23px; border: 0; border-radius: 5px; background: transparent; color: #8e8e93; font-size: 11px; }
+.vi-durations .vi-duration-active { background: #2a2a2d; color: white; }
+.vi-focus-panel small { display: block; margin-top: 9px; color: #8e8e93; }
+.vi-focus-task { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; border-left: 1px solid #262629; padding: 2px 0 0 20px; }
+.vi-focus-task span { color: #8e8e93; }
+.vi-focus-task strong { font-size: 14px; }
+.vi-focus-task button { margin-top: 7px; border: 0; border-radius: 7px; background: #f5f5f7; padding: 6px 11px; color: #161618; font-weight: 700; }
+.vi-journal-panel { min-height: 210px; padding: 0 20px 20px; }
+.vi-note-entry { display: flex; align-items: flex-start; gap: 8px; border-radius: 8px; background: #202023; padding: 8px; }
+.vi-note-entry textarea { min-height: 36px; flex: 1; resize: vertical; border: 0; outline: 0; background: transparent; color: white; font: inherit; line-height: 1.5; }
+.vi-note-entry textarea::placeholder { color: #8e8e93; }
+.vi-note-entry button { border: 0; border-radius: 5px; background: #f5f5f7; padding: 5px 9px; color: #1c1c1e; }
+.vi-note-entry button:disabled { opacity: .4; cursor: default; }
+.vi-note-list { max-height: 165px; overflow-y: auto; }
+.vi-note-list p { display: flex; gap: 12px; margin: 0; border-bottom: 1px solid #202023; padding: 10px 0; white-space: pre-wrap; }
+.vi-note-list time { flex: none; color: #8e8e93; font-family: ui-monospace, Menlo, monospace; }
+.vi-cat-panel { display: grid; min-height: 188px; grid-template-columns: 72px 1fr; gap: 8px 16px; padding: 6px 20px 18px; }
+.vi-pixel-cat { display: grid; width: 60px; height: 60px; place-items: center; border: 1px solid #343438; border-radius: 10px; background: #1a1a1d; color: #c4c0cb; }
+.vi-pixel-cat svg { width: 42px; height: 42px; image-rendering: pixelated; }
+.vi-cat-message { min-height: 94px; border: 1px solid #27272b; border-radius: 8px; background: #151517; padding: 9px 11px; }
+.vi-cat-message > div { display: flex; justify-content: space-between; color: #8e8e93; font-size: 11px; }
+.vi-cat-message button { border: 0; background: transparent; color: #8e8e93; }
+.vi-cat-message p { margin: 10px 0 0; font-size: 13px; line-height: 1.5; }
+.vi-cat-prompts { display: flex; grid-column: 2; flex-wrap: wrap; gap: 8px; }
+.vi-cat-prompts button { border: 0; background: transparent; color: #a1a1a6; font-size: 11px; }
+.vi-cat-prompts button:hover { color: white; }
+.vi-island-compact { width: min(350px, calc(100% - 28px)); border-radius: 0 0 17px 17px; }
+.vi-island-collapsed { display: flex; width: 100%; height: 38px; align-items: center; gap: 9px; overflow: hidden; border: 0; background: transparent; padding: 0 14px; color: white; text-align: left; }
+.vi-island-collapsed svg { width: 17px; height: 17px; flex: none; }
+.vi-island-collapsed span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vi-island-collapsed b { font-family: ui-monospace, Menlo, monospace; font-weight: 500; }
+.vi-bottom-controls { display: flex; max-width: 1200px; align-items: center; justify-content: space-between; gap: 12px; margin: 14px auto 0; color: #8e8e93; font-size: 12px; }
+.vi-bottom-controls button { flex: none; border: 1px solid #dcdad6; border-radius: 8px; background: white; padding: 6px 11px; color: #3a3a3c; cursor: pointer; }
+
+@media (max-width: 767px) {
+  .vi-scene { height: 480px; border-radius: 14px; }
+  .vi-os-menu { font-size: 10px; }
+  .vi-os-menu span:last-child { display: none; }
+  .vi-calendar { inset: 72px 10px 10px; }
+  .vi-calendar-sidebar { width: 85px; gap: 1px; padding: 7px 4px; font-size: 10px; }
+  .vi-calendar-sidebar > span:not(.vi-traffic) { min-height: 25px; padding: 0 5px; }
+  .vi-calendar-sidebar small, .vi-calendar-sidebar .vi-cal-dot { display: none; }
+  .vi-calendar-toolbar { height: 38px; padding: 0 5px; font-size: 10px; }
+  .vi-calendar-toolbar > span:not(.vi-calendar-toolbar-spacer) { display: none; }
+  .vi-calendar-days { height: 34px; font-size: 9px; }
+  .vi-calendar-event { padding: 3px; font-size: 9px; }
+  .vi-island-menu { padding: 0 5px; }
+  .vi-island-tabs { gap: 0; }
+  .vi-island-tabs button { gap: 2px; padding: 0 5px; font-size: 10px; }
+  .vi-island-tabs svg { width: 11px; height: 11px; }
+  .vi-island-tools { gap: 0; }
+  .vi-island-tools button { width: 23px; }
+  .vi-map-panel { padding: 0 7px 9px; }
+  .vi-map { height: 220px; }
+  .vi-task-action strong { font-size: 12px; }
+  .vi-task-action span { font-size: 10px; }
+  .vi-primary { height: 32px; padding: 0 8px; font-size: 11px; }
+  .vi-focus-panel { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px 12px 18px; }
+  .vi-clock { font-size: 32px; }
+  .vi-focus-task { padding-left: 9px; }
+  .vi-focus-task strong { font-size: 11px; }
+  .vi-cat-panel { grid-template-columns: 45px 1fr; gap: 6px; padding: 5px 9px 12px; }
+  .vi-pixel-cat { width: 40px; height: 40px; }
+  .vi-pixel-cat svg { width: 30px; height: 30px; }
+  .vi-cat-message p { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vi-map-world, .vi-map-node { transition: none; }
+}
