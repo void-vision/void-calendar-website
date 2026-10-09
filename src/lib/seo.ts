@@ -95,6 +95,8 @@ export type PageKey = keyof typeof pages
 
 const hreflang = { zh: 'zh-Hans', en: 'en' } as const
 const ogLocale = { zh: 'zh_CN', en: 'en_US' } as const
+/** 分享图副标题随语言走：中文 /og.png，英文 /og-en.png。 */
+const ogImage = { zh: '/og.png', en: '/og-en.png' } as const
 
 export function absoluteUrl(path: string) {
   return `${siteUrl}${path.startsWith('/') ? path : `/${path}`}`
@@ -119,9 +121,10 @@ type HeadInput = Copy & {
   jsonLd?: object[]
 }
 
-export function pageHead({ title, description, path, lang, type = 'website', publishedTime, image = '/og.png', jsonLd = [] }: HeadInput) {
+export function pageHead({ title, description, path, lang, type = 'website', publishedTime, image, jsonLd = [] }: HeadInput) {
   const url = absoluteUrl(localizePath(path, lang))
-  const imageUrl = absoluteUrl(image)
+  const imagePath = image ?? ogImage[lang]
+  const imageUrl = absoluteUrl(imagePath)
   const other = lang === 'en' ? 'zh' : 'en'
   return {
     meta: [
@@ -136,7 +139,7 @@ export function pageHead({ title, description, path, lang, type = 'website', pub
       { property: 'og:description', content: description },
       { property: 'og:url', content: url },
       { property: 'og:image', content: imageUrl },
-      ...(image === '/og.png'
+      ...(imagePath === ogImage.zh || imagePath === ogImage.en
         ? [
             { property: 'og:image:width', content: '1200' },
             { property: 'og:image:height', content: '630' },
@@ -201,7 +204,7 @@ export function homeJsonLd(lang: SiteLang) {
       downloadUrl: absoluteUrl(downloadPath),
       description: pages.home[lang].description,
       url: absoluteUrl(localizePath('/', lang)),
-      image: absoluteUrl('/og.png'),
+      image: absoluteUrl(ogImage[lang]),
       offers: {
         '@type': 'Offer',
         price: '0',
@@ -257,7 +260,7 @@ export function postHead(post: Post, lang: SiteLang) {
         inLanguage: hreflang[lang],
         url,
         mainEntityOfPage: url,
-        image: absoluteUrl(image ?? '/og.png'),
+        image: absoluteUrl(image ?? ogImage[lang]),
         author: organization,
         publisher: organization,
         about: { '@id': appId },
