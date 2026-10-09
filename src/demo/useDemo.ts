@@ -62,6 +62,12 @@ export function useDemo(lang: SiteLang) {
     })
   }, [])
 
+  const holdIsland = useCallback((expanded: boolean) => {
+    set(expanded
+      ? { heroManual: true, scene: 1, t: 0, mbCtl: true, mbOpen: false, navSel: 'cal', evSel: null }
+      : { heroManual: false, t: 0 })
+  }, [set])
+
   const fitAi = useCallback(() => {
     const el = aiRef.current
     if (!el) return
@@ -299,7 +305,7 @@ export function useDemo(lang: SiteLang) {
       try {
         localStorage.setItem('vc-hero-scene', String(i))
       } catch {
-        /* ignore */
+        /* 本地存储不可用时继续演示。 */
       }
     },
     [set],
@@ -334,7 +340,7 @@ export function useDemo(lang: SiteLang) {
       const sc = (Number(localStorage.getItem('vc-hero-scene')) || 0) % 4
       set({ scene: sc, t: 0 })
     } catch {
-      /* ignore */
+      /* 本地存储不可用时使用初始场景。 */
     }
 
     const onKey = (e: KeyboardEvent) => {
@@ -477,8 +483,6 @@ export function useDemo(lang: SiteLang) {
         if (pe !== undefined && Math.abs(pe - e) < 0.0005) return
         pe = e
         st.style.transform = `translate3d(0,${((1 - e) * 24).toFixed(2)}px,0) scale(${(0.84 + 0.16 * e).toFixed(4)})`
-        mk.style.borderRadius = `${(18 - 6 * e).toFixed(2)}px`
-        mk.style.boxShadow = `0 ${(20 + 24 * e).toFixed(1)}px ${(60 + 50 * e).toFixed(1)}px rgba(28,28,30,${(0.07 + 0.07 * e).toFixed(3)})`
       })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -527,15 +531,16 @@ export function useDemo(lang: SiteLang) {
       if (t >= D) {
         scene = (scene + 1) % 4
         t = 0
-        set({ mbCtl: false, uFocus: false, t, scene })
+        set((current) => current.heroManual || current.scene !== s.scene ? null : { mbCtl: false, uFocus: false, t, scene })
         try {
           localStorage.setItem('vc-hero-scene', String(scene))
         } catch {
-          /* ignore */
+          /* 本地存储不可用时继续演示。 */
         }
         return
       }
-      set({ t, scene })
+      // 交互可能在计时器本轮读取之后发生，提交前再次检查，避免旧场景覆盖用户操作。
+      set((current) => current.heroManual || current.scene !== s.scene ? null : { t, scene })
     }, 60)
 
     requestAnimationFrame(fitNote)
@@ -584,19 +589,26 @@ export function useDemo(lang: SiteLang) {
 
   useEffect(() => applySiteLang(lang), [applySiteLang, lang])
 
+  const appliedLang = useRef<SiteLang | null>(null)
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    document.documentElement.lang = state.lang === 'en' ? 'en' : 'zh-Hans'
+    const htmlLang = state.lang === 'en' ? 'en' : 'zh-Hans'
+    if (document.documentElement.lang !== htmlLang) document.documentElement.lang = htmlLang
+    if (state.lang === 'zh' && appliedLang.current !== 'en') {
+      appliedLang.current = 'zh'
+      return
+    }
     applyLang(root, state.lang === 'en')
+    appliedLang.current = state.lang
   })
 
   const view = buildView(state, api)
-  if (state.lang !== 'en') return { ...view, refs: refsOf() }
+  if (state.lang !== 'en') return { ...view, holdIsland, refs: refsOf() }
   const ai = view.aiValue
   const translated = trDeep(view) as typeof view
   translated.aiValue = state.aiUser ? ai : trEN(ai)
-  return { ...translated, refs: refsOf() }
+  return { ...translated, holdIsland, refs: refsOf() }
 
   function refsOf() {
     return { rootRef, stageRef, mockRef, aiRef, hiveRef, detRef, noteRef, lnkRef, lnkBtnRef, mbBtnRef, popRef, searchRef, capRef, captureDialogRef, eventRef }

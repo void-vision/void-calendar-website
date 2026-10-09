@@ -278,8 +278,7 @@ section[id],
   }
 
   .demo-menubar > b {
-    flex-shrink: 0;
-    font-size: 11px;
+    display: none;
   }
 
   .demo-menu-extra,
@@ -596,12 +595,6 @@ button[data-mb]:focus-visible {
 
 nav::-webkit-scrollbar {
   display: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
