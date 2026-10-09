@@ -57,10 +57,11 @@ export function HomePage() {
         </div>
       </section>
 
-      <section id="showcase" className="relative mt-[clamp(48px,6vw,80px)] h-[200vh]">
+      <section id="showcase" className="relative mt-[clamp(48px,6vw,80px)] h-[300vh]">
         <div className="showcase-content sticky top-[68px] flex h-[calc(100vh-68px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
           <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] [transform:translate3d(0,24px,0)_scale(.84)]">
             <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[18px] border border-[#e3e1dd] bg-linear-to-b from-[#f2f4f7] to-[#e9ecf1] text-[#1c1c1e] shadow-[0_20px_60px_rgba(28,28,30,.08)]">
+              <ShowcaseProgress />
               <MenuBar v={v} />
               <div className="demo-window-padding px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)]">
                 <div className="w-full overflow-hidden rounded-xl border border-[rgba(28,28,30,.1)] bg-white text-[#1c1c1e] shadow-[0_18px_50px_rgba(28,28,30,.12),0_2px_6px_rgba(28,28,30,.05)]">
@@ -111,6 +112,54 @@ export function HomePage() {
 }
 
 type View = ReturnType<typeof useDemo>
+
+function ShowcaseProgress() {
+  const trackRef = useRef<HTMLDivElement>(null)
+  const fillRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    let frame = 0
+    const update = () => {
+      frame = 0
+      const track = trackRef.current
+      const showcase = track?.closest('#showcase')
+      if (!track || !showcase) return
+      if (window.matchMedia('(max-width: 767px)').matches) {
+        track.style.opacity = '0'
+        return
+      }
+      const bounds = showcase.getBoundingClientRect()
+      const stickyDistance = bounds.height - window.innerHeight
+      // 日历放大完成后，进度条才开始表示固定展示的剩余距离。
+      const progressStart = -stickyDistance * 0.55
+      const active = stickyDistance > 0 && bounds.top <= progressStart && bounds.bottom >= window.innerHeight
+      track.style.opacity = active ? '1' : '0'
+      if (!active) return
+      const progress = Math.min(1, Math.max(0, (progressStart - bounds.top) / (stickyDistance * 0.45)))
+      if (fillRef.current) fillRef.current.style.transform = `scaleX(${progress})`
+    }
+    const scheduleUpdate = () => {
+      if (!frame) frame = requestAnimationFrame(update)
+    }
+    const observer = new ResizeObserver(scheduleUpdate)
+    observer.observe(document.documentElement)
+    window.addEventListener('scroll', scheduleUpdate, { passive: true })
+    window.addEventListener('resize', scheduleUpdate)
+    scheduleUpdate()
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('scroll', scheduleUpdate)
+      window.removeEventListener('resize', scheduleUpdate)
+      if (frame) cancelAnimationFrame(frame)
+    }
+  }, [])
+
+  return (
+    <div ref={trackRef} aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-30 h-[3px] bg-[#e8e6e2]" style={{ opacity: 0 }}>
+      <div ref={fillRef} className="h-full origin-left bg-[#1c1c1e]" style={{ transform: 'scaleX(0)' }} />
+    </div>
+  )
+}
 
 function MenuBar({ v }: { v: View }) {
   const r = v.refs
