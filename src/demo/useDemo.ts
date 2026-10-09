@@ -477,8 +477,6 @@ export function useDemo(lang: SiteLang) {
         if (pe !== undefined && Math.abs(pe - e) < 0.0005) return
         pe = e
         st.style.transform = `translate3d(0,${((1 - e) * 24).toFixed(2)}px,0) scale(${(0.84 + 0.16 * e).toFixed(4)})`
-        mk.style.borderRadius = `${(18 - 6 * e).toFixed(2)}px`
-        mk.style.boxShadow = `0 ${(20 + 24 * e).toFixed(1)}px ${(60 + 50 * e).toFixed(1)}px rgba(28,28,30,${(0.07 + 0.07 * e).toFixed(3)})`
       })
     }
     window.addEventListener('scroll', onScroll, { passive: true })
@@ -584,11 +582,18 @@ export function useDemo(lang: SiteLang) {
 
   useEffect(() => applySiteLang(lang), [applySiteLang, lang])
 
+  const appliedLang = useRef<SiteLang | null>(null)
   useEffect(() => {
     const root = rootRef.current
     if (!root) return
-    document.documentElement.lang = state.lang === 'en' ? 'en' : 'zh-Hans'
+    const htmlLang = state.lang === 'en' ? 'en' : 'zh-Hans'
+    if (document.documentElement.lang !== htmlLang) document.documentElement.lang = htmlLang
+    if (state.lang === 'zh' && appliedLang.current !== 'en') {
+      appliedLang.current = 'zh'
+      return
+    }
     applyLang(root, state.lang === 'en')
+    appliedLang.current = state.lang
   })
 
   const view = buildView(state, api)

@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'lenis/dist/lenis.css';
 
 html,
 body {
@@ -602,6 +603,10 @@ nav::-webkit-scrollbar {
   html {
     scroll-behavior: smooth;
   }
+}
+
+html.lenis {
+  scroll-behavior: auto;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -13,6 +13,9 @@ import { SiteHeader } from './SiteHeader'
 import { downloadPath } from '../lib/download'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
+const MemoSiteHeader = memo(SiteHeader)
+const MemoSiteFooter = memo(SiteFooter)
+const MemoComparisonBlog = memo(ComparisonBlog)
 
 function Logo({ className = 'size-full object-contain' }: { className?: string }) {
   return <img src="/logo-128.png" alt="Void Calendar" width={128} height={128} decoding="async" className={className} />
@@ -23,9 +26,34 @@ export function HomePage() {
   const v = useDemo(lang)
   const r = v.refs
   const tr = useTranslate()
+
+  useEffect(() => {
+    let disposed = false
+    let lenis: { destroy: () => void } | undefined
+    const desktop = window.matchMedia('(min-width: 768px)')
+    const syncScroll = async () => {
+      if (!desktop.matches) {
+        lenis?.destroy()
+        lenis = undefined
+        return
+      }
+      if (lenis) return
+      const { default: Lenis } = await import('lenis')
+      if (disposed || !desktop.matches || lenis) return
+      lenis = new Lenis({ autoRaf: true, anchors: true, allowNestedScroll: true, lerp: 0.18, stopInertiaOnNavigate: true })
+    }
+    desktop.addEventListener('change', syncScroll)
+    void syncScroll()
+    return () => {
+      disposed = true
+      desktop.removeEventListener('change', syncScroll)
+      lenis?.destroy()
+    }
+  }, [])
+
   return tr(
     <div ref={r.rootRef} className="min-h-screen bg-white text-[15px] leading-[1.6] text-[#1c1c1e]">
-      <SiteHeader lang={lang} />
+      <MemoSiteHeader lang={lang} />
 
       <main>
       <section id="top" className="px-[clamp(20px,5vw,72px)] pt-[clamp(88px,11vw,152px)]">
@@ -59,7 +87,7 @@ export function HomePage() {
 
       <section id="showcase" className="relative mt-[clamp(48px,6vw,80px)] h-[300vh]">
         <div className="showcase-content sticky top-[68px] flex h-[calc(100vh-68px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
-          <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] [transform:translate3d(0,24px,0)_scale(.84)]">
+          <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] will-change-transform [transform:translate3d(0,24px,0)_scale(.84)]">
             <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[18px] border border-[#e3e1dd] bg-linear-to-b from-[#f2f4f7] to-[#e9ecf1] text-[#1c1c1e] shadow-[0_20px_60px_rgba(28,28,30,.08)]">
               <ShowcaseProgress />
               <MenuBar v={v} />
@@ -104,9 +132,9 @@ export function HomePage() {
       <Templates v={v} />
       <Plugins v={v} />
       <Download />
-      <ComparisonBlog lang={lang} />
+      <MemoComparisonBlog lang={lang} />
       </main>
-      <SiteFooter lang={lang} />
+      <MemoSiteFooter lang={lang} />
     </div>
   )
 }
