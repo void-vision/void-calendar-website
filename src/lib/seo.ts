@@ -71,11 +71,11 @@ export const pages = {
     path: '/privacy',
     zh: {
       title: '隐私协议 · Void Calendar',
-      description: 'VOID VISION PTY LTD 对 Void Calendar macOS 应用和本网站的隐私说明：本地日程、日历授权、AI 密钥与可选使用统计。',
+      description: 'VOID VISION PTY LTD 对 Void Calendar macOS 应用和本网站的隐私说明：本地日程、Google 用户数据的使用与共享、加密保护、AI 密钥与可选使用统计。',
     },
     en: {
       title: 'Privacy Policy · Void Calendar',
-      description: 'How Void Vision handles data for the Void Calendar Mac app and this site: local schedules, calendar access, AI keys, and optional usage analytics.',
+      description: 'How Void Vision handles data for the Void Calendar Mac app and this site: local schedules, use and sharing of Google user data, encryption, AI keys, and optional usage analytics.',
     },
   },
   terms: {

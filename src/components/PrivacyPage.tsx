@@ -2,8 +2,8 @@ import { Link } from '@tanstack/react-router'
 import { useAlternateLink, useSiteLang } from '../lib/lang'
 import { LangLink } from './LangLink'
 
-const updated = '2026年9月30日'
-const updatedEn = 'September 30, 2026'
+const updated = '2026年10月10日'
+const updatedEn = 'October 10, 2026'
 
 export function PrivacyPage() {
   const lang = useSiteLang()
@@ -74,7 +74,7 @@ const zhSections = [
     title: '日程和笔记留在你的设备上',
     body: [
       '日历、任务、收件箱、笔记、专注记录和 AI 对话默认保存在本机数据库里。我们没有用来存放这些内容的账号服务器，也不能远程读取你的日程正文。',
-      'Google 授权、iCloud 的 App 专用密码，以及你自己填写的 AI API 密钥，保存在 macOS 钥匙串中，不写入日程数据库。',
+      'Google 授权、iCloud 的 App 专用密码，以及你自己填写的 AI API 密钥，保存在本机加密凭据库中，不写入日程数据库，也不上传到我们的服务器。',
     ],
   },
   {
@@ -82,16 +82,28 @@ const zhSections = [
     body: [
       'Apple 日历：在你授权后，应用读取日程并显示在 Void Calendar 中，不修改原来的 Apple 日历。',
       'Apple 提醒事项：在你授权后，与你选中的列表双向同步任务，包括标题、备注、到期时间和完成状态。',
-      'Google 日历：通过系统浏览器完成 OAuth。申请的权限是读取日历，以及读写你账号中的日程。令牌存在钥匙串。你点击发送邀请时，由 Google 向受邀人发送通知；普通保存不会主动群发邀请。',
-      'iCloud 日历：使用 Apple ID 邮箱和 App 专用密码，通过 CalDAV 同步。应用专用密码存在钥匙串，不会保存你的 Apple ID 登录密码。',
+      'Google 日历：通过系统浏览器完成 OAuth。申请的权限是读取日历列表和日程，以及在你可写的日历上创建、修改和删除日程。令牌保存在本机加密凭据库。你点击发送邀请时，由 Google 向受邀人发送通知；普通保存不会主动群发邀请。Google 用户数据的访问、使用、共享和保护见下一节。',
+      'iCloud 日历：使用 Apple ID 邮箱和 App 专用密码，通过 CalDAV 同步。应用专用密码存在本机加密凭据库，不会保存你的 Apple ID 登录密码。',
       '会议链接可以保存在日程详情里。Google Meet 使用已有的 Google 日历权限创建。Zoom 和 FaceTime 目前只保存你粘贴的链接，不会替你登录这些服务。',
+    ],
+  },
+  {
+    title: 'Google 用户数据',
+    body: [
+      '本应用如何使用 Google 用户数据：只在你主动连接 Google 日历、Google 任务，或选择用 Google 登录时访问，并且只用于向你提供日历、任务和时间盒功能。我们不用这些数据做广告、信用评估，也不出售给数据经纪商。',
+      'Google 日历：读取日历列表（名称、颜色、时区、是否为主日历）以及日程的标题、时间、地点、说明、参与者邮箱和回复状态、重复规则、会议链接。权限为 https://www.googleapis.com/auth/calendar.readonly 与 https://www.googleapis.com/auth/calendar.events。这些内容用来在 Void Calendar 中显示你的日程、判断空闲时间，并把你确认的新建、修改或删除写回你可写的日历。只有你选择发送邀请时，才由 Google 通知参与者；普通保存不会群发邀请。你要求创建会议时，用同一权限创建 Google Meet 链接。',
+      'Google 任务：在你连接时，读取并写回任务列表和任务的标题、备注、到期时间与完成状态，并读取该 Google 账号的 ID 和邮箱，用来标明这条连接。权限为 https://www.googleapis.com/auth/tasks、openid 和 email。',
+      '用 Google 登录 Void Calendar 账号时，这是与日历连接分开的另一次授权。Supabase Auth 取得该账号的标识和邮箱，用来建立登录会话。我们在本机保存账号 ID 和邮箱，以识别已登录的工作区。',
+      '我们与谁分享、向谁传输或披露 Google 用户数据：不出售，也不向广告商、数据经纪商或信息转售商披露。Google 日历缓存和 OAuth 令牌不会上传到 VOID VISION 的服务器。你使用自己配置的 AI 排程时，完成本次请求所需的日程内容（可能包含已经同步到本机的 Google 日程）从你的 Mac 直接发给你选择的模型服务；我们不接收这些请求，也不用 Google API 收到的数据开发、改进或训练通用的、非个性化的 AI/ML 模型。开启账号云同步后，你在应用里创建的项目、任务、时间盒、笔记和对话会上传到同步服务；外部日历缓存和令牌不在其中。若你的笔记或对话写进了 Google 日程的文字，那段文字会随这些记录同步。除此之外，我们不会把 Google 用户数据传输或披露给第三方，除非法律要求，或为保护应用与用户的安全所必需。',
+      '敏感数据的保护机制：我们采取安全措施保护这些数据的保密性。与 Google 的通信使用 HTTPS。OAuth 访问令牌和刷新令牌用 AES-256-GCM 加密，保存在仅限当前用户访问的本机凭据库中，不参与云同步，VOID VISION 的人员也不能从我们的服务器读取你的 Google 日程。',
+      '对从 Google API 收到的信息的使用，遵守 Google API Services User Data Policy，包括 Limited Use 要求。本机副本保留到你断开连接、删除对应内容，或卸载并删除应用数据。断开连接会从加密凭据库删除令牌。你也可以在 Google 账号的第三方访问权限中撤销 Void Calendar。已经写回 Google 账号的内容，继续由 Google 按其规则保存。',
     ],
   },
   {
     title: 'AI',
     body: [
       'AI 排程使用你自己配置的模型接口和 API 密钥。请求从你的 Mac 直接发到该接口，内容会包含完成排程所需要的日程、任务和对话上下文。',
-      '我们不代收这些对话，也不用它们训练模型。该模型提供方如何处理内容，适用其自己的条款。你可以随时断开配置，密钥会从钥匙串中删除。',
+      '我们不代收这些对话，也不用它们训练模型。该模型提供方如何处理内容，适用其自己的条款。你可以随时断开配置，密钥会从加密凭据库中删除。',
     ],
   },
   {
@@ -118,7 +130,7 @@ const zhSections = [
   {
     title: '保存多久、如何删除',
     body: [
-      '本机数据一直留在你的 Mac 上，直到你在应用里删除、断开对应账号，或卸载应用并删除其数据。钥匙串中的授权随断开连接删除。',
+      '本机数据一直留在你的 Mac 上，直到你在应用里删除、断开对应账号，或卸载应用并删除其数据。加密凭据库中的授权随断开连接删除。',
       '已经发送到 Google、Apple 或你选择的 AI 服务的内容，由那些服务按其规则保存。已发出的匿名使用统计由统计服务按其保留规则保存。',
     ],
   },
@@ -150,7 +162,7 @@ const enSections = [
     title: 'Your calendar stays on your Mac',
     body: [
       'Events, tasks, inbox items, notes, focus logs, and AI conversations are stored in a local database. We do not operate an account server that holds this content, and we cannot remotely read your schedule.',
-      'Google authorization, your iCloud app-specific password, and any AI API key you enter are stored in the macOS Keychain, not in the calendar database.',
+      'Google authorization, your iCloud app-specific password, and any AI API key you enter are stored in an encrypted credential vault on your Mac. They are not written into the calendar database and are not uploaded to our servers.',
     ],
   },
   {
@@ -158,16 +170,28 @@ const enSections = [
     body: [
       'Apple Calendar: after you grant access, the app reads events to display them. It does not modify the original Apple calendar.',
       'Apple Reminders: after you grant access, selected lists sync both ways, including title, notes, due date, and completion.',
-      'Google Calendar: OAuth runs in the system browser. The requested scopes read calendars and read or write events. Tokens stay in the Keychain. Invitation email is sent by Google only when you choose to send invites.',
-      'iCloud Calendar: sync uses your Apple ID email and an app-specific password over CalDAV. That password stays in the Keychain. The Apple ID password is not stored.',
+      'Google Calendar: OAuth runs in the system browser. The requested scopes read your calendar list and events, and create, change, or delete events on calendars you can write. Tokens stay in the encrypted credential vault on your Mac. Invitation email is sent by Google only when you choose to send invites. How we access, use, share, and protect Google user data is in the next section.',
+      'iCloud Calendar: sync uses your Apple ID email and an app-specific password over CalDAV. That password stays in the encrypted credential vault on your Mac. The Apple ID password is not stored.',
       'Meeting links can be saved on an event. Google Meet is created with the existing Google Calendar permission. Zoom and FaceTime links are only the URLs you paste; the app does not sign in to those services.',
+    ],
+  },
+  {
+    title: 'Google user data',
+    body: [
+      'How this application uses Google user data: we access it only when you connect Google Calendar, connect Google Tasks, or sign in with Google, and only to provide calendar, task, and time-boxing features to you. We do not use it for advertising or credit decisions, and we do not sell it to data brokers.',
+      'Google Calendar: we read the calendar list (name, color, time zone, and whether it is primary) and event title, time, location, description, attendee email addresses and responses, recurrence, and meeting links. The scopes are https://www.googleapis.com/auth/calendar.readonly and https://www.googleapis.com/auth/calendar.events. We use this to show your events in Void Calendar, see which time is free, and write the creates, edits, and deletions you confirm back to calendars you can edit. Google emails attendees only when you choose to send invitations. Saving a change does not send those invitations. When you ask for a meeting, the same permission creates a Google Meet link.',
+      'Google Tasks: when you connect it, we read and write task lists and task title, notes, due date, and completion, and we read that Google account’s ID and email to label the connection. The scopes are https://www.googleapis.com/auth/tasks, openid, and email.',
+      'Signing in to a Void Calendar account with Google is a separate authorization from connecting a calendar. Supabase Auth receives that account’s identifier and email to create the sign-in session. We store the account ID and email on your Mac to recognize the signed-in workspace.',
+      'With whom we share, transfer, or disclose Google user data: we do not sell it, and we do not disclose it to advertisers, data brokers, or information resellers. The Google Calendar cache and OAuth tokens are not uploaded to VOID VISION servers. When you use AI scheduling with a model you configure, the schedule needed for that request — which can include Google events already on your Mac — is sent from your Mac directly to that provider. We do not receive those requests, and we do not use data received from Google APIs to develop, improve, or train generalized or non-personalized AI/ML models. If you turn on account sync, projects, tasks, time boxes, notes, and chats you create in the app are uploaded to the sync service. The external calendar cache and tokens are not part of that upload. If a note or chat includes text from a Google event, that text syncs with the note or chat. Other than that, we do not transfer or disclose Google user data to third parties, except when required by law or when necessary to protect the security of the app and its users.',
+      'Data protection mechanisms for sensitive data: we maintain security procedures to protect the confidentiality of this data. Connections to Google use HTTPS. OAuth access tokens and refresh tokens are encrypted with AES-256-GCM and stored in a credential vault on your Mac that is limited to the current user. That vault is excluded from cloud sync, and VOID VISION staff cannot read your Google events from our servers.',
+      'Our use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements. Local copies remain until you disconnect, delete the content, or uninstall and remove the app data. Disconnecting deletes the tokens from the encrypted vault. You can also revoke Void Calendar in your Google Account’s third-party access settings. Content already written back to your Google Account stays with Google under Google’s own rules.',
     ],
   },
   {
     title: 'AI',
     body: [
       'Scheduling uses the model endpoint and API key you configure. Requests go from your Mac directly to that endpoint and can include the schedule, tasks, and conversation needed to plan.',
-      'We do not collect those conversations or use them to train models. The provider you choose handles that content under its own terms. Disconnecting the configuration deletes the key from the Keychain.',
+      'We do not collect those conversations or use them to train models. The provider you choose handles that content under its own terms. Disconnecting the configuration deletes the key from the encrypted credential vault.',
     ],
   },
   {
@@ -192,7 +216,7 @@ const enSections = [
   {
     title: 'Retention and deletion',
     body: [
-      'Local data remains on your Mac until you delete it in the app, disconnect an account, or uninstall and remove the app data. Keychain credentials are removed when you disconnect.',
+      'Local data remains on your Mac until you delete it in the app, disconnect an account, or uninstall and remove the app data. Credentials in the encrypted vault are removed when you disconnect.',
       'Content already sent to Google, Apple, or your chosen AI provider is kept under that service’s rules. Anonymous usage events already sent are kept under the analytics provider’s retention rules.',
     ],
   },

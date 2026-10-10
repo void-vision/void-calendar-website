@@ -1,11 +1,11 @@
 {
-  "version": "0.1.0-beta.2",
-  "notes": "This update improves the macOS desktop experience by removing browser-specific right-click menus while preserving Void Calendar’s own menus and copy/paste shortcuts.",
-  "pub_date": "2026-10-08T13:29:02Z",
+  "version": "0.1.0-beta.3",
+  "notes": "Void Island and meeting reminders are on by default, with English support for Island. Improved Island settings and month view; fixed the macOS app icon on versions before macOS 26. Upgrade note: Island and meeting reminders are switched on once after this update, even if previously disabled. Turn them off again in Settings if preferred; your choice is kept from then on. If Dock or Launchpad still shows a square icon, run killall Dock to refresh the cached icon.",
+  "pub_date": "2026-10-09T08:15:34Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZHRzbnFpRzdQOFJKQ1ZHSHY0Zyt5cUwxNTRnQmhWamtwWjZTc3c0a0YxUXFUNHgyRzBzZHl0WGxaNWZyM2NRY3QwS3Y0NDRzZnVjd043N0E2ZDZpY3dMNkt4TjNndHdRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxNDY1NzQ1CWZpbGU6Vm9pZCBDYWxlbmRhci5hcHAudGFyLmd6CXZlcnNpb246MC4xLjAtYmV0YS4yCkVCRzdCQjN6eUVJYnRmRk9xYWZFZzNGQmk3ZnBFeXQzVjR3bzNwYzBLaWRnR1hORGF3Z3poSDd0c3pkSzZzVDZ0NkVUZStFNHJvVndRMk1sV0dvdEFBPT0K",
-      "url": "https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.2/Void.Calendar.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZHRzbnFpRzdQOGZkQXJOeUJ3UXI1VW9YQ202dllvdEd6Yi9xWlc4SjJYNDNHWmUvYmFtbWU2aDB1RFZtdXV4aG5ueFRuSUJKNzAybkJCc09ldVIzME1DMEQwb3IrTEFJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxNTMzNTI4CWZpbGU6Vm9pZCBDYWxlbmRhci5hcHAudGFyLmd6CXZlcnNpb246MC4xLjAtYmV0YS4zCnRoZnZ2NXVKbktPdk1FYjZGd2I5dmRkc0tOQXA0Ri9GUTZhV2ZDYW5CeWJ3VDZ4QmxWVVNXTWd3ekdUK2lGV283djlob0ptUXdhc1oxSi9PK3Znc0R3PT0K",
+      "url": "https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.3/Void.Calendar.app.tar.gz"
     }
   }
 }

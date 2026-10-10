@@ -1,5 +1,35 @@
 export const releases = [
   {
+    version: '0.1.0-beta.3',
+    published: '2026-10-09',
+    summary: '默认开启 Void Island 与会议提醒，优化月视图并修复 macOS 图标。',
+    summaryEn: 'Void Island and meeting reminders are now on by default, with an improved month view and a fix for the macOS app icon.',
+    items: [
+      'Void Island 默认开启：悬停在刘海区域即可打开任务地图、专注计时器、日记和像素猫；开启时播放简短的像素音效，可在设置 → Island 中关闭。',
+      '会议提醒默认开启：首次启动时请求 macOS 通知权限，在会议开始前 5 分钟和结束时提醒；拒绝权限后自动关闭，可在设置中重新开启。',
+      'Void Island 支持英语，按钮、消息和像素猫语录跟随应用语言。',
+      'Island 设置中的悬停延迟、宽度与音量滑块更长，并新增数值输入框以便精确调整。',
+      '月视图使用与周视图一致的浅色背景和色边事件卡片，每天可容纳更多事件，修复最后一行被裁切的问题。',
+      '修复 macOS 26 之前的系统上应用图标显示为白色方块，以及英文模式下 Void Island 仍显示中文的问题。',
+    ],
+    itemsEn: [
+      'Void Island is on by default. Hover over your notch to open your task map, focus timer, journal and pixel cat. A short pixel jingle plays when it turns on; you can turn it off in Settings → Island.',
+      'Meeting reminders are on by default. On first launch, the app asks for macOS notification permission and reminds you 5 minutes before meetings and when they end. Declining permission switches reminders off; you can turn them on again in Settings.',
+      'Void Island now supports English: buttons, messages and the cat’s quotes follow the app language.',
+      'Island settings have longer hover delay, width and volume sliders, with number fields for exact values.',
+      'Month view uses the same tinted event cards with colored edges as week view, fits more events per day, and no longer cuts off the last row.',
+      'Fixed the white square app icon on macOS versions before macOS 26, and Chinese text appearing in Void Island when the app was set to English.',
+    ],
+    notes: [
+      '升级后，Void Island 和会议提醒会开启一次，即使之前已关闭；如不需要，请在设置中再次关闭，此后会保留你的选择。',
+      '如果 Dock 或启动台仍显示方块图标，这是 macOS 缓存了旧图标，可运行 killall Dock 刷新。',
+    ],
+    notesEn: [
+      'Void Island and meeting reminders are switched on once after this update, even if you had turned them off before. Turn them off again in Settings if you prefer; your choice is kept from then on.',
+      'If Dock or Launchpad still shows a square icon, macOS is caching the old one. Run killall Dock to refresh it.',
+    ],
+  },
+  {
     version: '0.1.0-beta.2',
     published: '2026-10-08',
     summary: '优化 macOS 桌面体验，移除浏览器默认右键菜单。',

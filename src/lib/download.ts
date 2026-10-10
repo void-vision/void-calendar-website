@@ -1,4 +1,4 @@
-const releasePath = 'https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.2/Void.Calendar_0.1.0-beta.2_aarch64.dmg'
+const releasePath = 'https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.3/Void.Calendar_0.1.0-beta.3_aarch64.dmg'
 
 export function getMacDownloadUrl(country: string | null) {
   return `https://${country === 'CN' ? 'gh-proxy.org' : 'gh-proxy.com'}/${releasePath}`
