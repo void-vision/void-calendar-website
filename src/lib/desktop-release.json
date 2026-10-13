@@ -1,11 +1,11 @@
 {
-  "version": "0.1.0-beta.4",
-  "notes": "Import Apple Notes, re-import iCloud Calendar, and edit or delete repeating iCloud events. Faster update checks and a redesigned update prompt. Improved calendar colors, instant deletes, local time zones, large iCloud calendars, Island and the AI model menu. Fixed events not syncing to iCloud, earlier sync failures, moving and renaming events, and note editing. Upgrade note: Re-importing iCloud removes events created in Void and linked to iCloud locally, along with their task links, colors and reminders. Their iCloud copies return as regular iCloud events; nothing in iCloud changes.",
-  "pub_date": "2026-10-10T10:12:04Z",
+  "version": "0.1.0-beta.5",
+  "notes": "More visual AI replies with charts, schedule overviews and selectable times, a live thinking timeline, AI scheduling strategies, adjustable thinking effort and resumable runs. Custom API models can now propose calendar, task and note changes. New macOS Usage Tracking plugin keeps data locally, separately for each account, without syncing or AI access. Add locations with a map picker and Apple Maps search. Repeating events now sync as recurring series with Google Calendar, Outlook, iCloud/CalDAV and Apple Calendar. Refined charts, task picker, Island and plugin sidebar. Fixed chat scrolling, week-view alignment, Codex charts, agent detection and database retry handling. Beta notes: Usage Tracking and Apple Maps search require the macOS desktop app; map tiles require an internet connection.",
+  "pub_date": "2026-10-13T12:55:28Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZHRzbnFpRzdQOFpWRDVVWWpHbThSWkYyK21sb0RwdkszdWJhUTNZSVpzV09aaXdtK2JpZHMrVXZzZ0JVekx0Wk9EMFhxUFVKcXgzSTFydnJwbjRNeFJ3b1lERmgxQXdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxNjI4MjkzCWZpbGU6Vm9pZCBDYWxlbmRhci5hcHAudGFyLmd6CXZlcnNpb246MC4xLjAtYmV0YS40Clh6RFZBRHVWQVdxTTIxb09OandhU0ovY2Jybjl0dVVyYzJvZ2V0RWx3SkJCdXlzZXNnY1pyM2dqVWVaeWdwcFdNWDEzcks2QUJ3dUg5c2lCMmNXTkJnPT0K",
-      "url": "https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.4/Void.Calendar.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZHRzbnFpRzdQOGY1NGJ4UDMyYXR6MVVsT0ZjeUVyYnRIN2c1YWhjU2FoOEh0bjAvVzJiTHZvdlBzUVdzYndhVGt1ZXNZb0FkakJiL05DNFgxVC9xbWdHQXJGVTRaMHdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxODk1ODA4CWZpbGU6Vm9pZCBDYWxlbmRhci5hcHAudGFyLmd6CXZlcnNpb246MC4xLjAtYmV0YS41Cmp1WE1BVGZEMWFORnpzc0duejBRUDM4MmR3VjJwdFR1NnloWVJtTFRKQmVjcFRpL29nQVYxSnpOWFU0ZnVQTzFBSXVPQ1o0Z1NSWVNncVRvS1N1akF3PT0K",
+      "url": "https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.5/Void.Calendar.app.tar.gz"
     }
   }
 }

@@ -1,5 +1,43 @@
 export const releases = [
   {
+    version: '0.1.0-beta.5',
+    published: '2026-10-13',
+    summary: 'AI 回复更直观、思考过程更透明，新增使用时长追踪插件与地图选址，完善重复事件同步。',
+    summaryEn: 'More visual and transparent AI assistance, a new Usage Tracking plugin, locations with maps, and proper recurring-event sync.',
+    items: [
+      'AI 回复支持图表、关键数据、日程概览和对比表格；候选时间可直接点击选择，所有修改仍通过待确认的提案执行。',
+      '实时展示 AI 思考步骤与工具调用，完成后自动收起；创建事件时显示 AI 光标绘制动画。',
+      '新增 AI 排程策略与思考强度滑块，简化权限设置；应用退出或崩溃后可恢复未完成的 AI 回复。',
+      '通过自定义 API 接入的模型也能提议修改日历、任务和笔记，使用相同的工具与确认流程。',
+      '新增 macOS 使用时长追踪插件：按日、周、月查看应用使用时间、分类、时间线与排名，可自定义分类规则。',
+      '使用时长数据按账户单独保存在本机，不会同步，AI 无法读取；窗口标题与网站域名追踪可选，可随时暂停。',
+      '任务与事件支持地点：通过 Apple 地图搜索、拖动缩放地图或点击落点选址，并可在 Apple 地图打开已保存地点。',
+      '重复事件以真正的重复系列同步到 Google 日历、Outlook、iCloud/CalDAV 和 Apple 日历；无法安全编辑的规则标记为仅能在源日历修改。',
+      '优化事件弹窗、图表和使用时长面板，重新设计任务选择器，提升 Retina 图表清晰度，精简 Island 设置，并支持将插件置顶。',
+      '修复聊天滚动跳动、周视图时间线对齐、Codex 图表显示和新安装 AI 代理识别的问题；数据库被占用时会等待重试，并明确提示存储错误。',
+    ],
+    itemsEn: [
+      'AI replies can include charts, key figures, schedule overviews and comparison tables. Tap candidate times to answer; changes still go through a proposal you confirm.',
+      'A live timeline shows reasoning steps and tool calls, then collapses when finished. AI cursors draw new events on the calendar.',
+      'Choose an AI scheduling strategy and thinking effort, with simpler permission settings. Interrupted AI replies resume after restarting the app.',
+      'Custom API models can propose calendar, task and note changes using the same tools and confirmation flow as CLI agents.',
+      'New macOS Usage Tracking plugin: explore app usage by day, week and month, with categories, timelines, rankings and editable category rules.',
+      'Usage data stays on this Mac, separately for each account, without syncing or AI access. Window titles and website domains are optional, and recording can be paused.',
+      'Add locations to tasks and events using Apple Maps search, an interactive map or a dropped pin, and open saved places in Apple Maps.',
+      'Repeating events sync as real recurring series with Google Calendar, Outlook, iCloud/CalDAV and Apple Calendar. Rules that cannot be edited safely are marked as editable only in the source calendar.',
+      'Refined event popovers, charts and usage panels, a redesigned task picker, sharper Retina charts, simpler Island settings and pinned sidebar plugins.',
+      'Fixed chat scrolling, week-view alignment, Codex charts and detection of newly installed AI agents. Database contention now retries, with clear storage errors.',
+    ],
+    notes: [
+      '使用时长追踪与地图选址中的 Apple 地图搜索需要 macOS 桌面应用；窗口标题与网站追踪分别需要辅助功能和自动化权限。',
+      '地图瓦片由 OpenFreeMap 提供，需要联网；地图无法加载时仍可搜索和保存地点。',
+    ],
+    notesEn: [
+      'Usage Tracking and Apple Maps search require the macOS desktop app. Window titles need Accessibility access; website tracking needs Automation access.',
+      'Map tiles come from OpenFreeMap and require an internet connection. Search and saving still work if the map cannot load.',
+    ],
+  },
+  {
     version: '0.1.0-beta.4',
     published: '2026-10-10',
     summary: '新增 Apple 备忘录导入，完善 iCloud 日历同步与重复事件编辑，优化更新提示和笔记体验。',
