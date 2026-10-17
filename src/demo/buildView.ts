@@ -11,12 +11,15 @@ import {
   TCOL,
   TPLS,
 } from './catalog'
-import { FTOT, type DemoEvent, type DemoState, type Msg } from './types'
+import { type DemoEvent, type DemoState, type Msg } from './types'
 import { dayLabels, demoEvents, eventTime } from './events'
 import { trEN } from './i18n'
 import { buildWorkspaceView } from './workspaceView'
 import { buildCaptureView } from './captureView'
-import type { CaptureTemplateId } from './captureTemplates'
+import { demoProjects, demoNotes } from './workspaces'
+import type { CaptureTemplateId, CaptureDestination } from './captureTemplates'
+import { elapsedFocus, startFocusPatch, finishFocusPatch, isScriptedFocus, pauseFocusPatch } from './productBehavior'
+import { parseCaptureText } from './captureParser'
 
 type Ev = DemoEvent
 const EVENTS = demoEvents
@@ -32,6 +35,7 @@ export type DemoApi = {
   saveCap: () => void
   sendAi: () => void
   selectCaptureTemplate: (id: CaptureTemplateId) => void
+  openCaptureDestination: (id: CaptureDestination) => void
   openProjectCapture: (id: string) => void
   prepareProjectPlan: (id: string, title: string, tasks: { id: string; title: string; hours: number }[]) => void
   applySuggestions: () => void
@@ -89,7 +93,7 @@ function fmtDur(ms: number) {
 }
 
 export function focusElapsed(s: DemoState) {
-  return Math.min(FTOT * 1000, s.fAcc + (s.fRun ? Date.now() - s.fAt : 0))
+  return elapsedFocus(s)
 }
 
 export function buildView(state: DemoState, api: DemoApi) {
@@ -180,8 +184,8 @@ function heroVals(s: DemoState, api: DemoApi) {
     }
     if (e.id === 'prd3') {
       if (sc === 1) {
-        o.s = t < 2400 ? 10 : 11
-        if (t >= 1500 && t < 2400) o.sh = '0 0 0 2px #e5484d'
+        o.s = t < 5800 ? 10 : 11
+        if (t >= 1500 && t < 5800) o.sh = '0 0 0 2px #e5484d'
       }
       if (sc === 3 && t >= 2800) o.sh = '0 0 0 2px #1463d9'
     }
@@ -211,16 +215,17 @@ function heroVals(s: DemoState, api: DemoApi) {
   if (sc === 1) {
     msgs.push(U(Q), A('已排好 9 个时间盒，已应用。'))
     if (t >= 1000) msgs.push(N('日历更新 · 新日程「临时会议」10:00 – 11:00'))
+    if (t >= 1500) msgs.push(U('临时会议占了 10:00–11:00，把冲突的 PRD 时间盒顺延到空档。'))
     if (t >= 2600) {
-      msgs.push(A('和「PRD v2 · 收尾与评审」冲突了，已顺延到 11:00 – 13:00，其余安排不变。', [], [act('撤销')]))
-      toast = '已顺延 1 个时间盒 · ⌘Z 撤销'
+      msgs.push(A(t < 5800 ? '建议将 PRD 时间盒改到 11:00–13:00，时长保持 2 小时。确认后写入。' : '已顺延到 11:00–13:00，时长保持 2 小时。', [], [act(t < 5800 ? '确认调整' : '撤销', false, true)]))
+      if (t >= 5800) toast = '已顺延 1 个时间盒'
     }
   }
   if (sc === 2) {
-    if (t >= 3400 && t < 4400) toast = '已存到笔记'
+    if (t >= 3400 && t < 4400) toast = '已添加到任务列表'
     if (t >= 4400)
       msgs.push(
-        A(`笔记里记下一条想法：「${IDEA}」。周四 11:30 有空档，排进去？`, [], [
+        A(`任务「${IDEA}」已保存。周四 11:30 有空档，排进去？`, [], [
           act(t >= 5800 ? '已排入' : '排到周四 11:30', t >= 5800 && t < 6000, true),
           act('稍后'),
         ]),
@@ -228,11 +233,11 @@ function heroVals(s: DemoState, api: DemoApi) {
     if (t >= 5900) toast = '已排到 周四 11:30'
   }
   const focus = sc === 3 && t >= 2800
-  const left = Math.max(0, 1500 - Math.floor((t - 2800) / 1000))
+  const left = Math.max(0, s.fDuration * 60 - Math.floor((t - 2800) / 1000))
   const clock = `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`
   if (sc === 3) {
     msgs.push(A('现在是「PRD v2 · 收尾与评审」，还剩 40 分钟。'))
-    if (t >= 3000) msgs.push(A('已开始 25 分钟专注，结束后自动记到这个时间盒。'))
+    if (t >= 3000) msgs.push(A('专注已开始，结束后记录实际时长。'))
   }
   const inTyped = sc === 0 && t < 1800 ? typed(Q, 200, 1600) : ''
   const capOn = sc === 2 && t >= 800 && t < 3300
@@ -251,14 +256,14 @@ function heroVals(s: DemoState, api: DemoApi) {
     inSh: '0 1px 2px rgba(28,28,30,.04)',
     capOp: capOn ? 1 : 0,
     capSc: capOn ? 1 : 0.96,
-    capText: sc === 2 ? typed(IDEA, 1200, 3000) : '',
+    capText: sc === 2 ? typed(IDEA, 1500, 3000) : '',
     inboxN: 3,
     inboxSc: sc === 2 && ((t >= 3300 && t < 3600) || (t >= 5800 && t < 6100)) ? 1.3 : 1,
     popOp: sc === 3 && t >= 500 ? 1 : 0,
     popY: sc === 3 && t >= 500 ? 0 : -8,
     popTag: focus ? '专注中' : '进行中',
     mbPct: 66 + (sc === 3 ? (t / D) * 6 : 0),
-    focusLabel: focus ? `专注中 · ${clock}` : '开始专注',
+    focusLabel: focus ? `暂停 · ${clock}` : '开始专注',
     focusBg: '#1c1c1e',
     focusSc: sc === 3 && t >= 2700 && t < 2950 ? 0.95 : 1,
     mbText: focus ? `专注中 ${clock}` : 'PRD v2 · 收尾 · 40 分钟',
@@ -293,6 +298,7 @@ function userVals<T extends {
   popOp: number
   popY: number
   mbPillBg: string
+  mbPct: number
   focusLabel: string
   focusBg: string
   popTag: string
@@ -320,13 +326,13 @@ function userVals<T extends {
     r.capSc = 1
   }
   const nv = (id: string, label: string, badge?: number) => {
-    const on = s.navSel === id
+    const on = (!s.heroManual && s.scene === 2 && s.t >= 3400 && s.t < 4400 ? 'tasks' : s.navSel) === id
     return {
       id,
       active: on,
       label,
-      bg: on ? '#e4ecfb' : 'transparent',
-      fg: on ? '#1463d9' : '#2c2c2e',
+      bg: on ? '#e8e7e4' : 'transparent',
+      fg: '#2c2c2e',
       hbg: on ? '#dde7fa' : '#ecebe8',
       hasBadge: !!badge,
       badge,
@@ -341,20 +347,23 @@ function userVals<T extends {
   let list = [...EVENTS.filter((e) => e.id !== 'meet' && e.id !== 'idea'), ...s.extraEvents]
   if (q) list = list.filter((e) => e.t.toLowerCase().includes(q) || trEN(e.t).toLowerCase().includes(q))
   const selected = allEvents.find((event) => event.id === s.evSel)
-  const selectedStart = selected?.id === 'prd3' && s.scene === 1 && s.t >= 2400 ? 11 : selected?.s ?? 0
+  const selectedStart = selected?.id === 'prd3' && s.scene === 1 && s.t >= 5800 ? 11 : selected?.s ?? 0
   const selectedWhen = selected ? `${DN[selected.d]} · ${fh(selectedStart)} – ${fh(selectedStart + selected.e - selected.s)}` : ''
-  const itemType = s.navSel === 'tasks' ? 'todo' : 'idea'
+  const effectiveNav = !s.heroManual && s.scene === 2 && s.t >= 3400 && s.t < 4400 ? 'tasks' : s.navSel
+  const itemType = effectiveNav === 'tasks' ? 'todo' : 'idea'
   const seedItems = (itemType === 'todo' ? ['PRD v2 · 收尾与评审', '周五分享：做演示稿', '健身'] : [IDEA, '整理插件权限说明', '预约体检'])
     .map((title, index) => ({ id: `initial-${itemType}-${index}`, title, type: itemType, when: '待安排' }))
-  const collectionItems = [...s.capturedItems.filter((item) => item.type === itemType).map((item) => ({ ...item, when: '刚刚' })), ...seedItems]
+  const collectionItems = [...(itemType === 'todo' && s.scene === 2 && s.t >= 3400 ? [{ id: 'scene-captured-task', title: IDEA, type: 'todo', when: '刚刚' }] : []), ...s.capturedItems.filter((item) => item.type === itemType).map((item) => ({ ...item, when: '刚刚' })), ...seedItems]
   const demoPop = r.popOp === 1
   const vis = s.mbCtl ? s.mbOpen : demoPop
   const aiText = s.aiUser ? s.aiVal : r.inTyped
   const empty = !aiText.trim() || !s.aiUser || s.aiPending
-  const focusLabel = s.uFocus ? '专注中 · 25:00' : r.focusLabel
+  const left = Math.max(0, s.fDuration * 60 - Math.floor(elapsedFocus(s) / 1000))
+  const focusClock = `${String(Math.floor(left / 60)).padStart(2, '0')}:${String(left % 60).padStart(2, '0')}`
+  const focusLabel = s.uFocus ? s.fDone ? '专注结束' : `${s.fRun ? '暂停' : '继续'} · ${focusClock}` : r.focusLabel
   return {
     ...r,
-    navSel: s.navSel,
+    navSel: effectiveNav,
     ...buildWorkspaceView(s, api),
     ...buildCaptureView(s, api),
     collectionTitle: itemType === 'todo' ? '任务列表' : 'Idea',
@@ -374,10 +383,11 @@ function userVals<T extends {
       when: selectedWhen,
       kind: s.suggestions.some((event) => event.id === selected.id) ? '待确认' : selected.ai ? 'AI 时间盒' : '日程',
       pending: s.suggestions.some((event) => event.id === selected.id),
+      focusActive: (s.fStarted && !s.fDone) || isScriptedFocus(s),
       dot: HPAL[selected.c].dot,
     } : null,
     closeEvent: () => api.set({ evSel: null }),
-    startEventFocus: () => selected && api.set({ uFocus: true, focusTitle: selected.t, focusWhen: selectedWhen, evSel: null, mbCtl: true, mbOpen: true, heroManual: true }),
+    startEventFocus: () => selected && api.set((current) => ({ ...(current.fStarted && !current.fDone ? {} : isScriptedFocus(current) ? startFocusPatch(current, 'PRD v2 · 收尾与评审', '10:00 – 12:00') : startFocusPatch(current, selected.t, selectedWhen)), evSel: null, navSel: 'pomo', heroManual: true, mbCtl: true, mbOpen: false })),
     suggestions: s.suggestions.map((event) => ({ id: event.id, userTitle: event.t, when: `${DN[event.d]} · ${fh(event.s)} – ${fh(event.e)}`, duration: `${event.e - event.s} h` })),
     applySuggestions: api.applySuggestions,
     adjustSuggestions: api.adjustSuggestions,
@@ -395,19 +405,35 @@ function userVals<T extends {
     capDemo: !s.capUser,
     capVal: s.capVal,
     navWork: [nv('cal', '日历'), nv('inbox', 'Idea', r.inboxN), nv('tasks', '任务列表'), nv('proj', '项目'), nv('memo', '笔记')],
-    navPlug: [nv('pomo', '番茄钟'), nv('habit', '习惯打卡'), nv('gh', 'GitHub')],
-    searchRes: list.slice(0, 6).map((e) => ({
-      title: e.t,
-      userTitle: e.id.startsWith('demo-') ? e.t : null,
-      dot: HPAL[e.c].dot,
-      when: `${DN[e.d]} ${fh(e.s)}`,
-      pick: (ev: { preventDefault: () => void }) => {
-        ev.preventDefault()
-        api.set({ evSel: e.id, searchOpen: false, searchQ: '', navSel: 'cal', heroManual: true, scene: 3, t: 0, mbCtl: true, mbOpen: false })
-      },
-    })),
-    searchHead: q ? '日程' : '本周日程',
-    searchNone: !!(q && !list.length),
+    navPlug: [nv('pomo', '番茄钟')],
+    searchRes: [
+      ...list.map((e) => ({
+        title: e.t, userTitle: e.id.startsWith('demo-') ? e.t : null,
+        dot: HPAL[e.c].dot, when: `${DN[e.d]} ${fh(e.s)}`,
+        pick: (ev: { preventDefault: () => void }) => {
+          ev.preventDefault()
+          api.set({ evSel: e.id, searchOpen: false, searchQ: '', navSel: 'cal', heroManual: true, scene: 3, t: 0, mbCtl: true, mbOpen: false })
+        },
+      })),
+      ...(q ? [
+        ...[...demoProjects, ...s.customProjects].flatMap((project) => [
+          { title: project.title, userTitle: project.id.startsWith('custom-') ? project.title : null, dot: project.color, when: '项目',
+            pick: () => api.set({ navSel: 'proj', projectSel: project.id, searchOpen: false, searchQ: '', heroManual: true, evSel: null }) },
+          ...[...project.groups.flatMap((group) => group.tasks), ...(s.projectExtraTasks[project.id] ?? [])].map((task) => ({
+            title: task.title, userTitle: task.id.startsWith('project-capture-') ? task.title : null, dot: project.color, when: '任务',
+            pick: () => api.set({ navSel: 'proj', projectSel: project.id, searchOpen: false, searchQ: '', heroManual: true, evSel: null }),
+          })),
+        ]),
+        ...s.capturedItems.map((item) => ({ title: item.title, userTitle: item.title, dot: '#8e8e93', when: '任务',
+          pick: () => api.set({ navSel: item.type === 'todo' ? 'tasks' : 'inbox', searchOpen: false, searchQ: '', heroManual: true, evSel: null }) })),
+        ...[...demoNotes, ...s.capturedNotes].map((note) => ({
+          title: s.noteDrafts[note.id]?.title ?? note.title,
+          userTitle: s.noteDrafts[note.id]?.title ?? (note.id.startsWith('capture-') ? note.title : null), dot: '#e0782f', when: '笔记',
+          pick: () => api.set({ navSel: 'memo', noteSel: note.id, notesListing: false, noteEditing: false, searchOpen: false, searchQ: '', heroManual: true, evSel: null }),
+        })),
+      ].filter((item) => item.title.toLowerCase().includes(q) || trEN(item.title).toLowerCase().includes(q)) : []),
+    ].slice(0, 8),
+    searchHead: q ? '全部结果' : '本周日程',
     searchOpen: s.searchOpen,
     searchQ: s.searchQ,
     searchBd: s.searchOpen ? '#c9c7c2' : '#e3e1dd',
@@ -421,12 +447,13 @@ function userVals<T extends {
     focusTitle: s.focusTitle ?? 'PRD v2 · 收尾与评审',
     focusUserTitle: s.extraEvents.some((event) => event.t === s.focusTitle) ? s.focusTitle : null,
     focusWhen: s.focusWhen ?? '10:00 – 12:00',
-    mbText: s.uFocus ? `${s.focusTitle ?? 'PRD v2 · 收尾'} · 25:00` : r.mbText,
-    mbUserText: s.uFocus && s.extraEvents.some((event) => event.t === s.focusTitle) ? `${s.focusTitle} · 25:00` : null,
+    mbText: s.uFocus ? `${s.focusTitle ?? 'PRD v2 · 收尾'} · ${focusClock}` : r.mbText,
+    mbUserText: s.uFocus && s.extraEvents.some((event) => event.t === s.focusTitle) ? `${s.focusTitle} · ${focusClock}` : null,
     focusBg: s.uFocus && vis ? '#1c1c1e' : r.focusBg,
-    popTag: s.uFocus && vis ? '专注中' : r.popTag,
-    shiftLabel: s.askShift ? '已请 AI 顺延到 13:00 →' : '调整时间',
-    popLeft: focusLabel.indexOf('专注中') === 0 ? `${focusLabel.replace('专注中 · ', '')} 专注` : '剩余 40 分钟',
+    popTag: s.uFocus && vis ? s.fDone ? '专注结束' : s.fRun ? '专注中' : '已暂停' : r.popTag,
+    shiftLabel: '调整时间',
+    popLeft: s.uFocus || isScriptedFocus(s) ? focusClock : '剩余 40 分钟',
+    mbPct: s.uFocus ? Math.min(100, elapsedFocus(s) / (s.fDuration * 600)) : r.mbPct,
     mbDot: (s.scene === 3 && s.t >= 2800) || s.uFocus ? '#1c1c1e' : '#8e86a3',
     aiValue: aiText,
     aiEmpty: empty,
@@ -441,7 +468,8 @@ function userVals<T extends {
         disabled: action.label === '已应用' || action.label === '已排入',
         pick: () => {
           if (action.label === '应用') api.set({ t: 6300, heroManual: true })
-          else if (action.label === '撤销') api.set({ t: 1200, heroManual: true })
+          else if (action.label === '确认调整') api.set({ t: 6000, heroManual: true })
+          else if (action.label === '撤销') api.set({ t: 2700, heroManual: true })
           else if (action.label === '排到周四 11:30') api.set({ t: 6000, heroManual: true })
           else if (action.label === '稍后') api.set({ t: 3400, heroManual: true })
           else if (action.label === '再调整') api.set({ aiUser: true, aiVal: Q, heroManual: true })
@@ -453,9 +481,16 @@ function userVals<T extends {
     saveCap: api.saveCap,
     sendAi: api.sendAi,
     toggleMb: () => api.set((x) => ({ mbCtl: true, mbOpen: !(x.mbCtl ? x.mbOpen : demoPop) })),
-    startFocus: () => api.set({ uFocus: true, heroManual: true }),
-    askShift: () => api.set({ askShift: true }),
-    onCapVal: (e: { target: { value: string } }) => api.set({ capVal: e.target.value }),
+    startFocus: () => api.set((current) => current.fRun || isScriptedFocus(current)
+      ? pauseFocusPatch(current)
+      : startFocusPatch(current)),
+    askShift: () => api.set({ heroManual: true, aiUser: true, aiVal: `调整「${s.focusTitle ?? 'PRD v2 · 收尾与评审'}」的时间`, mbCtl: true, mbOpen: false }),
+    onCapVal: (e: { target: { value: string } }) => {
+      const duration = s.capTemplate === 'box' ? parseCaptureText(e.target.value, 'timebox').durationMinutes : null
+      const [hour, minute] = s.capStart.split(':').map(Number)
+      const end = hour * 60 + minute + (duration ?? 0)
+      api.set({ capVal: e.target.value, capError: '', ...(duration && end < 1440 ? { capEnd: eventTime(end / 60) } : {}) })
+    },
     onSearchQ: (e: { target: { value: string } }) => api.set({ searchQ: e.target.value, searchOpen: true }),
     onSearchFocus: () => api.set({ searchOpen: true }),
     onSearchBlur: () => api.set({ searchOpen: false }),
@@ -500,7 +535,7 @@ function disVals(s: DemoState, mode: string, api: DemoApi) {
     [null, null, '明天 09:00'],
   ]
   const pk = picks[s.askPick] || picks[0]
-  const pending = mode === 'ask' && ph >= 3 && !s.askOk
+  const pending = ph >= 3 && !s.askOk
   const side = ph >= 1 && (ph < 3 || pending)
   const meet: ShiftBlock = { title: '临时会议', s: 600, e: 660, ...WM, r: side ? 'calc(50% + 3px)' : '0%', op: ph >= 1 ? 1 : 0, tx: ph < 1 ? -10 : 0, lab: '' }
   let prd: ShiftBlock = { title: 'PRD v2 · 第二段', s: 600, e: 690, ...PU, l: side ? 'calc(50% + 3px)' : '0%', op: 1, tx: 0, lab: '' }
@@ -509,6 +544,7 @@ function disVals(s: DemoState, mode: string, api: DemoApi) {
   }
   let g1: ShiftBlock = { title: '', s: 600, e: 690, ...PU, l: prd.l, op: 0, tx: 0, lab: '' }
   let g2 = { ...g1 }
+  let g3 = { ...g1 }
   let res = ''
   let dot = '#d2d0cb'
   if (ph < 1) res = '周三上午，正在写 PRD。'
@@ -517,13 +553,14 @@ function disVals(s: DemoState, mode: string, api: DemoApi) {
     dot = '#8e86a3'
     if (mode === 'shift') {
       prd = { ...prd, s: 660, e: 750 }
-      res = '已顺延到 11:00 – 12:30，其余安排不变。'
+      res = pending ? '建议顺延到 11:00 – 12:30，确认后写入。' : '已顺延到 11:00 – 12:30，其余安排不变。'
     }
     if (mode === 'split') {
-      prd = { ...prd, title: 'PRD · 1/3', s: 660, e: 685 }
-      g1 = { ...PU, title: 'PRD · 2/3', s: 695, e: 720, op: 1, l: '0%', tx: 0, lab: '' }
-      g2 = { ...PU, title: 'PRD · 3/3', s: 730, e: 755, op: 1, l: '0%', tx: 0, lab: '' }
-      res = '剩下的拆成 3 段 25 分钟，中间各留 10 分钟。'
+      prd = { ...prd, title: 'PRD · 1/4', s: 660, e: 685 }
+      g1 = { ...PU, title: 'PRD · 2/4', s: 695, e: 720, op: 1, l: '0%', tx: 0, lab: '' }
+      g2 = { ...PU, title: 'PRD · 3/4', s: 730, e: 755, op: 1, l: '0%', tx: 0, lab: '' }
+      g3 = { ...PU, title: 'PRD · 4/4', s: 765, e: 780, op: 1, l: '0%', tx: 0, lab: '' }
+      res = pending ? '建议拆成 25 + 25 + 25 + 15 分钟，确认后写入。' : '已拆为 4 段，共 90 分钟，中间各留 10 分钟。'
     }
     if (mode === 'ask') {
       if (pending) {
@@ -555,6 +592,17 @@ function disVals(s: DemoState, mode: string, api: DemoApi) {
       }
     }
   }
+  let original: ShiftBlock | null = null
+  if (pending && mode !== 'ask') {
+    original = { ...PU, title: 'PRD v2 · 第二段', s: 600, e: 690, op: 1, tx: 0, l: 'calc(50% + 3px)', lab: '冲突' }
+    for (const block of [prd, g1, g2, g3]) {
+      if (!block.op) continue
+      block.bs = 'dashed'
+      block.bg = '#fff'
+      block.r = 'calc(50% + 3px)'
+      block.l = '0%'
+    }
+  }
   const B = (o: ShiftBlock) => {
     const hh = (o.e - o.s) * PX
     const cp = hh < 48
@@ -582,12 +630,12 @@ function disVals(s: DemoState, mode: string, api: DemoApi) {
     }
   }
   return {
-    dBlocks: [B(meet), B(prd), B(g1), B(g2)],
+    dBlocks: [meet, prd, g1, g2, g3, ...(original ? [original] : [])].map(B),
     dResult: res,
     dDot: dot,
     askShow: pending,
     replayDis: () => api.startDis(),
-    askOpts: picks.map((p, i) => {
+    askOpts: (mode === 'ask' ? picks : []).map((p, i) => {
       const on = i === s.askPick
       return { label: p[2], on: on ? 'true' : 'false', fg: on ? '#1c1c1e' : '#8e8e93', bar: on ? 1 : 0, pick: () => api.set({ askPick: i }) }
     }),
@@ -597,29 +645,37 @@ function disVals(s: DemoState, mode: string, api: DemoApi) {
 
 function focVals(s: DemoState, api: DemoApi) {
   const el = focusElapsed(s)
-  const left = Math.max(0, FTOT - Math.floor(el / 1000))
+  const running = s.fRun || isScriptedFocus(s)
+  const left = Math.max(0, s.fDuration * 60 - Math.floor(el / 1000))
   const C = 320.44
-  const p = Math.min(1, el / (FTOT * 1000))
+  const p = Math.min(1, el / (s.fDuration * 60_000))
   const mm = Math.floor(left / 60)
   const ss = left % 60
   const clock = `${String(mm).padStart(2, '0')}:${String(ss).padStart(2, '0')}`
   const last = s.fRecs[s.fRecs.length - 1]
   return {
     fDash: `${(C * p).toFixed(2)} ${C}`,
-    fClock: s.fDone ? fmtDur(last ? last.ms : 0) : clock,
-    fArc: s.fDone ? '#3f6a41' : s.fRun ? '#c4553f' : '#d9a99c',
-    fTomOp: s.fRun || s.fDone ? 1 : 0.6,
+    fClock: s.fDone ? fmtDur(s.fAcc) : clock,
+    fArc: s.fDone ? '#3f6a41' : running ? '#c4553f' : '#d9a99c',
+    fTomOp: running || s.fDone ? 1 : 0.6,
     fPauseOp: !s.fRun && !s.fDone && s.fStarted ? 1 : 0,
     fBadgeOp: s.fDone ? 1 : 0,
+    fUserTitle: s.focusTitle ?? (isScriptedFocus(s) ? s.lang === 'en' ? trEN('PRD v2 · 收尾与评审') : 'PRD v2 · 收尾与评审' : null),
+    islandSeconds: Math.max(0, s.fDuration * 60 - Math.floor(el / 1000)),
+    islandDuration: s.fDuration,
+    islandStarted: s.fStarted && !s.fDone,
+    islandMinutes: Math.floor(s.fRecs.reduce((total, record) => total + record.ms, 0) / 60_000),
+    fRunning: s.fRun || isScriptedFocus(s),
+    fDone: s.fDone,
     fStatus: s.fDone
-      ? `第 ${s.fRound} 个番茄已完成 · 已写入笔记`
-      : s.fRun
-        ? `第 ${s.fRound} 个番茄 · 共 25 分钟`
+      ? `第 ${s.fRound} 个番茄已结束`
+      : running
+        ? `第 ${s.fRound} 个番茄 · 共 ${s.fDuration} 分钟`
         : s.fStarted
           ? `已暂停 · 第 ${s.fRound} 个番茄`
-          : `第 ${s.fRound} 个番茄 · 共 25 分钟`,
-    fToggleLabel: s.fDone ? '再开始一轮' : s.fRun ? '暂停' : s.fStarted ? '继续' : '开始专注',
-    fEndD: s.fDone || (!s.fStarted && s.fAcc === 0) ? 'none' : 'block',
+          : `第 ${s.fRound} 个番茄 · 共 ${s.fDuration} 分钟`,
+    fToggleLabel: s.fDone ? '再开始一轮' : s.fRun || isScriptedFocus(s) ? '暂停' : s.fStarted ? '继续' : '开始专注',
+    fEndD: s.fDone || (!s.fStarted && s.fAcc === 0 && !isScriptedFocus(s)) ? 'none' : 'block',
     hasRecs: s.fRecs.length > 0,
     fDots: [0, 1, 2, 3].map((i) => {
       const dn = i < s.fRecs.length || (s.fDone && i < s.fRound)
@@ -628,21 +684,13 @@ function focVals(s: DemoState, api: DemoApi) {
     }),
     fRecs: s.fRecs,
     fFoot: s.fDone
-      ? `本轮专注 ${fmtDur(last.ms)} · 已写回时间盒「PRD v2 · 收尾与评审」`
-      : `${s.fRun ? '专注进行中 · 已专注 ' : '已暂停 · 已专注 '}${Math.floor(el / 60000)} 分钟`,
-    fFootDot: s.fDone ? '#3f6a41' : s.fRun ? '#c4553f' : '#d2d0cb',
-    fToggle: () =>
-      api.set((x) => {
-        if (x.fDone) return { fDone: false, fAcc: 0, fAt: Date.now(), fRun: true, fRound: x.fRound + 1, fStarted: true }
-        if (x.fRun) return { fRun: false, fAcc: Math.min(FTOT * 1000, x.fAcc + Date.now() - x.fAt) }
-        return { fRun: true, fAt: Date.now(), fStarted: true }
-      }),
-    fEnd: () =>
-      api.set((x) => {
-        if (x.fDone) return null
-        const ms = Math.min(FTOT * 1000, x.fAcc + (x.fRun ? Date.now() - x.fAt : 0))
-        return { fDone: true, fRun: false, fAcc: ms, fRecs: [...x.fRecs, { ms, text: `第 ${x.fRound} 个番茄 · 专注 ${fmtDur(ms)}` }] }
-      }),
+      ? `本轮专注 ${fmtDur(last?.ms ?? 0)}`
+      : !s.fStarted && !isScriptedFocus(s) ? `准备开始 · ${s.fDuration} 分钟` : `${running ? '专注进行中 · 已专注 ' : '已暂停 · 已专注 '}${Math.floor(el / 60000)} 分钟`,
+    fFootDot: s.fDone ? '#3f6a41' : running ? '#c4553f' : '#d2d0cb',
+    fToggle: () => api.set((current) => current.fRun || isScriptedFocus(current)
+      ? pauseFocusPatch(current)
+      : startFocusPatch(current)),
+    fEnd: () => api.set((current) => finishFocusPatch(current)),
     nTitle: s.nTitle,
     nBody: s.nBody,
     onNTitle: (e: { target: { value: string } }) => api.set({ nTitle: e.target.value }),

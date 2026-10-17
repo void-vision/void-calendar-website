@@ -14,7 +14,7 @@ export function DemoSidebar({ v }: { v: View }) {
       <div className="px-2.5 py-1 text-[11px] text-[#8e8e93]">工作区</div>
       {v.navWork.map((item) => (
         <Fragment key={item.id}>
-          <button type="button" data-demo-nav={item.id} aria-current={item.active ? 'page' : undefined} onClick={item.pick} className="flex h-8 shrink-0 cursor-pointer items-center gap-2.5 rounded-md px-2.5 text-left font-[inherit] hover:bg-[#ecebe8]" style={{ background: item.id === 'memo' ? undefined : item.bg, color: item.id === 'memo' ? '#2c2c2e' : item.fg }}>
+          <button type="button" data-demo-nav={item.id} aria-current={item.active ? 'page' : undefined} onClick={item.pick} className="flex h-8 shrink-0 cursor-pointer items-center gap-2.5 rounded-md px-2.5 text-left font-[inherit] hover:bg-[#ecebe8]" style={{ background: item.bg, color: item.fg }}>
             <DemoIcon name={icons[item.id as keyof typeof icons]} size={16} /><span className="flex-1 text-[12.5px]">{item.label}</span>
           </button>
           {item.id === 'inbox' || item.id === 'tasks' ? <span aria-hidden="true" className="ml-[18px] h-2.5 shrink-0 border-l-2 border-[#dedcd7]" /> : null}

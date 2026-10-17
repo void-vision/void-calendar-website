@@ -5,7 +5,8 @@ export const demoEvents = EVS as DemoEvent[]
 export const dayLabels = ['周一', '周二', '周三', '周四', '周五']
 
 export function eventTime(hour: number) {
-  return `${String(Math.floor(hour)).padStart(2, '0')}:${hour % 1 ? '30' : '00'}`
+  const minutes = Math.round(hour * 60)
+  return `${String(Math.floor(minutes / 60)).padStart(2, '0')}:${String(minutes % 60).padStart(2, '0')}`
 }
 
 let sequence = 0

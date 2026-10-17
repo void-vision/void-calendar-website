@@ -70,18 +70,19 @@ function PixelCat({ en }: { en: boolean }) {
   </div>
 }
 
-export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onExpandedChange: (expanded: boolean) => void }) {
+export function VoidIslandDemo({ lang, onExpandedChange, seconds, duration, running, started, focusTitle, focusMinutes, focusRounds, onStartFocus, onToggleFocus, onDuration }: {
+  lang: SiteLang; onExpandedChange: (expanded: boolean) => void;
+  seconds: number; duration: number; running: boolean; started: boolean; focusTitle: string | null;
+  focusMinutes: number; focusRounds: number;
+  onStartFocus: (title: string, minutes: number) => void;
+  onToggleFocus: (title: string) => void; onDuration: (minutes: number) => void;
+}) {
   const en = lang === 'en'
   const islandRef = useRef<HTMLDivElement>(null)
-  const introTimerRef = useRef<number | undefined>(undefined)
-  const introPlayedRef = useRef(false)
   const [tab, setTab] = useState<IslandTab>('map')
   const [selected, setSelected] = useState(0)
   const [expanded, setExpanded] = useState(false)
   const [zoom, setZoom] = useState(1)
-  const [duration, setDuration] = useState(25)
-  const [seconds, setSeconds] = useState(25 * 60)
-  const [running, setRunning] = useState(false)
   const [sound, setSound] = useState(true)
   const [settings, setSettings] = useState(false)
   const [draft, setDraft] = useState('')
@@ -92,24 +93,6 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
   const activeTask = tasks[selected]
 
   useEffect(() => onExpandedChange(expanded), [expanded, onExpandedChange])
-
-  useEffect(() => {
-    const island = islandRef.current
-    if (!island) return
-    const observer = new IntersectionObserver(([entry]) => {
-      if (!entry.isIntersecting || introPlayedRef.current) return
-      observer.disconnect()
-      introTimerRef.current = window.setTimeout(() => {
-        introPlayedRef.current = true
-        setExpanded(true)
-      }, 180)
-    }, { threshold: .5 })
-    observer.observe(island)
-    return () => {
-      observer.disconnect()
-      window.clearTimeout(introTimerRef.current)
-    }
-  }, [])
 
   useEffect(() => {
     if (!expanded) return
@@ -133,16 +116,6 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
     }
   }, [expanded])
 
-  useEffect(() => {
-    if (!running) return
-    const timer = window.setInterval(() => setSeconds((current) => Math.max(0, current - 1)), 1000)
-    return () => window.clearInterval(timer)
-  }, [running])
-
-  useEffect(() => {
-    if (running && seconds === 0) setRunning(false)
-  }, [running, seconds])
-
   const switchTask = () => setSelected((current) => (current + 1) % tasks.length)
   const saveNote = () => {
     const text = draft.trim()
@@ -150,15 +123,9 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
     setNotes((current) => [text, ...current])
     setDraft('')
   }
-  const startFocus = () => {
+  const startFocus = (task: (typeof tasks)[number] = activeTask) => {
     setTab('focus')
-    setSeconds(duration * 60)
-    setRunning(true)
-  }
-  const setFocusDuration = (minutes: number) => {
-    setDuration(minutes)
-    setSeconds(minutes * 60)
-    setRunning(false)
+    onStartFocus(en ? task.en : task.zh, duration)
   }
   const labels = en ? { map: 'Map', focus: 'Focus', journal: 'Notes', cat: 'Cat' } : { map: '地图', focus: '专注', journal: '记录', cat: '小猫' }
   const personas = en ? { camus: 'Camus', psych: 'Psychology', friend: 'Friend' } : { camus: '加缪', psych: '心理学', friend: '朋友' }
@@ -169,7 +136,7 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
     : (en ? 'I am here with you. Let us do this one thing together.' : '我在这里陪着你。我们先把这一件事做完。')
 
   return <div className="vi-island-host" aria-label={en ? 'Void Island demo' : '灵动岛演示'}>
-      <div ref={islandRef} className={`vi-island ${expanded ? `vi-island-tab-${tab}` : 'vi-island-compact'}`} onPointerEnter={(event) => { if (event.pointerType === 'mouse') { introPlayedRef.current = true; window.clearTimeout(introTimerRef.current); setExpanded(true) } }} onPointerLeave={(event) => { if (event.pointerType === 'mouse') { introPlayedRef.current = true; window.clearTimeout(introTimerRef.current); setExpanded(false); setSettings(false); setPersonaOpen(false) } }}>
+      <div ref={islandRef} className={`vi-island ${expanded ? `vi-island-tab-${tab}` : 'vi-island-compact'}`} onPointerEnter={(event) => { if (event.pointerType === 'mouse') { setExpanded(true) } }} onPointerLeave={(event) => { if (event.pointerType === 'mouse') { setExpanded(false); setSettings(false); setPersonaOpen(false) } }}>
         {expanded ? <>
           <div className="vi-island-menu">
             <div role="tablist" aria-label={en ? 'Island panels' : '灵动岛面板'} className="vi-island-tabs">
@@ -190,15 +157,15 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
                 <div className="vi-zone vi-zone-due"><span className="vi-due-skull">☠</span><span>D U E</span><i /><i /><i /><i /></div>
                 <svg className="vi-map-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M19 18 35 19 49 19 39 43 53 49 19 48 19 18 M35 19 39 43 M49 19 53 49 M19 48 31 87 45 83 21 93 M39 43 31 87 M53 49 72 52 89 52 92 70 77 70 73 90 72 52 M77 70 92 70 M89 52 77 70" /></svg>
                 {[[4, 12], [55, 7], [58, 68], [97, 21], [8, 69], [54, 93], [86, 7]].map(([x, y], index) => <span key={index} className="vi-map-dust" style={{ left: `${x}%`, top: `${y}%`, animationDelay: `${-index * .7}s` }} />)}
-                {tasks.map((task, index) => <button key={task.id} type="button" className={`vi-map-node vi-node-${task.color} ${index > 7 ? 'vi-node-small' : ''} ${task.id === 'test' ? 'vi-node-done' : ''} ${selected === index ? 'vi-node-selected' : ''}`} style={{ left: `${task.x}%`, top: `${task.y}%` }} aria-label={en ? task.en : task.zh} aria-pressed={selected === index} onClick={() => setSelected(index)} onDoubleClick={startFocus}>{task.id === 'test' ? <DoneMarker /> : <PixelStar index={index} />}{selected === index && <span className="vi-map-reticle"><i /><i /><i /><i /></span>}</button>)}
+                {tasks.map((task, index) => <button key={task.id} type="button" className={`vi-map-node vi-node-${task.color} ${index > 7 ? 'vi-node-small' : ''} ${task.id === 'test' ? 'vi-node-done' : ''} ${selected === index ? 'vi-node-selected' : ''}`} style={{ left: `${task.x}%`, top: `${task.y}%` }} aria-label={en ? task.en : task.zh} aria-pressed={selected === index} onClick={() => setSelected(index)} onDoubleClick={() => startFocus(task)}>{task.id === 'test' ? <DoneMarker /> : <PixelStar index={index} />}{selected === index && <span className="vi-map-reticle"><i /><i /><i /><i /></span>}</button>)}
                 <span className="vi-map-selected-label" style={{ left: `${activeTask.x}%`, top: `${activeTask.y + 8}%` }}>{en ? activeTask.en : activeTask.zh}</span>
               </div>
               <span className="vi-map-caption">11:20 · {en ? '14 places' : '14 个地点'}</span>
               <div className="vi-map-zoom"><button type="button" aria-label={en ? 'Zoom in' : '放大地图'} onClick={() => setZoom((value) => Math.min(1.35, +(value + 0.15).toFixed(2)))}>+</button><button type="button" aria-label={en ? 'Zoom out' : '缩小地图'} onClick={() => setZoom((value) => Math.max(0.8, +(value - 0.15).toFixed(2)))}>−</button><button type="button" aria-label={en ? 'Reset map zoom' : '定位当前任务'} onClick={() => setZoom(1)}><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true"><path d="M10 15.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11z M10 2v3 M10 15v3 M2 10h3 M15 10h3" /><circle cx="10" cy="10" r="1.2" fill="currentColor" stroke="none" /></svg></button></div>
             </div>
-            <div className="vi-task-action"><div><strong>{en ? activeTask.en : activeTask.zh}</strong><span>→ {en ? activeTask.stepEn : activeTask.stepZh} · {activeTask.minutes} {en ? 'min' : '分钟'}</span></div><button type="button" className="vi-switch" aria-label={en ? 'Pick another task' : '换一个'} onClick={switchTask}><IslandIcon name="switch" /></button><button type="button" className="vi-primary" onClick={startFocus}>{en ? 'Do this' : '就做这件'}</button></div>
+            <div className="vi-task-action"><div><strong>{en ? activeTask.en : activeTask.zh}</strong><span>→ {en ? activeTask.stepEn : activeTask.stepZh} · {activeTask.minutes} {en ? 'min' : '分钟'}</span></div><button type="button" className="vi-switch" aria-label={en ? 'Pick another task' : '换一个'} onClick={switchTask}><IslandIcon name="switch" /></button><button type="button" className="vi-primary" onClick={() => startFocus()}>{en ? 'Do this' : '就做这件'}</button></div>
           </div>}
-          {tab === 'focus' && <div className="vi-focus-panel" role="tabpanel" aria-label={labels.focus}><div><div className="vi-clock">{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</div><div className="vi-durations">{[5, 15, 25, 45].map((minutes) => <button key={minutes} type="button" className={duration === minutes ? 'vi-duration-active' : ''} onClick={() => setFocusDuration(minutes)}>{minutes}</button>)}</div><small>{en ? '20 minutes focused today · 1 session' : '今天已专注 20 分钟 · 1 轮'}</small></div><div className="vi-focus-task"><span>{en ? 'CURRENT TASK' : '当前任务'}</span><strong>{en ? activeTask.en : activeTask.zh}</strong><span>→ {en ? activeTask.stepEn : activeTask.stepZh}</span><button type="button" onClick={() => { if (seconds === 0) setSeconds(duration * 60); setRunning((value) => !value) }}>{running ? (en ? 'Pause' : '暂停') : (en ? 'Start focus' : '开始专注')}</button></div></div>}
+          {tab === 'focus' && <div className="vi-focus-panel" role="tabpanel" aria-label={labels.focus}><div><div className="vi-clock">{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</div><div className="vi-durations">{[5, 15, 25, 45].map((minutes) => <button key={minutes} type="button" className={duration === minutes ? 'vi-duration-active' : ''} disabled={started} onClick={() => onDuration(minutes)}>{minutes}</button>)}</div><small>{en ? `${focusMinutes} minutes focused today · ${focusRounds} sessions` : `今天已专注 ${focusMinutes} 分钟 · ${focusRounds} 轮`}</small></div><div className="vi-focus-task"><span>{en ? 'CURRENT TASK' : '当前任务'}</span><strong>{focusTitle ?? (en ? activeTask.en : activeTask.zh)}</strong>{!focusTitle || focusTitle === activeTask.zh || focusTitle === activeTask.en ? <span>→ {en ? activeTask.stepEn : activeTask.stepZh}</span> : null}<button type="button" onClick={() => onToggleFocus(en ? activeTask.en : activeTask.zh)}>{running ? (en ? 'Pause' : '暂停') : (en ? 'Start focus' : '开始专注')}</button></div></div>}
           {tab === 'journal' && <div className="vi-journal-panel" role="tabpanel" aria-label={labels.journal}><div className="vi-note-entry"><textarea value={draft} onChange={(event) => setDraft(event.target.value)} onKeyDown={(event) => { if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) { event.preventDefault(); saveNote() } }} placeholder={en ? 'Write anything… Mention a task with [[ ]]' : '随手记点什么，可以多行；输入 [[ ]] 引用任务'} aria-label={en ? 'New note' : '新记录'} rows={2} /><button type="button" onClick={saveNote} disabled={!draft.trim()}>{en ? 'Save' : '记下'}</button></div><div className="vi-note-list">{notes.map((note, index) => <p key={`${index}-${note}`}><time>{en ? 'Now' : '刚刚'}</time>{note}</p>)}<p><time>10:05</time>{en ? 'Check Friday’s meeting before replying to Mia.' : '回复 Mia 的排期邮件前，先确认周五的会还在不在。'}</p><p><time>09:40</time>{en ? 'Three pages have inconsistent button spacing.' : '走查截图里的问题：三页按钮间距不一致。'}</p><p><time>09:12</time>{en ? 'Start with the design review checklist today.' : '今天先把整理设计走查问题清单做掉。'}</p></div></div>}
           {tab === 'cat' && <div className="vi-cat-panel" role="tabpanel" aria-label={labels.cat}>
             <PixelCat en={en} />
@@ -206,7 +173,7 @@ export function VoidIslandDemo({ lang, onExpandedChange }: { lang: SiteLang; onE
             <div className="vi-cat-prompts">{(en ? ['Talk with me', 'I feel tired', 'Encourage me', 'Something else'] : ['陪我聊两句', '我有点累', '夸夸我', '说点别的']).map((prompt, index) => <button key={prompt} type="button" onClick={() => setCatIndex((index + 1) % catLines.zh.length)}>{index + 1} {prompt}</button>)}</div>
             <div className="vi-persona"><button type="button" aria-label={en ? 'Quote persona' : '箴言人格'} aria-expanded={personaOpen} aria-haspopup="listbox" onClick={() => setPersonaOpen((value) => !value)}><i className="vi-persona-dot" style={{ background: personaColors[persona] }} /><span>{personas[persona]}</span><svg className="vi-persona-chevron" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M5 8l5 5 5-5" /></svg></button>{personaOpen && <div className="vi-persona-list" role="listbox" aria-label={en ? 'Quote persona' : '箴言人格'}>{(['camus', 'psych', 'friend'] as const).map((item) => <button key={item} type="button" role="option" aria-selected={persona === item} onClick={() => { setPersona(item); setPersonaOpen(false) }}><i className="vi-persona-dot" style={{ background: personaColors[item] }} /><span className="vi-persona-option-text"><span>{personas[item]}</span><small>{personaDescriptions[item]}</small></span>{persona === item && <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d="M4.5 10.5l3.5 3.5 7.5-8" /></svg>}</button>)}</div>}</div>
           </div>}
-        </> : <button type="button" className="vi-island-collapsed" onClick={() => setExpanded(true)} aria-label={en ? 'Expand Void Island' : '展开灵动岛'}><IslandIcon name="cat" /><span>{en ? activeTask.en : activeTask.zh}</span><b>{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</b></button>}
+        </> : <button type="button" className="vi-island-collapsed" onClick={() => setExpanded(true)} aria-label={en ? 'Expand Void Island' : '展开灵动岛'}><IslandIcon name="cat" /><span>{focusTitle ?? (en ? activeTask.en : activeTask.zh)}</span><b>{String(Math.floor(seconds / 60)).padStart(2, '0')}:{String(seconds % 60).padStart(2, '0')}</b></button>}
       </div>
   </div>
 }

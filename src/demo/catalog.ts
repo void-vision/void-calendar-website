@@ -1,16 +1,12 @@
-/* Ported from OpenDesign 官网 v2.dc.html. Visual copy and demo data stay in sync with that prototype. */
+/* Demo sample data. Product interaction sources and verification: docs/demo-parity.md. */
+import { SAMPLE_DAYS, SCHEDULING_PRESETS } from './schedulingStyle'
+import { parityTranslations } from './parityTranslations'
 import { workspaceTranslations } from './workspaceTranslations'
 export type PluginRow = [string, string, string]
 export const MODES=[
-  {id:'shift',name:'自动顺延',desc:'没做完的顺延到下一个空档，事后告诉我'},
-  {id:'ask',name:'先问我',desc:'给出 2–3 个新时间让我选'},
-  {id:'split',name:'拆小一点',desc:'把剩下的拆成 25 分钟的小段，插进空档'}];
-export const P='#ede7f8',PF='#5a3ea0',PD='#7c5cc9';
-export const BOX={
-  shift:[{top:50,h:37.5,title:'PRD v2 · 第二段',time:'11:00 – 12:30'}],
-  ask:[{top:50,h:37.5,title:'PRD v2 · 第二段',time:'建议 11:00 – 12:30',dash:true}],
-  split:[{top:50,h:10.4,title:'PRD · 1/3',time:'11:00 – 11:25'},{top:64.6,h:10.4,title:'PRD · 2/3',time:'11:35 – 12:00'},{top:79.2,h:10.4,title:'PRD · 3/3',time:'12:10 – 12:35'}]};
-export const NOTE={shift:'已把「PRD v2 · 第二段」顺延到 11:00，其余安排不变。',ask:'「PRD v2 · 第二段」和临时会议冲突了，挪到哪个时间？',split:'剩下的拆成 3 段 25 分钟，中间留 10 分钟休息。'};
+  {id:'shift',name:'顺延到空档',desc:'让 AI 找到下一个空档，预览后确认写入'},
+  {id:'ask',name:'比较新时间',desc:'比较几个新时间，选好后确认写入'},
+  {id:'split',name:'拆分时间盒',desc:'拆成短段并留出缓冲，保留原任务的全部时长'}];
 export const PLUGINS=[
   ['番茄钟','效率','把时间盒变成专注计时，完成后自动记录。'],
   ['微循环','效率','把任务切成一个个小循环：先想清楚目标，再专注，最后复盘。'],
@@ -32,7 +28,7 @@ export const EVS=[
  {id:'a6',d:3,s:9,e:10.5,t:'整理读书笔记',c:'green'},{id:'a7',d:3,s:11,e:11.5,t:'体检预约',c:'green'},{id:'idea',d:3,s:11.5,e:12.5,t:'给周五分享找 3 个案例',c:'orange',ai:1},{id:'reh',d:3,s:14,e:15.5,t:'分享彩排',c:'orange',ai:1,k:4},{id:'fit3',d:3,s:18,e:19,t:'健身',c:'green',ai:1,k:7},
  {id:'a8',d:4,s:10,e:11,t:'周五分享',c:'orange'},{id:'a9',d:4,s:13,e:15,t:'竞品调研',c:'blue'},{id:'fit4',d:4,s:18,e:19,t:'健身',c:'green',ai:1,k:8}];
 export const Q='这周把 PRD v2 写完，周五前准备好分享，健身 4 次',IDEA='给周五分享找 3 个案例';
-export const TABS=[{label:'排程',title:'说一句，排好一周。',sub:'AI 读取你已有的日程，把任务放进真正空着的时间。'},{label:'顺延',title:'计划被打乱，日历自己重排。',sub:'新日程和时间盒冲突时，按你选的方式处理。'},{label:'捕获',title:'想到就记，稍后再排。',sub:'按快捷键选择模板，待办进 Idea，想法写进笔记。'},{label:'专注',title:'不切换应用，也知道现在该做什么。',sub:'菜单栏显示当前时间盒，一键开始专注。'}];
+export const TABS=[{label:'排程',title:'说一句，排好一周。',sub:'AI 读取你已有的日程，把任务放进真正空着的时间。'},{label:'顺延',title:'计划被打乱，让 AI 帮你重排。',sub:'告诉 AI 怎么调整，先预览建议，再确认写入。'},{label:'捕获',title:'想到就记，稍后再排。',sub:'按 C 选择分类，待办进任务列表，想法写进笔记。'},{label:'专注',title:'不切换应用，也知道现在该做什么。',sub:'菜单栏显示当前时间盒，一键开始专注。'}];
 export const ICONS={'番茄钟':'M10 5a6 6 0 1 0 0 12a6 6 0 0 0 0-12zM10 8v3l2 1.5M8 2.5h4','微循环':'M4 10a6 6 0 0 1 10.2-4.2M16 10a6 6 0 0 1-10.2 4.2M14.5 3v3h-3M5.5 17v-3h3','Claude Code':'M7 6l-4 4 4 4M13 6l4 4-4 4M11 4.5l-2 11','Codex':'M4 5h12v10H4zM7 9l2 1.5L7 12M11 12h2.5','Terminal':'M3.5 4.5h13v11h-13zM6 8.5l2.5 2L6 12.5M10 12.5h4','GitHub':'M6 3.5v13M14 5.5a1.8 1.8 0 1 0 0 .01M14 7.5c0 3.5-8 2.5-8 7','Linear':'M4 11l5 5M4 7.5l8.5 8.5M5.5 5.5l9 9M8 4l8 8','习惯打卡':'M4 10.5l3.5 3.5L16 6','时间感知器':'M5 5h.01M10 5h.01M15 5h.01M5 10h.01M10 10h.01M15 10h.01M5 15h.01M10 15h.01M15 15h.01','记账':'M4 5h12v10H4zM4 8.5h12M7 12h3','读书':'M3 5c3-1 5-1 7 1v10c-2-2-4-2-7-1zM17 5c-3-1-5-1-7 1v10c2-2 4-2 7-1z','便签打印':'M6 3.5h8v4H6zM4 7.5h12v6H4zM6 11.5h8v5H6z'};
 export const SHORT={'番茄钟':'专注计时自动记录','微循环':'目标 · 专注 · 复盘','Claude Code':'交给 Claude 执行','Codex':'编码任务排队','Terminal':'引用任务再执行','GitHub':'Issue 变成任务','Linear':'同步 issue','习惯打卡':'每天的小目标','时间感知器':'把一生画成点阵','记账':'消费挂在日程旁','读书':'读书进度与感受','便签打印':'打印今天的便签'};
 export const PTINT={'效率':['#e4ecfb','#1d4ea3'],'开发':['#ede7f8','#5a3ea0'],'生活':['#e2f1e6','#2c6a3f'],'阅读':['#fbe8db','#8b4a1c']};
@@ -41,9 +37,14 @@ export const TPLS=[
  {name:'夜猫子',author:'林间',ic:[[3,4,2.4,2.4,.55],[8,12,2,2,.35]],path:'M21 2.5a7.5 7.5 0 1 0 7.2 11.4A6.1 6.1 0 0 1 21 2.5z',desc:'把深度工作放在晚上，上午只放轻量事务',icon:'M13.8 3.6a6.8 6.8 0 1 0 3 11.2 5.6 5.6 0 0 1-3-11.2z',b:[[10.5,11.5,'L','邮件'],[11.5,12,'L',''],[13,14,'R','午饭'],[14,15,'M','会议'],[15.5,16.5,'L','杂事'],[18,19,'R','晚饭'],[20,22,'F','深度专注'],[22.25,23.75,'F','专注'],[23.75,24,'R',''],[24,24,'R','']]},
  {name:'INTJ · 深度工作',author:'阿Ken',ic:[[1,5,21,10,1],[24.5,5,8.5,10,.35]],path:'',desc:'上午整块专注，会议集中到下午，严格保护专注时间',icon:'M3 7h14v6H3zM3 16h6',b:[[8.5,11.5,'F','整块专注'],[11.5,12,'L','邮件'],[12,13,'R','午饭'],[13.5,14.5,'M','会议'],[14.5,15.5,'M','会议'],[15.5,16,'L','杂事'],[16,18,'F','专注'],[18.5,19.5,'R','运动'],[21,21.5,'L','复盘'],[21.5,21.5,'R','']]},
  {name:'考试周',author:'周末读书人',ic:[[1,5,7,10,1],[9.5,5,7,10,.6],[18,5,7,10,.32],[26.5,5,6.5,10,1]],path:'',desc:'按科目轮换，每 50 分钟休息，睡眠优先',icon:'M3 5.5c2.5-1 4.8-.8 7 1v9c-2.2-1.8-4.5-2-7-1zM17 5.5c-2.5-1-4.8-.8-7 1v9c2.2-1.8 4.5-2 7-1z',b:[[8,8.83,'F','数学'],[9,9.83,'F','英语'],[10,10.83,'F','专业'],[11,11.83,'F','数学'],[12,13.5,'R','午休'],[14,14.83,'F','英语'],[15,15.83,'F','专业'],[16,16.83,'F','数学'],[19,20,'L','复盘'],[22.5,25,'R','睡眠']]}];
+export const SAMPLE_KINDS = { focus: 'F', meeting: 'M', light: 'L', break: 'R' } as const
+TPLS.forEach((template, index) => {
+  template.b = SAMPLE_DAYS[SCHEDULING_PRESETS[index]].map((block) => [block.start / 60, block.end / 60, SAMPLE_KINDS[block.kind], block.label === 'lunch' ? '午休' : { focus: '专注', meeting: '会议', light: '轻事务', break: '休息' }[block.kind]])
+})
 export const TCOL={F:['#ece7f4','#d6cee4','#4a4360'],L:['#f3f2ef','#e4e2dd','#6b6b70'],M:['#f7f0e8','#e6d6c4','#6a5540'],R:['repeating-linear-gradient(135deg,#fff 0 3px,#f1efeb 3px 6px)','#e8e6e2','#8e8e93']};
 export const I18N={
 ...workspaceTranslations,
+...parityTranslations,
 '工作方式':'How it works','AI 排程':'AI scheduling','专注与笔记':'Focus & notes','插件市场':'Plugins','下载':'Download',
 '你的每一天，':'Your whole day,','从这里开始。':'starts here.',
 'AI、日历、任务、笔记与专注，在同一个地方。用时间盒安排每一天，用插件连接更多可能。':'AI, calendar, tasks, notes and focus in one place. Plan each day with time boxes, and extend it with plugins.',
@@ -110,7 +111,7 @@ export const I18N={
 '记录读书进度，在每一章写下感受。':'Tracks reading progress with notes on each chapter.','便签打印':'Sticky print','把今天的时间盒打印成一张便签。':'Prints today\'s time boxes on a sticky note.',
 '产品周会':'Product weekly','深度工作：插件系统原型':'Deep work: plugin prototype','1:1 沟通':'1:1','站会':'Standup','临时会议':'Ad-hoc meeting','整理读书笔记':'Tidy reading notes','体检预约':'Book checkup','周五分享':'Friday talk','竞品调研':'Competitor research',
 '排程':'Schedule','说一句，排好一周。':'One sentence plans the week.','AI 读取你已有的日程，把任务放进真正空着的时间。':'AI reads your calendar and puts tasks into time that is actually free.',
-'顺延':'Reschedule','计划被打乱，日历自己重排。':'Plans change. Your calendar adjusts.','新日程和时间盒冲突时，按你选的方式处理。':'When a new event conflicts, it\'s handled the way you choose.',
+'顺延':'Reschedule','计划被打乱，让 AI 帮你重排。':'Plans change. Your calendar adjusts.','告诉 AI 怎么调整，先预览建议，再确认写入。':'When a new event conflicts, it\'s handled the way you choose.',
 '在任何应用里按快捷键，想法先进 Inbox。':'Press a shortcut in any app to send ideas to the Inbox.','不切换应用，也知道现在该做什么。':'Know what\'s next without switching apps.','菜单栏显示当前时间盒，一键开始专注。':'The menu bar shows your current time box. One click to focus.',
 '专注计时自动记录':'Auto-logged focus','目标 · 专注 · 复盘':'Goal · Focus · Review','交给 Claude 执行':'Run with Claude','编码任务排队':'Queue coding','引用任务再执行':'Run with task context','Issue 变成任务':'Issues to tasks','同步 issue':'Sync issues','每天的小目标':'Daily goals','把一生画成点阵':'Life as dots','消费挂在日程旁':'Spend by event','读书进度与感受':'Reading log','打印今天的便签':'Print today',
 'ADHD 友好':'ADHD-friendly','小满':'Xiaoman','短时间盒、多缓冲，计划被打乱时拆小重排，不催促':'Short blocks and generous buffers. Disruptions get split and re-planned, with no nagging.',
@@ -137,6 +138,7 @@ export const I18N={
 '插件权限改为按需申请\n日历视图保留周视图为默认\n周五前补充演示稿的案例':'Request plugin permissions only when needed\nKeep week view as the default\nAdd examples to the slides before Friday',
 'PRD · 1/3':'PRD · 1/3','已存到':'Saved to'};
 export const I18R=[
+ [/第 (\d+) 个番茄已结束/g,'Pomodoro $1 ended'],[/第 (\d+) 个番茄 · 共 (\d+) 分钟/g,'Pomodoro $1 · $2 min'],[/准备开始 · (\d+) 分钟/g,'Ready · $1 minutes'],
  [/第 (\d+) 个番茄已完成 · 已写入笔记/g,'Pomodoro $1 done · saved to note'],[/第 (\d+) 个番茄 · 共 25 分钟/g,'Pomodoro $1 · 25 min'],[/已暂停 · 第 (\d+) 个番茄/g,'Paused · Pomodoro $1'],
  [/第 (\d+) 个番茄 · 专注 /g,'Pomodoro $1 · focused '],[/本轮专注 /g,'This round: '],[/ · 已写回时间盒「PRD v2 · 收尾与评审」/g,' · saved to "PRD v2 · Wrap-up & review"'],
  [/专注进行中 · 已专注 /g,'Focusing · '],[/已暂停 · 已专注 /g,'Paused · '],[/专注中 · /g,'Focusing · '],[/(\d+:\d+) 专注/g,'$1 focus'],

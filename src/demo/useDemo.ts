@@ -3,13 +3,13 @@ import { I18N } from './catalog'
 import { buildView, focusElapsed, type DemoApi } from './buildView'
 import { applyLang, trDeep, trEN } from './i18n'
 import { createDemoEvent } from './events'
-import { captureTemplates, type CaptureTemplateId } from './captureTemplates'
+import { captureTemplates, captureDestinations, type CaptureTemplateId, type CaptureDestination } from './captureTemplates'
+import { capturePatch, finishFocusPatch, startFocusPatch, elapsedFocus, isScriptedFocus, pauseFocusPatch } from './productBehavior'
 import { dayLabels, eventTime } from './events'
 import type { SiteLang } from '../lib/lang'
 import {
   DEFAULT_NOTE_BODY,
   DEFAULT_NOTE_TITLE,
-  FTOT,
   SCENE_SECONDS,
   initialState,
   type DemoState,
@@ -62,10 +62,22 @@ export function useDemo(lang: SiteLang) {
     })
   }, [])
 
+  const islandExpanded = useRef(false)
   const holdIsland = useCallback((expanded: boolean) => {
-    set(expanded
-      ? { heroManual: true, scene: 1, t: 0, mbCtl: true, mbOpen: false, navSel: 'cal', evSel: null }
-      : { heroManual: false, t: 0 })
+    islandExpanded.current = expanded
+  }, [])
+
+  const islandStartFocus = useCallback((title: string, minutes: number) => {
+    set((s) => s.fStarted && !s.fDone
+      ? { uFocus: true, heroManual: true }
+      : startFocusPatch(s, title, null, Date.now(), minutes))
+  }, [set])
+  const islandToggleFocus = useCallback((title: string) => {
+    set((s) => s.fRun || isScriptedFocus(s) ? pauseFocusPatch(s)
+      : startFocusPatch(s, s.fStarted && !s.fDone ? s.focusTitle : title))
+  }, [set])
+  const islandSetDuration = useCallback((minutes: number) => {
+    set((s) => s.fStarted && !s.fDone ? null : { fDuration: minutes, fAcc: 0, fDone: false, fStarted: false })
   }, [set])
 
   const fitAi = useCallback(() => {
@@ -85,21 +97,17 @@ export function useDemo(lang: SiteLang) {
   }, [])
 
   const openCap = useCallback(() => {
-    set({ capUser: true, capVal: '', capType: 'idea', capTemplate: 'idea', capStage: 'templates', capProjectId: null, evSel: null, heroManual: true })
+    set({ capUser: true, capVal: '', capBody: '', capPriority: 0, capError: '', capType: 'idea', capTemplate: 'idea', capStage: 'templates', capProjectId: null, evSel: null, heroManual: true })
     setTimeout(() => captureDialogRef.current?.focus(), 30)
   }, [set])
 
   const selectCaptureTemplate = useCallback((id: CaptureTemplateId) => {
-    if (id === 'focus') {
-      set({ capUser: false, uFocus: true, mbCtl: true, mbOpen: true, fRun: true, fStarted: true, fAcc: 0, fAt: Date.now(), fDone: false })
-      return
-    }
-    set({ capTemplate: id, capStage: 'input', capType: id === 'todo' || id === 'box' ? id : 'idea' })
+    set({ capTemplate: id, capStage: 'input', capError: '', capType: id })
     setTimeout(() => capRef.current?.focus(), 30)
   }, [set])
 
   const openProjectCapture = useCallback((id: string) => {
-    set({ capUser: true, capVal: '', capType: 'todo', capTemplate: 'todo', capStage: 'input', capProjectId: id, evSel: null, heroManual: true })
+    set({ capUser: true, capVal: '', capBody: '', capPriority: 0, capError: '', capType: 'todo', capTemplate: 'todo', capStage: 'input', capProjectId: id, evSel: null, heroManual: true })
     setTimeout(() => capRef.current?.focus(), 30)
   }, [set])
 
@@ -113,37 +121,22 @@ export function useDemo(lang: SiteLang) {
     [set],
   )
 
+  const openCaptureDestination = useCallback((destination: CaptureDestination) => {
+    set({ capUser: false, heroManual: true, evSel: null,
+      ...(destination === 'projects' ? { navSel: 'proj' } :
+        destination === 'pomodoro' ? { navSel: 'pomo' } :
+        { navSel: 'memo', noteSel: destination === 'daily' ? 'daily' : stateRef.current.noteSel, notesListing: destination === 'all', noteEditing: false }),
+    })
+  }, [set])
+
   const saveCap = useCallback(() => {
-    const v = stateRef.current.capVal.trim()
     const current = stateRef.current
-    const ty = current.capTemplate ?? current.capType
-    if (!v) return closeCap()
-    const event = ty === 'box' ? createDemoEvent(v, stateRef.current.extraEvents, 1) : null
-    if (ty === 'box' && !event) return flash('本周没有合适空档，请换成更短的时间盒。')
-    const id = `capture-${Date.now()}`
-    if (ty === 'todo' && current.capProjectId) {
-      const projectId = current.capProjectId
-      set((s) => ({ capUser: false, navSel: 'proj', projectSel: projectId, projectExtraTasks: { ...(s.projectExtraTasks ?? {}), [projectId]: [...(s.projectExtraTasks?.[projectId] ?? []), { id: `project-${id}`, title: v, hours: 1 }] } }))
-      return flash('已添加到项目')
-    }
-    if (ty === 'todo') {
-      set((s) => ({ capUser: false, inboxExtra: s.inboxExtra + 1, capturedItems: [{ id, title: v, type: 'idea' }, ...s.capturedItems], navSel: 'inbox' }))
-      return flash('已存到 Idea')
-    }
-    if (ty === 'idea' || ty === 'reading') {
-      const lines = v.split('\n')
-      const note = { id, title: lines[0], body: lines.slice(1).join('\n'), source: ty === 'reading' ? '读书 · 当前章节' : '捕获想法' }
-      set((s) => ({ capUser: false, capturedNotes: [note, ...(s.capturedNotes ?? [])], navSel: 'memo', noteSel: id, notesListing: false, noteEditing: false }))
-      return flash('已存到笔记')
-    }
-    if (event) {
-      set((s) => ({ capUser: false, extraEvents: [...s.extraEvents, event], navSel: 'cal' }))
-      return flash('已排进日历的下一个空档')
-    }
-    const template = captureTemplates.find((item) => item.id === ty)!
-    set({ capUser: false, navSel: 'capture-result', captureResult: { label: template.label, target: template.target, content: v, status: ty === 'claude' || ty === 'codex' ? '已加入队列' : '已记录' } })
-    flash(ty === 'claude' || ty === 'codex' ? '已加入演示队列' : '已记录')
-  }, [closeCap, flash, set])
+    const patch = capturePatch(current, `capture-${Date.now()}`)
+    if (!patch) return
+    set(patch)
+    if (patch.capError) return
+    flash(current.capTemplate === 'idea' ? '已存到笔记' : current.capTemplate === 'box' ? '已加入日历' : current.capProjectId ? '已添加到项目' : '已添加到任务列表')
+  }, [flash, set])
 
   const sendAi = useCallback(() => {
     const cur = stateRef.current
@@ -301,7 +294,7 @@ export function useDemo(lang: SiteLang) {
   const goScene = useCallback(
     (i: number) => {
       aiRequest.current += 1
-      set({ scene: i, t: 0, mbCtl: false, mbOpen: false, uFocus: false, askShift: false, uChat: null, aiUser: false, aiVal: '', aiPending: false, suggestions: [], heroManual: false, evSel: null, navSel: 'cal', focusTitle: null, focusWhen: null })
+      set({ scene: i, t: 0, mbCtl: false, mbOpen: false, uFocus: false, fRun: false, fStarted: false, fDone: false, fAcc: 0, askShift: false, uChat: null, aiUser: false, aiVal: '', aiPending: false, suggestions: [], heroManual: false, evSel: null, navSel: 'cal', focusTitle: null, focusWhen: null })
       try {
         localStorage.setItem('vc-hero-scene', String(i))
       } catch {
@@ -344,6 +337,7 @@ export function useDemo(lang: SiteLang) {
     }
 
     const onKey = (e: KeyboardEvent) => {
+      if (e.isComposing || e.repeat) return
       const tg = e.target as HTMLElement | null
       const typing = !!tg && (tg.tagName === 'INPUT' || tg.tagName === 'TEXTAREA' || tg.isContentEditable)
       if (e.key === 'Escape' && stateRef.current.lnk) {
@@ -361,6 +355,10 @@ export function useDemo(lang: SiteLang) {
       if (stateRef.current.capUser && (stateRef.current.capStage ?? 'templates') === 'templates' && !typing && !e.metaKey && !e.ctrlKey && !e.altKey) {
         const template = captureTemplates.find((item) => item.key && item.key.toLowerCase() === e.key.toLowerCase())
         if (template) { e.preventDefault(); selectCaptureTemplate(template.id) }
+        else {
+          const destination = captureDestinations.find((item) => item.key.toLowerCase() === e.key.toLowerCase())
+          if (destination) { e.preventDefault(); openCaptureDestination(destination.id) }
+        }
         return
       }
       if (e.key === 'Escape' && stateRef.current.evSel && !typing) {
@@ -386,6 +384,13 @@ export function useDemo(lang: SiteLang) {
       if ((e.key === 'c' || e.key === 'C') && inView()) {
         e.preventDefault()
         openCap()
+      } else if (inView()) {
+        const destination = captureDestinations.find((item) => item.key.toLowerCase() === e.key.toLowerCase())
+        if (destination) { e.preventDefault(); openCaptureDestination(destination.id) }
+        else if (e.key.toLowerCase() === 'i' || e.key.toLowerCase() === 't') {
+          e.preventDefault()
+          set({ navSel: e.key.toLowerCase() === 'i' ? 'inbox' : 'tasks', heroManual: true, evSel: null })
+        }
       }
     }
     window.addEventListener('keydown', onKey)
@@ -412,21 +417,12 @@ export function useDemo(lang: SiteLang) {
         const rr = fe.getBoundingClientRect()
         vis = rr.top < innerHeight && rr.bottom > 0 && rr.height > 0
       }
-      if (!s.fStarted && vis) {
-        set({ fStarted: true, fRun: true, fAt: Date.now() })
-        return
-      }
       if (!s.fRun || s.fDone) return
-      if (focusElapsed(s) >= FTOT * 1000) {
-        const ms = FTOT * 1000
-        set((x) =>
-          x.fDone
-            ? null
-            : { fDone: true, fRun: false, fAcc: ms, fRecs: [...x.fRecs, { ms, text: `第 ${x.fRound} 个番茄 · 专注 25 分 0 秒` }] },
-        )
+      if (focusElapsed(s) >= s.fDuration * 60_000) {
+        set((current) => finishFocusPatch(current))
         return
       }
-      if (vis && !document.hidden) set({})
+      if (!document.hidden && (vis || s.uFocus)) set({})
     }, 250)
 
     const ro = hiveRef.current
@@ -518,8 +514,8 @@ export function useDemo(lang: SiteLang) {
       const dt = Math.min(200, now - last)
       last = now
       const s = stateRef.current
-      if (s.heroManual || s.capUser || s.searchOpen || (s.mbCtl && s.mbOpen) || s.aiFocus || s.aiVal || s.uChat) return
-      if (document.hidden) return
+      if (islandExpanded.current || s.heroManual || s.capUser || s.searchOpen || (s.mbCtl && s.mbOpen) || s.aiFocus || s.aiVal || s.uChat) return
+      if (document.hidden || reduced.current) return
       const el = mockRef.current
       if (el) {
         const r = el.getBoundingClientRect()
@@ -557,7 +553,7 @@ export function useDemo(lang: SiteLang) {
       window.clearInterval(iv)
       aiRequest.current += 1
     }
-  }, [closeCap, closeMb, fitNote, openCap, selectCaptureTemplate, set, startDis])
+  }, [closeCap, closeMb, fitNote, openCap, openCaptureDestination, selectCaptureTemplate, set, startDis])
 
   const seen = useRef(false)
 
@@ -569,6 +565,7 @@ export function useDemo(lang: SiteLang) {
       saveCap,
       sendAi,
       selectCaptureTemplate,
+      openCaptureDestination,
       openProjectCapture,
       prepareProjectPlan,
       applySuggestions,
@@ -584,7 +581,7 @@ export function useDemo(lang: SiteLang) {
       sceneSeconds: SCENE_SECONDS,
       mem: mem.current,
     }),
-    [adjustSuggestions, applySuggestions, closeCap, closeMb, fitAi, fitNote, flash, goScene, openCap, openProjectCapture, pickPlugin, prepareProjectPlan, saveCap, selectCaptureTemplate, sendAi, set, setDisMode, startDis],
+    [adjustSuggestions, applySuggestions, closeCap, closeMb, fitAi, fitNote, flash, goScene, openCap, openCaptureDestination, openProjectCapture, pickPlugin, prepareProjectPlan, saveCap, selectCaptureTemplate, sendAi, set, setDisMode, startDis],
   )
 
   useEffect(() => applySiteLang(lang), [applySiteLang, lang])
@@ -604,11 +601,11 @@ export function useDemo(lang: SiteLang) {
   })
 
   const view = buildView(state, api)
-  if (state.lang !== 'en') return { ...view, holdIsland, refs: refsOf() }
+  if (state.lang !== 'en') return { ...view, holdIsland, islandStartFocus, islandToggleFocus, islandSetDuration, refs: refsOf() }
   const ai = view.aiValue
   const translated = trDeep(view) as typeof view
   translated.aiValue = state.aiUser ? ai : trEN(ai)
-  return { ...translated, holdIsland, refs: refsOf() }
+  return { ...translated, holdIsland, islandStartFocus, islandToggleFocus, islandSetDuration, refs: refsOf() }
 
   function refsOf() {
     return { rootRef, stageRef, mockRef, aiRef, hiveRef, detRef, noteRef, lnkRef, lnkBtnRef, mbBtnRef, popRef, searchRef, capRef, captureDialogRef, eventRef }

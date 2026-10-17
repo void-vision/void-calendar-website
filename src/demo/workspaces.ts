@@ -1,6 +1,6 @@
 import { DEFAULT_NOTE_BODY, DEFAULT_NOTE_TITLE } from './types'
 
-export type WorkspaceTask = { id: string; title: string; hours: number; when?: string; body?: string; noteId?: string; eventId?: string }
+export type WorkspaceTask = { id: string; title: string; hours: number; priority?: number; when?: string; body?: string; noteId?: string; eventId?: string }
 export type WorkspaceProject = { id: string; title: string; category: string; color: string; due: string; folder: string; target: number; pomodoros: number; groups: { id: string; title: string; tasks: WorkspaceTask[] }[] }
 export type NoteSegment = { text: string; target?: string; kind?: 'note' | 'project' }
 export type NoteBlock = { id: string; kind: 'check' | 'paragraph' | 'quote' | 'bullets' | 'heading'; text?: string; indent?: number; segments?: NoteSegment[]; items?: string[] }

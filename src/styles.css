@@ -6,6 +6,15 @@ body {
   background: #fff;
 }
 
+/* Keep short events tall enough for a complete text line instead of compressing 12 hours
+   into the showcase height. Event positions still follow their actual duration. */
+.demo-calendar-scroll {
+  overflow: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: #d2d0cb transparent;
+}
+
 body {
   font-family:
     -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC',
@@ -349,7 +358,7 @@ section[id],
   /* 固定日列的最小宽度，避免事件标题被挤成一列文字。 */
   .demo-week {
     min-width: 544px;
-    min-height: 100%;
+    min-height: 620px;
   }
 
   .demo-week-grid {

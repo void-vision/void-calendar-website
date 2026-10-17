@@ -47,6 +47,8 @@ const SKIP = new Set([
   'mbUserText',
   'searchQ',
   'capVal',
+  'capBody',
+  'fUserTitle',
   'aiValue',
   'nTitle',
   'nBody',

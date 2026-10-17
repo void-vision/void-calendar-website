@@ -69,7 +69,7 @@ export function HomePage() {
             <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[18px] border border-[#e3e1dd] bg-linear-to-b from-[#f2f4f7] to-[#e9ecf1] text-[#1c1c1e] shadow-[0_20px_60px_rgba(28,28,30,.08)]">
               <ShowcaseProgress />
               <MenuBar v={v} />
-              <MemoVoidIslandDemo lang={lang} onExpandedChange={v.holdIsland} />
+              <MemoVoidIslandDemo lang={lang} onExpandedChange={v.holdIsland} seconds={v.islandSeconds} duration={v.islandDuration} running={v.fRunning} started={v.islandStarted} focusTitle={v.fUserTitle} focusMinutes={v.islandMinutes} focusRounds={v.fRecs.length} onStartFocus={v.islandStartFocus} onToggleFocus={v.islandToggleFocus} onDuration={v.islandSetDuration} />
               <div className="demo-window-padding px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)]">
                 <div className="w-full overflow-hidden rounded-xl border border-[rgba(28,28,30,.1)] bg-white text-[#1c1c1e] shadow-[0_18px_50px_rgba(28,28,30,.12),0_2px_6px_rgba(28,28,30,.05)]">
                   <DemoChrome v={v} />
@@ -214,7 +214,7 @@ function MenuBar({ v }: { v: View }) {
               <div className="h-full bg-[#8e86a3] transition-[width] duration-100" style={{ width: `${v.mbPct}%` }} />
             </div>
             <div className="mt-1 flex items-center gap-3.5">
-              <button type="button" onClick={v.startFocus} className="h-[30px] cursor-pointer rounded-lg border-0 px-3.5 font-[inherit] text-[12.5px] font-medium text-white tabular-nums transition-[background,transform] duration-180 hover:bg-[#3a3a3c]" style={{ background: v.focusBg, transform: `scale(${v.focusSc})` }}>
+              <button type="button" onClick={v.startFocus} disabled={v.fDone} className="h-[30px] cursor-pointer rounded-lg border-0 px-3.5 font-[inherit] text-[12.5px] font-medium text-white tabular-nums transition-[background,transform] duration-180 hover:bg-[#3a3a3c]" style={{ background: v.focusBg, transform: `scale(${v.focusSc})` }}>
                 {v.focusLabel}
               </button>
               <button type="button" onClick={v.askShift} className="h-[30px] cursor-pointer border-0 bg-transparent px-0.5 font-[inherit] text-[12.5px] text-[#48484a] transition-colors hover:text-[#1c1c1e]">
@@ -307,7 +307,7 @@ function DemoChrome({ v }: { v: View }) {
               if (e.key === 'Escape') e.currentTarget.blur()
               if (e.key === 'Enter' && !e.nativeEvent.isComposing && v.searchRes[0]) v.searchRes[0].pick(e)
             }}
-            placeholder="搜索日程、任务、笔记…"
+            placeholder="搜索日程、任务、项目、笔记…"
             className="h-7 w-full rounded-[14px] border bg-white pr-9 pl-3 font-[inherit] text-xs text-[#1c1c1e] outline-none transition-[border-color,box-shadow]"
             style={{ borderColor: v.searchBd, boxShadow: v.searchSh }}
           />
@@ -322,7 +322,7 @@ function DemoChrome({ v }: { v: View }) {
                   <span className="whitespace-nowrap text-[#8e8e93] tabular-nums">{item.when}</span>
                 </button>
               ))}
-              {v.searchNone ? <div className="p-2 text-[#aeaeb2]">没有匹配的结果</div> : null}
+              {v.searchRes.length === 0 ? <div className="p-2 text-[#aeaeb2]">没有匹配的结果</div> : null}
             </div>
           ) : null}
         </div>
@@ -338,10 +338,10 @@ function DemoChrome({ v }: { v: View }) {
       <div data-workspace={v.navSel === 'proj' || v.navSel === 'memo' ? 'expanded' : undefined} className="demo-body relative flex h-[clamp(200px,calc(100vh-400px),600px)] text-xs">
         <DemoSidebar v={v} />
         <div className="demo-calendar relative flex min-w-0 flex-1 flex-col">
-          {v.navSel === 'capture-result' ? <DemoCaptureResult v={v} /> : v.navSel === 'proj' ? <DemoProjects v={v} /> : v.navSel === 'memo' ? <DemoNotes v={v} /> : v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
+          {v.navSel === 'pomo' ? <DemoFocusPanel v={v} /> : v.navSel === 'capture-result' ? <DemoCaptureResult v={v} /> : v.navSel === 'proj' ? <DemoProjects v={v} /> : v.navSel === 'memo' ? <DemoNotes v={v} /> : v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
             <div ref={calendarRef} className="demo-calendar-scroll flex min-h-0 flex-1 flex-col">
-              <div className="demo-week flex min-h-0 flex-1 flex-col">
-                <div className="demo-week-grid grid h-11 shrink-0 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb]">
+              <div className="demo-week flex min-h-[620px] flex-1 flex-col">
+                <div className="demo-week-grid sticky top-0 z-6 grid h-11 shrink-0 grid-cols-[44px_repeat(5,minmax(0,1fr))] border-b border-[#efeeeb] bg-white">
                   <div />
                   <DayHead label="周一" n="28" />
                   <DayHead label="周二" n="29" />
@@ -364,12 +364,14 @@ function DemoChrome({ v }: { v: View }) {
                           key={e.id}
                           type="button"
                           data-demo-event={e.id}
+                          data-compact={e.h < 100 / 24 ? true : undefined}
                           data-no-translate={e.userTitle ? true : undefined}
                           aria-label={`${e.userTitle ?? e.title}，${e.when}`}
+                          title={`${e.userTitle ?? e.title} · ${e.when}`}
                           aria-pressed={v.selectedEvent?.id === e.id}
                           disabled={e.op === 0}
                           onClick={e.pick}
-                          className="absolute right-[3px] left-[3px] flex cursor-pointer items-start overflow-hidden rounded-[5px] px-1.5 py-[3px] text-left font-[inherit] text-[11.5px] leading-[1.4] transition-[top,opacity,transform,box-shadow,background] duration-300 hover:brightness-97"
+                          className="demo-event absolute right-[3px] left-[3px] flex min-h-[18px] cursor-pointer items-start overflow-hidden rounded-[5px] px-1.5 py-[3px] text-left font-[inherit] text-[11.5px] leading-4 transition-[top,opacity,transform,box-shadow,background] duration-300 hover:brightness-97 data-compact:py-0"
                           style={{
                             top: `${e.top}%`,
                             height: `${e.h}%`,
@@ -385,7 +387,7 @@ function DemoChrome({ v }: { v: View }) {
                             transitionTimingFunction: 'cubic-bezier(.3,.7,.2,1)',
                           }}
                         >
-                          {e.userTitle ?? e.title}
+                          <span className="demo-event-title block min-w-0 flex-1 truncate leading-4">{e.userTitle ?? e.title}</span>
                         </button>
                       ))}
                       <div className="absolute right-0 -left-1 z-4 h-0.5 bg-[#e5484d]" style={{ display: d.nowD, top: '27.78%' }}>
@@ -407,7 +409,7 @@ function DemoChrome({ v }: { v: View }) {
               <div data-no-translate={v.selectedEvent.userTitle ? true : undefined} className="text-sm leading-relaxed font-medium">{v.selectedEvent.userTitle ?? v.selectedEvent.title}</div>
               <div className="text-xs text-[#6b6b70] tabular-nums">{v.selectedEvent.when}</div>
               <button type="button" onClick={v.selectedEvent.pending ? v.applySuggestions : v.startEventFocus} className="mt-1 h-9 cursor-pointer self-start rounded-lg bg-[#1c1c1e] px-3.5 text-xs font-medium text-white hover:bg-[#3a3a3c]">
-                {v.selectedEvent.pending ? '加入日历' : '开始专注'}
+                {v.selectedEvent.pending ? '加入日历' : v.selectedEvent.focusActive ? '查看计时器' : '开始专注'}
               </button>
             </div>
           ) : null}
@@ -496,6 +498,18 @@ function DemoChrome({ v }: { v: View }) {
   )
 }
 
+function DemoFocusPanel({ v }: { v: View }) {
+  const tr = useTranslate()
+  return tr(<div className="flex min-h-0 flex-1 flex-col items-center gap-3 overflow-y-auto p-5 text-center">
+    <div className="text-sm font-semibold">番茄钟</div>
+    <div data-no-translate={v.fUserTitle ? true : undefined} className="text-xs text-[#6b6b70]">{v.fUserTitle ?? 'PRD v2 · 收尾与评审'}</div>
+    <div className="text-[40px] leading-tight font-light tabular-nums">{v.fClock}</div>
+    <div className="text-[11px] text-[#8e8e93]">{v.fStatus}</div>
+    <div className="flex gap-3"><button type="button" onClick={v.fToggle} className="min-h-8 cursor-pointer rounded-lg bg-[#1c1c1e] px-3 text-xs text-white">{v.fToggleLabel}</button>{v.fEndD !== 'none' ? <button type="button" onClick={v.fEnd} className="min-h-8 cursor-pointer text-xs text-[#6b6b70]">结束并记录</button> : null}</div>
+    {v.fRecs.map((record, index) => <div key={index} className="w-full border-t border-[#efeeeb] pt-2 text-left text-[11px] text-[#6b6b70]">{record.userTitle ? <span data-no-translate>{record.userTitle} · </span> : null}{record.text}</div>)}
+  </div>)
+}
+
 function DemoCollection({ v }: { v: View }) {
   const tr = useTranslate()
   return tr(
@@ -530,7 +544,7 @@ function DayHead({ label, n }: { label: string; n: string }) {
 // 不依赖演示状态，避免随动画计时反复渲染。
 const Flow = memo(function Flow() {
   const steps = [
-    ['#capture', '01', '捕获想法', '按 C 选择模板，先记下。', '#1c1c1e'],
+    ['#capture', '01', '捕获想法', '按 C 选择分类，先记下。', '#1c1c1e'],
     ['#ai', '02', '变成任务', 'AI 把目标拆成合适长度的任务。', '#dddbd6'],
     ['#ai', '03', '安排时间盒', '放进日历里真正空着的时间。', '#dddbd6'],
     ['#focus', '04', '开始专注', '菜单栏倒计时，结束后自动记录。', '#dddbd6'],
@@ -567,7 +581,7 @@ const Capture = memo(function Capture() {
         <div data-rv="0" className="flex flex-col gap-[18px]">
           <div className="text-sm font-medium text-[#1463d9]">01 · 捕获</div>
           <h2 className="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.22] font-medium tracking-[-0.025em] text-balance">想到就记，稍后再排。</h2>
-          <p className="m-0 max-w-[440px] text-[17px] leading-[1.75] text-[#6b6b70] text-pretty">按下快捷键，选择捕获模板。待办先放进 Idea，想法写进笔记，再让 AI 帮你安排时间。</p>
+          <p className="m-0 max-w-[440px] text-[17px] leading-[1.75] text-[#6b6b70] text-pretty">按下快捷键，选择捕获分类。待办加入任务列表，想法写进笔记，再让 AI 帮你安排时间。</p>
           <div className="mt-1 flex items-center gap-2.5 text-sm text-[#6b6b70]">
             <span className="flex h-7 min-w-7 items-center justify-center rounded-[7px] border border-[#dddbd6] border-b-2 text-[13px] font-medium text-[#1c1c1e]">C</span>
             在上方演示窗口里试一下
@@ -585,11 +599,11 @@ const Capture = memo(function Capture() {
               <span className="vc-blink ml-0.5 h-5 w-[1.5px] bg-[#1463d9]" />
             </div>
             <div className="flex border-t border-[#f0efec] pt-2.5 text-xs text-[#8e8e93]">
-              <span className="flex-1">存到 Idea</span><span>↵ 保存</span>
+              <span className="flex-1">待办 → 任务</span><span>⌘↵ 保存</span>
             </div>
           </div>
           <div className="relative z-1 mx-0 mt-[-18px] flex max-w-[420px] flex-col rounded-2xl border border-[#ecebe8] bg-[#fafaf9] px-[18px] pt-[30px] pb-3 text-sm">
-            <div className="flex items-center gap-2 px-1 pb-2 text-[12.5px] text-[#8e8e93]"><span className="flex-1">Idea</span><span>4</span></div>
+            <div className="flex items-center gap-2 px-1 pb-2 text-[12.5px] text-[#8e8e93]"><span className="flex-1">任务列表</span><span>4</span></div>
             <InboxRow title="给周五分享找 3 个案例" when="刚刚" fresh />
             <InboxRow title="整理插件权限说明" when="昨天" />
             <InboxRow title="预约体检" when="周一" />
@@ -660,7 +674,7 @@ const AiSection = memo(function AiSection() {
         </div>
         <div data-rv="1" className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-x-8 gap-y-6">
           {[
-            ['早上自动规划今天', '把今天的空档和 Inbox 整理成一份时间盒方案。'],
+            ['让 AI 规划今天', '说出今天要做的事，结合空档生成时间盒建议。'],
             ['长任务自动拆开', '单个时间盒超过你设定的上限，就拆成几段。'],
             ['会议前后留出缓冲', '不会把深度工作紧贴在会议后面。'],
             ['写入你指定的日历', 'AI 生成的时间盒单独存放，随时能清理。'],
@@ -732,10 +746,10 @@ function Disrupt({ v }: { v: View }) {
           <h2 className="m-0 text-[clamp(28px,3vw,40px)] leading-[1.25] font-normal tracking-[-0.02em] text-balance">
             临时来了个会，{' '}
             <br />
-            日历自己挪好。
+            告诉 AI 怎么调整。
           </h2>
-          <p className="m-0 max-w-[420px] text-base leading-[1.75] text-[#6b6b70]">选一种你习惯的处理方式，右侧会按这个方式重排。</p>
-          <div role="tablist" aria-label="重排方式" className="mt-2.5 flex max-w-[440px] gap-4 border-b border-[#ecebe8] sm:gap-7">
+          <p className="m-0 max-w-[420px] text-base leading-[1.75] text-[#6b6b70]">用自然语言说明调整方式：顺延、另选时间，或拆成短段。先看建议，再确认写入。</p>
+          <div role="tablist" aria-label="调整需求示例" className="mt-2.5 flex max-w-[440px] gap-4 border-b border-[#ecebe8] sm:gap-7">
             {v.modes.map((m) => (
               <button key={m.name} type="button" role="tab" aria-selected={m.sel === 'true'} onClick={m.pick} className="relative cursor-pointer border-0 bg-transparent p-0 pb-3 font-[inherit] text-[15px] whitespace-nowrap transition-colors duration-200 hover:text-[#1c1c1e]" style={{ color: m.fg }}>
                 {m.name}
@@ -831,7 +845,7 @@ function Focus({ v }: { v: View }) {
         <div data-rv="0" className="flex max-w-[640px] flex-col gap-[18px]">
           <div className="text-sm font-medium text-[#1463d9]">04 · 专注与笔记</div>
           <h2 className="m-0 text-[clamp(28px,3vw,40px)] leading-[1.25] font-normal tracking-[-0.02em] text-balance">开始专注，结束时留下一段笔记。</h2>
-          <p className="m-0 max-w-[520px] text-base leading-[1.75] text-[#6b6b70] text-pretty">从时间盒一键开始番茄钟，剩余时间一直显示在菜单栏。结束后，实际专注时长写回这个时间盒，并记进笔记。</p>
+          <p className="m-0 max-w-[520px] text-base leading-[1.75] text-[#6b6b70] text-pretty">从时间盒一键开始番茄钟，剩余时间一直显示在菜单栏。结束后，记录实际专注时长和关联时间盒，也可以留下自己的笔记。</p>
         </div>
         <div className="flex flex-wrap items-start gap-x-[clamp(28px,4vw,56px)] gap-y-8">
           <div data-rv="1" className="flex min-w-0 flex-[1.35_1_440px] flex-wrap items-center gap-x-11 gap-y-7 rounded-[22px] border border-[#ecebe8] bg-white p-[clamp(24px,3vw,40px)]">
@@ -840,7 +854,7 @@ function Focus({ v }: { v: View }) {
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center gap-2 text-sm font-medium text-[#1c1c1e]">
                   <span className="size-[7px] shrink-0 rounded-[2px] bg-[#8e86a3]" />
-                  <span>PRD v2 · 收尾与评审</span>
+                  <span data-no-translate={v.fUserTitle ? true : undefined}>{v.fUserTitle ?? 'PRD v2 · 收尾与评审'}</span>
                 </div>
                 <div className="flex items-center gap-2.5 text-[12.5px] text-[#8e8e93]">
                   <span className="flex gap-1">
@@ -888,9 +902,9 @@ function Focus({ v }: { v: View }) {
             {v.hasRecs ? (
               <div className="flex flex-col gap-1.5 pt-1">
                 {v.fRecs.map((rc) => (
-                  <motion.div key={rc.text} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, ease }} className="flex items-center gap-2.5 text-sm text-[#3a3a3c]">
+                  <motion.div key={rc.text + String(rc.ms)} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, ease }} className="flex items-center gap-2.5 text-sm text-[#3a3a3c]">
                     <span className="size-1.5 shrink-0 rounded-full bg-[#c4553f]" />
-                    <span>{rc.text}</span>
+                    <span>{rc.userTitle ? <span data-no-translate>{rc.userTitle} · </span> : null}{rc.text}</span>
                   </motion.div>
                 ))}
               </div>
@@ -958,7 +972,6 @@ function Templates({ v }: { v: View }) {
               </svg>
               <span className="flex min-w-0 flex-col">
                 <span className="text-[14.5px] font-medium whitespace-nowrap">{t.name}</span>
-                <span className="text-[11.5px] whitespace-nowrap text-[#aeaeb2]">{t.author}</span>
               </span>
             </button>
           ))}

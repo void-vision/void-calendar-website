@@ -14,7 +14,7 @@ export type DemoEvent = {
   k?: number
   sourceTask?: string
 }
-export type CapturedItem = { id: string; title: string; type: CapType }
+export type CapturedItem = { id: string; title: string; type: CapType; hours?: number; priority?: number }
 
 export type Bullet = { dot: string; text: string }
 export type Act = { label: string; bg: string; fg: string; bd: string; sc: number; pick?: () => void; disabled?: boolean }
@@ -32,7 +32,7 @@ export type Msg = {
   acts: Act[]
 }
 
-export type Rec = { ms: number; text: string }
+export type Rec = { ms: number; text: string; userTitle?: string | null }
 
 export type DemoState = {
   lang: 'zh' | 'en'
@@ -59,6 +59,12 @@ export type DemoState = {
   searchOpen: boolean
   capUser: boolean
   capVal: string
+  capBody: string
+  capPriority: number
+  capDay: number
+  capStart: string
+  capEnd: string
+  capError: string
   capType: CapType
   capStage: 'templates' | 'input'
   capTemplate: CaptureTemplateId
@@ -70,6 +76,7 @@ export type DemoState = {
   dPh: number
   askPick: number
   askOk: boolean
+  fDuration: number
   fAcc: number
   fAt: number
   fRun: boolean
@@ -133,6 +140,12 @@ export function initialState(): DemoState {
     searchOpen: false,
     capUser: false,
     capVal: '',
+    capBody: '',
+    capPriority: 0,
+    capDay: 2,
+    capStart: '11:30',
+    capEnd: '12:00',
+    capError: '',
     capType: 'idea',
     capStage: 'templates',
     capTemplate: 'idea',
@@ -144,7 +157,8 @@ export function initialState(): DemoState {
     dPh: 3,
     askPick: 0,
     askOk: false,
-    fAcc: 378000,
+    fDuration: 25,
+    fAcc: 0,
     fAt: 0,
     fRun: false,
     fDone: false,
