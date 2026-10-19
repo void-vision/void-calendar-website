@@ -11,62 +11,63 @@ import { ComparisonBlog } from './ComparisonBlog'
 import { SiteFooter } from './SiteFooter'
 import { SiteHeader } from './SiteHeader'
 import { VoidIslandDemo } from './VoidIslandDemo'
-import { downloadPath } from '../lib/download'
+import { Hero } from './home/Hero'
+import { FlowSection } from './home/FlowSection'
+import { AgentSection } from './home/AgentSection'
+import { DownloadBand, Essentials, Faq, Statement } from './home/MoreSections'
+import { SectionIntro } from './site/primitives'
+import { BrandMark, brandFor } from './site/brands'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
 const MemoSiteHeader = memo(SiteHeader)
 const MemoSiteFooter = memo(SiteFooter)
 const MemoComparisonBlog = memo(ComparisonBlog)
 const MemoVoidIslandDemo = memo(VoidIslandDemo)
+// 这些区块不依赖演示状态，避免随演示计时反复渲染。
+const MemoHero = memo(Hero)
+const MemoFlow = memo(FlowSection)
+const MemoAgent = memo(AgentSection)
+const MemoStatement = memo(Statement)
+const MemoEssentials = memo(Essentials)
+const MemoDownloadBand = memo(DownloadBand)
+const MemoFaq = memo(Faq)
 
 function Logo({ className = 'size-full object-contain' }: { className?: string }) {
   return <img src="/logo-128.png" alt="Void Calendar" width={128} height={128} decoding="async" className={className} />
 }
 
+/** 区块眉题与标题：沿用中文原文，英文由演示翻译表转换。 */
+const eyebrowClass = 't-eyebrow text-brand'
+const titleClass = 't-display m-0'
+const ledeClass = 't-lede m-0 text-ink-3'
+
 export function HomePage() {
   const lang = useSiteLang()
+  const en = lang === 'en'
   const v = useDemo(lang)
   const r = v.refs
   const tr = useTranslate()
 
   return tr(
-    <div ref={r.rootRef} className="min-h-screen bg-white text-[15px] leading-[1.6] text-[#1c1c1e]">
+    <div ref={r.rootRef} className="min-h-svh bg-background text-[15px] leading-[1.6] text-foreground">
       <MemoSiteHeader lang={lang} />
 
       <main>
-      <section id="top" className="px-[clamp(20px,5vw,72px)] pt-[clamp(88px,11vw,152px)]">
-        <div className="mx-auto flex max-w-[1100px] flex-col items-center gap-7 text-center">
-          <p className="m-0 -mb-3 text-sm font-medium tracking-[0.01em] text-[#1463d9]">
-            {lang === 'en' ? 'AI calendar & time-blocking app for Mac' : 'Mac 上的 AI 日历与时间盒'}
-          </p>
-          <h1 className="m-0 text-[clamp(42px,5.8vw,78px)] leading-[1.14] font-medium tracking-[-0.035em] text-balance">
-            你的每一天，{' '}
-            <br />
-            从这里开始。
-          </h1>
-          <p className="m-0 max-w-[600px] text-[clamp(16px,1.5vw,19px)] leading-[1.75] text-[#6b6b70] text-pretty">
-            AI、日历、任务、笔记与专注，在同一个地方。用时间盒安排每一天，用插件连接更多可能。
-          </p>
-          <div className="mt-1 flex flex-wrap items-center justify-center gap-3">
-            <motion.a href={downloadPath} whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
-              下载 macOS 版
-            </motion.a>
-            <motion.a href="#flow" whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#f3f2ef] px-6 text-[15.5px] font-medium text-[#1c1c1e] hover:bg-[#e9e7e3] hover:text-[#1c1c1e]">
-              看看怎么用
-            </motion.a>
-          </div>
-          <div className="text-[13px] text-[#8e8e93]">
-            {lang === 'en'
-              ? 'Public beta · Apple silicon Macs, macOS 13 or later · Syncs with iCloud and Google Calendar'
-              : '公开测试版 · 适用于 Apple 芯片 Mac，macOS 13 及以上 · 可同步 iCloud、Google 日历'}
-          </div>
-        </div>
-      </section>
+      <MemoHero en={en} />
 
-      <section id="showcase" className="relative mt-[clamp(48px,6vw,80px)] h-[300vh]">
-        <div className="showcase-content sticky top-[68px] flex h-[calc(100vh-68px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
-          <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] transition-transform duration-180 ease-out will-change-transform [transform:translate3d(0,24px,0)_scale(.84)]">
-            <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[18px] border border-[#e3e1dd] bg-linear-to-b from-[#f2f4f7] to-[#e9ecf1] text-[#1c1c1e] shadow-[0_20px_60px_rgba(28,28,30,.08)]">
+      <div id="demo" className="scroll-mt-14 pt-[clamp(96px,12vw,160px)]">
+        <SectionIntro
+          eyebrow={en ? 'Live demo' : '在线体验'}
+          title={en ? 'Not a video. The real thing.' : '不是视频，是能直接上手的 Void Calendar。'}
+          lede={en ? 'Scroll to bring the app into view, then click around: capture an idea, ask the AI, start a focus session.' : '向下滚动，把应用拉到眼前。然后随手试试：捕获想法、让 AI 排程、开始一轮专注。'}
+          className="px-5"
+        />
+      </div>
+
+      <section id="showcase" aria-label={en ? 'Interactive demo' : '交互演示'} className="relative mt-[clamp(32px,4vw,56px)] h-[160vh]">
+        <div className="showcase-content sticky top-[56px] flex h-[calc(100svh-56px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
+          <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] md:will-change-transform [transform:translate3d(0,24px,0)_scale(.84)]">
+            <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[22px] border border-black/[0.08] bg-linear-to-b from-[#eef2f8] to-[#e4e9f1] text-foreground shadow-[0_30px_80px_rgba(0,0,0,.12)]">
               <ShowcaseProgress />
               <MenuBar v={v} />
               <MemoVoidIslandDemo lang={lang} onExpandedChange={v.holdIsland} seconds={v.islandSeconds} duration={v.islandDuration} running={v.fRunning} started={v.islandStarted} focusTitle={v.fUserTitle} focusMinutes={v.islandMinutes} focusRounds={v.fRecs.length} onStartFocus={v.islandStartFocus} onToggleFocus={v.islandToggleFocus} onDuration={v.islandSetDuration} />
@@ -78,23 +79,22 @@ export function HomePage() {
             </div>
           </div>
           <div className="flex w-full max-w-[1360px] flex-wrap items-start gap-x-10 gap-y-4">
-            <div className="grid min-w-[min(100%,420px)] flex-[1_1_420px] grid-cols-4 gap-3">
-              {v.tabs.map((tb) => (
-                <button key={tb.n} type="button" onClick={tb.go} className="flex cursor-pointer flex-col gap-2.5 rounded-md bg-transparent py-1.5 text-left font-[inherit] transition-opacity hover:opacity-70">
-                  <span className="block h-0.5 overflow-hidden rounded-sm bg-[#e8e6e2]">
-                    <span className="block h-full bg-[#1c1c1e]" style={{ width: `${tb.pct}%` }} />
-                  </span>
-                  <span className="flex gap-2 text-[13.5px] transition-colors max-sm:gap-1 max-sm:text-xs" style={{ color: tb.fg }}>
-                    <span className={`tabular-nums ${v.lang === 'en' ? 'max-md:hidden' : ''}`}>0{tb.n}</span>
-                    <span className="max-sm:text-[11px]">{tb.label}</span>
-                  </span>
-                </button>
-              ))}
+            <div role="tablist" aria-label={en ? 'Demo scenes' : '演示场景'} className="flex min-w-[min(100%,420px)] flex-[1_1_420px] gap-1 rounded-full bg-muted p-1">
+              {v.tabs.map((tb) => {
+                // 当前场景用白色胶囊标出，底部细线表示自动播放进度。
+                const on = tb.fg === '#1c1c1e'
+                return (
+                  <button key={tb.n} type="button" role="tab" aria-selected={on} onClick={tb.go} className="relative flex min-h-10 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-full px-2 font-[inherit] text-[13px] font-medium text-ink-3 select-none transition-[color,background-color,box-shadow,transform] duration-300 ease-apple active:scale-[0.97] hover:text-foreground aria-selected:bg-white aria-selected:text-foreground aria-selected:shadow-[0_1px_3px_rgba(0,0,0,.08),0_0_0_.5px_rgba(0,0,0,.04)] max-sm:text-[11.5px]">
+                    <span className="relative">{tb.label}</span>
+                    {on ? <span aria-hidden="true" className="absolute bottom-[5px] left-1/2 h-[2px] w-8 -translate-x-1/2 overflow-hidden rounded-full bg-black/8"><span className="block h-full bg-brand" style={{ width: `${tb.pct}%` }} /></span> : null}
+                  </button>
+                )
+              })}
             </div>
             <div className="flex min-h-16 min-w-[min(100%,320px)] flex-[1_1_320px] flex-col gap-1">
-              <div className="text-[17px] font-medium tracking-[-0.01em]">{v.capTitle}</div>
-              <div className="text-sm text-[#6b6b70]">{v.capSub}</div>
-              <div className="mt-0.5 text-[12.5px] text-[#8e8e93]">
+              <div className="text-[17px] font-semibold tracking-[-0.015em]">{v.capTitle}</div>
+              <div className="text-sm text-ink-3">{v.capSub}</div>
+              <div className="mt-0.5 text-[12.5px] text-ink-4">
                 <span className="hidden md:inline">可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中</span>
                 <span className="md:hidden">左右滑动查看整周，点击捕获想法或日程试试</span>
               </div>
@@ -103,14 +103,16 @@ export function HomePage() {
         </div>
       </section>
 
-      <Flow />
-      <Capture />
-      <AiSection />
+      <MemoStatement en={en} />
+      <MemoFlow en={en} />
+      <MemoAgent en={en} />
       <Disrupt v={v} />
       <Focus v={v} />
       <Templates v={v} />
+      <MemoEssentials en={en} />
       <Plugins v={v} />
-      <Download />
+      <MemoDownloadBand en={en} />
+      <MemoFaq en={en} />
       <MemoComparisonBlog lang={lang} />
       </main>
       <MemoSiteFooter lang={lang} />
@@ -199,7 +201,7 @@ function MenuBar({ v }: { v: View }) {
           aria-label="当前时间盒"
           aria-hidden={v.popPE === 'none'}
           inert={v.popPE === 'none'}
-          className="demo-timebox absolute top-[calc(100%+6px)] -right-2 z-21 flex w-[clamp(300px,26vw,340px)] origin-[90%_0] flex-col rounded-[14px] border border-[rgba(28,28,30,.08)] bg-[rgba(252,252,251,.985)] text-[12.5px] leading-[1.45] whitespace-normal text-[#1c1c1e] shadow-[0_1px_2px_rgba(28,28,30,.04),0_16px_40px_rgba(28,28,30,.12)] backdrop-blur-3xl transition-[opacity,transform] duration-180"
+          className="demo-timebox absolute top-[calc(100%+6px)] -right-2 z-21 flex w-[clamp(300px,26vw,340px)] origin-[90%_0] flex-col rounded-[14px] border border-[rgba(28,28,30,.08)] bg-[rgba(252,252,251,.985)] text-[12.5px] leading-[1.45] whitespace-normal text-[#1c1c1e] shadow-[0_1px_2px_rgba(28,28,30,.04),0_16px_40px_rgba(28,28,30,.12)] transition-[opacity,transform] duration-180"
           style={{ opacity: v.popOp, transform: `translateY(${v.popY}px)`, pointerEvents: v.popPE as 'auto' | 'none', transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}
         >
           <div className="flex flex-col gap-2.5 px-[18px] pt-4 pb-3.5">
@@ -335,7 +337,7 @@ function DemoChrome({ v }: { v: View }) {
           <button key={item.id} type="button" role="tab" aria-selected={item.active} onClick={item.pick} className="min-h-8 shrink-0 cursor-pointer rounded-md px-2.5 font-[inherit] text-xs whitespace-nowrap" style={{ background: item.bg, color: item.fg }}>{item.label}</button>
         ))}
       </div>
-      <div data-workspace={v.navSel === 'proj' || v.navSel === 'memo' ? 'expanded' : undefined} className="demo-body relative flex h-[clamp(200px,calc(100vh-400px),600px)] text-xs">
+      <div data-workspace={v.navSel === 'proj' || v.navSel === 'memo' ? 'expanded' : undefined} className="demo-body relative flex h-[clamp(200px,calc(100svh-400px),600px)] text-xs">
         <DemoSidebar v={v} />
         <div className="demo-calendar relative flex min-w-0 flex-1 flex-col">
           {v.navSel === 'pomo' ? <DemoFocusPanel v={v} /> : v.navSel === 'capture-result' ? <DemoCaptureResult v={v} /> : v.navSel === 'proj' ? <DemoProjects v={v} /> : v.navSel === 'memo' ? <DemoNotes v={v} /> : v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
@@ -541,225 +543,30 @@ function DayHead({ label, n }: { label: string; n: string }) {
   )
 }
 
-// 不依赖演示状态，避免随动画计时反复渲染。
-const Flow = memo(function Flow() {
-  const steps = [
-    ['#capture', '01', '捕获想法', '按 C 选择分类，先记下。', '#1c1c1e'],
-    ['#ai', '02', '变成任务', 'AI 把目标拆成合适长度的任务。', '#dddbd6'],
-    ['#ai', '03', '安排时间盒', '放进日历里真正空着的时间。', '#dddbd6'],
-    ['#focus', '04', '开始专注', '菜单栏倒计时，结束后自动记录。', '#dddbd6'],
-    ['#focus', '05', '留下笔记', '用 [[ ]] 把笔记连到任务。', '#dddbd6'],
-  ]
-  const tr = useTranslate()
-  return tr(
-    <section id="flow" className="px-[clamp(20px,5vw,72px)] pt-[clamp(72px,9vw,128px)] pb-[clamp(40px,5vw,64px)]">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(40px,5vw,64px)]">
-        <div data-rv="0" className="flex max-w-[640px] flex-col gap-4">
-          <div className="text-sm font-medium text-[#1463d9]">工作方式</div>
-          <h2 className="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.22] font-medium tracking-[-0.025em] text-balance">从一个念头，到做完一件事。</h2>
-        </div>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,190px),1fr))] gap-x-6 gap-y-7">
-          {steps.map(([href, n, title, body, border], i) => (
-            <a key={n} data-rv={i + 1} href={href} className="flex flex-col gap-2 border-t pt-5 text-[#1c1c1e]" style={{ borderColor: border }}>
-              <span className="text-[13px] text-[#8e8e93] tabular-nums">{n}</span>
-              <span className="text-lg font-medium">{title}</span>
-              <span className="text-sm leading-[1.65] text-[#6b6b70]">{body}</span>
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-})
-
-// 不依赖演示状态，避免随动画计时反复渲染。
-const Capture = memo(function Capture() {
-  const tr = useTranslate()
-  return tr(
-    <section id="capture" className="px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
-      <div className="mx-auto grid max-w-[1200px] grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] items-center gap-[clamp(40px,7vw,112px)]">
-        <div data-rv="0" className="flex flex-col gap-[18px]">
-          <div className="text-sm font-medium text-[#1463d9]">01 · 捕获</div>
-          <h2 className="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.22] font-medium tracking-[-0.025em] text-balance">想到就记，稍后再排。</h2>
-          <p className="m-0 max-w-[440px] text-[17px] leading-[1.75] text-[#6b6b70] text-pretty">按下快捷键，选择捕获分类。待办加入任务列表，想法写进笔记，再让 AI 帮你安排时间。</p>
-          <div className="mt-1 flex items-center gap-2.5 text-sm text-[#6b6b70]">
-            <span className="flex h-7 min-w-7 items-center justify-center rounded-[7px] border border-[#dddbd6] border-b-2 text-[13px] font-medium text-[#1c1c1e]">C</span>
-            在上方演示窗口里试一下
-          </div>
-        </div>
-        <div data-rv="1" className="relative py-[clamp(8px,2vw,24px)]">
-          <div className="relative z-2 ml-auto flex max-w-[460px] flex-col gap-3.5 rounded-2xl border border-[#e8e6e2] bg-white px-5 py-[18px] shadow-[0_30px_70px_rgba(28,28,30,.10)]">
-            <div className="flex gap-1.5 text-[12.5px]">
-              <span className="flex h-[26px] items-center rounded-[7px] bg-[#e4ecfb] px-2.5 text-[#1463d9]">待办</span>
-              <span className="flex h-[26px] items-center rounded-[7px] border border-[#e3e1dd] px-2.5">想法</span>
-              <span className="flex h-[26px] items-center rounded-[7px] border border-[#e3e1dd] px-2.5">时间盒</span>
-            </div>
-            <div className="flex items-center text-lg">
-              给周五分享找 3 个案例
-              <span className="vc-blink ml-0.5 h-5 w-[1.5px] bg-[#1463d9]" />
-            </div>
-            <div className="flex border-t border-[#f0efec] pt-2.5 text-xs text-[#8e8e93]">
-              <span className="flex-1">待办 → 任务</span><span>⌘↵ 保存</span>
-            </div>
-          </div>
-          <div className="relative z-1 mx-0 mt-[-18px] flex max-w-[420px] flex-col rounded-2xl border border-[#ecebe8] bg-[#fafaf9] px-[18px] pt-[30px] pb-3 text-sm">
-            <div className="flex items-center gap-2 px-1 pb-2 text-[12.5px] text-[#8e8e93]"><span className="flex-1">任务列表</span><span>4</span></div>
-            <InboxRow title="给周五分享找 3 个案例" when="刚刚" fresh />
-            <InboxRow title="整理插件权限说明" when="昨天" />
-            <InboxRow title="预约体检" when="周一" />
-          </div>
-        </div>
-      </div>
-    </section>
-  )
-})
-
-function InboxRow({ title, when, fresh }: { title: string; when: string; fresh?: boolean }) {
-  const tr = useTranslate()
-  return tr(
-    <div className={`flex items-center gap-2.5 border-t border-[#efeeeb] px-1 py-2.5 ${fresh ? '' : 'text-[#48484a]'}`}>
-      <span className="size-1.5 rounded-full" style={{ background: fresh ? '#1463d9' : '#d2d0cb' }} />
-      <span className="flex-1">{title}</span>
-      <span className={`text-xs ${fresh ? 'text-[#1463d9]' : 'text-[#8e8e93]'}`}>{when}</span>
-    </div>
-  )
-}
-
-// 不依赖演示状态，避免随动画计时反复渲染。
-const AiSection = memo(function AiSection() {
-  const tasks = [
-    ['#7c5cc9', 'PRD v2 · 第一段', '1.5 h'],
-    ['#7c5cc9', 'PRD v2 · 第二段', '1.5 h'],
-    ['#7c5cc9', 'PRD v2 · 收尾与评审', '2 h'],
-    ['#e0782f', '周五分享：做演示稿', '2 h'],
-    ['#e0782f', '分享彩排', '1.5 h'],
-    ['#3a9a5b', '健身 × 4', '1 h'],
-  ]
-  const tr = useTranslate()
-  return tr(
-    <section id="ai" className="px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(40px,5vw,64px)]">
-        <div data-rv="0" className="flex flex-wrap items-end justify-between gap-x-16 gap-y-5">
-          <div className="flex max-w-[600px] flex-col gap-[18px]">
-            <div className="text-sm font-medium text-[#1463d9]">02 · AI 排程</div>
-            <h2 className="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.22] font-medium tracking-[-0.025em] text-balance">说一句要做什么，剩下的交给日历。</h2>
-          </div>
-          <p className="m-0 max-w-[400px] text-base leading-[1.75] text-[#6b6b70] text-pretty">AI 读取已有日程和截止日期，把任务切成合适的长度，放进真正空着的时间。改动已有日程前，会先问你。</p>
-        </div>
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,250px),1fr))] border-t border-[#e8e6e2]">
-          <div data-rv="1" className="flex flex-col gap-5 py-7 pr-[clamp(0px,2vw,28px)]">
-            <div className="flex items-center gap-2 text-[13px] text-[#8e8e93]"><span className="tabular-nums">A</span><span>输入</span></div>
-            <div className="block text-[clamp(20px,1.8vw,24px)] leading-[1.6] font-normal tracking-[-0.01em]">
-              这周把 PRD v2 写完，周五前准备好分享，健身 4 次
-              <span className="vc-blink ml-[3px] inline-block h-[1em] w-0.5 bg-[#1463d9] align-[-0.12em]" />
-            </div>
-            <div className="text-[13px] text-[#8e8e93]">读取：本周已有 11 个日程 · 2 个截止日期</div>
-          </div>
-          <div data-rv="2" className="flex flex-col gap-3.5 border-l border-[#f0efec] px-[clamp(0px,2vw,28px)] py-7">
-            <div className="flex items-center gap-2 text-[13px] text-[#8e8e93]"><span>B</span><span>任务拆解</span></div>
-            <div className="flex flex-col text-[14.5px]">
-              {tasks.map(([dot, title, time], i) => (
-                <div key={title} className={`flex items-center gap-2.5 py-[11px] ${i < tasks.length - 1 ? 'border-b border-[#f0efec]' : ''}`}>
-                  <span className="size-[7px] rounded-[2px]" style={{ background: dot }} />
-                  <span className="flex-1">{title}</span>
-                  <span className="text-[#8e8e93] tabular-nums">{time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-          <div data-rv="3" className="flex flex-col gap-3.5 border-l border-[#f0efec] py-7 pl-[clamp(0px,2vw,28px)]">
-            <div className="flex items-center gap-2 text-[13px] text-[#8e8e93]"><span>C</span><span>时间盒</span></div>
-            <MiniWeek />
-          </div>
-        </div>
-        <div data-rv="1" className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-x-8 gap-y-6">
-          {[
-            ['让 AI 规划今天', '说出今天要做的事，结合空档生成时间盒建议。'],
-            ['长任务自动拆开', '单个时间盒超过你设定的上限，就拆成几段。'],
-            ['会议前后留出缓冲', '不会把深度工作紧贴在会议后面。'],
-            ['写入你指定的日历', 'AI 生成的时间盒单独存放，随时能清理。'],
-          ].map(([t, d]) => (
-            <div key={t} className="flex flex-col gap-1">
-              <div className="text-[15px] font-medium">{t}</div>
-              <div className="text-sm text-[#6b6b70]">{d}</div>
-            </div>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-})
-
-function MiniWeek() {
-  const col = (blocks: { top: string; h: string; bg: string; fg: string; t: string }[]) => (
-    <div className="relative border-l border-[#f3f2ef]">
-      {blocks.map((b) => (
-        <div key={b.t} className="absolute right-[3px] left-[3px] overflow-hidden rounded-md px-1.5 py-1" style={{ top: b.top, height: b.h, background: b.bg, color: b.fg }}>
-          {b.t}
-        </div>
-      ))}
-    </div>
-  )
-  const tr = useTranslate()
-  return tr(
-    <>
-      <div className="grid grid-cols-[28px_repeat(3,minmax(0,1fr))] text-[11.5px] text-[#8e8e93]">
-        <span />
-        <span className="px-1">周一</span>
-        <span className="px-1">周二</span>
-        <span className="px-1 text-[#1463d9]">周三</span>
-      </div>
-      <div className="relative grid h-[300px] grid-cols-[28px_repeat(3,minmax(0,1fr))] bg-[linear-gradient(#f3f2ef_1px,transparent_1px)] bg-size-[100%_20%] text-[11.5px] leading-[1.35]">
-        <div className="relative text-[10.5px] text-[#aeaeb2]">
-          <span className="absolute top-0">09</span>
-          <span className="absolute top-[20%]">11</span>
-          <span className="absolute top-[40%]">13</span>
-          <span className="absolute top-[60%]">15</span>
-          <span className="absolute top-[80%]">17</span>
-        </div>
-        {col([
-          { top: '0', h: '15%', bg: '#f3f2ef', fg: '#6b6b70', t: '邮件与计划' },
-          { top: '15%', h: '15%', bg: '#ede7f8', fg: '#5a3ea0', t: 'PRD · 第一段' },
-          { top: '90%', h: '10%', bg: '#e2f1e6', fg: '#2c6a3f', t: '健身' },
-        ])}
-        {col([
-          { top: '0', h: '20%', bg: '#f3f2ef', fg: '#6b6b70', t: '深度工作' },
-          { top: '60%', h: '15%', bg: '#ede7f8', fg: '#5a3ea0', t: 'PRD · 第二段' },
-        ])}
-        {col([
-          { top: '10%', h: '20%', bg: '#ede7f8', fg: '#5a3ea0', t: 'PRD · 收尾' },
-          { top: '50%', h: '20%', bg: '#fbe8db', fg: '#8b4a1c', t: '做演示稿' },
-          { top: '90%', h: '10%', bg: '#e2f1e6', fg: '#2c6a3f', t: '健身' },
-        ])}
-      </div>
-    </>
-  )
-}
-
 function Disrupt({ v }: { v: View }) {
   const tr = useTranslate()
   return tr(
-    <section id="disrupt" className="px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
-      <div className="mx-auto grid max-w-[1200px] grid-cols-[repeat(auto-fit,minmax(min(100%,360px),1fr))] items-start gap-[clamp(40px,6vw,96px)]">
+    <section id="disrupt" className="py-[clamp(96px,12vw,168px)]">
+      <div className="mx-auto grid max-w-[1180px] px-5 sm:px-8 grid-cols-[repeat(auto-fit,minmax(min(100%,360px),1fr))] items-start gap-[clamp(40px,6vw,96px)]">
         <div data-rv="0" className="flex flex-col gap-[18px] pt-2">
-          <div className="text-sm font-medium text-[#1463d9]">03 · 重排</div>
-          <h2 className="m-0 text-[clamp(28px,3vw,40px)] leading-[1.25] font-normal tracking-[-0.02em] text-balance">
+          <div className={eyebrowClass}>{v.lang === 'en' ? 'Reschedule' : '重排'}</div>
+          <h2 className={titleClass}>
             临时来了个会，{' '}
             <br />
             告诉 AI 怎么调整。
           </h2>
-          <p className="m-0 max-w-[420px] text-base leading-[1.75] text-[#6b6b70]">用自然语言说明调整方式：顺延、另选时间，或拆成短段。先看建议，再确认写入。</p>
-          <div role="tablist" aria-label="调整需求示例" className="mt-2.5 flex max-w-[440px] gap-4 border-b border-[#ecebe8] sm:gap-7">
+          <p className={`${ledeClass} max-w-[440px]`}>用自然语言说明调整方式：顺延、另选时间，或拆成短段。先看建议，再确认写入。</p>
+          <div role="tablist" aria-label="调整需求示例" className="mt-2.5 flex max-w-[440px] gap-4 border-b border-black/[0.08] sm:gap-7">
             {v.modes.map((m) => (
-              <button key={m.name} type="button" role="tab" aria-selected={m.sel === 'true'} onClick={m.pick} className="relative cursor-pointer border-0 bg-transparent p-0 pb-3 font-[inherit] text-[15px] whitespace-nowrap transition-colors duration-200 hover:text-[#1c1c1e]" style={{ color: m.fg }}>
+              <button key={m.name} type="button" role="tab" aria-selected={m.sel === 'true'} onClick={m.pick} className="relative cursor-pointer border-0 bg-transparent p-0 pb-3 font-[inherit] text-[15px] whitespace-nowrap transition-colors duration-200 hover:text-foreground" style={{ color: m.fg }}>
                 {m.name}
-                <span className="absolute right-0 bottom-[-1px] left-0 h-[1.5px] origin-left bg-[#1c1c1e] transition-transform duration-300" style={{ transform: `scaleX(${m.bar})`, transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }} />
+                <span className="absolute right-0 bottom-[-1px] left-0 h-[1.5px] origin-left bg-foreground transition-transform duration-300" style={{ transform: `scaleX(${m.bar})`, transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }} />
               </button>
             ))}
           </div>
           <div className="flex max-w-[440px] flex-wrap items-baseline gap-4">
-            <p className="m-0 min-w-[220px] flex-[1_1_220px] text-[14.5px] text-[#6b6b70]">{v.modeDesc}</p>
-            <button type="button" onClick={v.replayDis} className="flex cursor-pointer items-center gap-1.5 border-0 bg-transparent px-0 py-1 font-[inherit] text-[13.5px] text-[#48484a] transition-colors hover:text-[#1c1c1e]">
+            <p className="m-0 min-w-[220px] flex-[1_1_220px] text-[14.5px] text-ink-3">{v.modeDesc}</p>
+            <button type="button" onClick={v.replayDis} className="flex cursor-pointer items-center gap-1.5 border-0 bg-transparent px-0 py-1 font-[inherit] text-[13.5px] text-ink-2 transition-colors hover:text-foreground">
               <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M2.5 8a5.5 5.5 0 1 0 1.7-4M2.5 2.5v3h3" />
               </svg>
@@ -767,16 +574,16 @@ function Disrupt({ v }: { v: View }) {
             </button>
           </div>
         </div>
-        <div data-rv="1" className="flex min-w-0 flex-col gap-4 pt-1.5">
-          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-[#ecebe8] pb-3 text-[13px]">
+        <div data-rv="1" className="flex min-w-0 flex-col gap-4 rounded-[28px] bg-muted p-[clamp(18px,3vw,36px)]">
+          <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-black/[0.08] pb-3 text-[13px]">
             <span className="font-medium">周三 9月30日</span>
-            <span className="text-[#8e8e93]">上午</span>
+            <span className="text-ink-3">上午</span>
             <span className="flex-1" />
-            <span className="flex items-center gap-1.5 text-xs text-[#8e8e93]"><span className="size-2 rounded-[2px] border border-[#8e86a3] bg-[#f5f3f8]" />时间盒</span>
-            <span className="flex items-center gap-1.5 text-xs text-[#8e8e93]"><span className="size-2 rounded-[2px] border border-[#b59a80] bg-[#f8f4ef]" />新日程</span>
+            <span className="flex items-center gap-1.5 text-xs text-ink-3"><span className="size-2 rounded-[2px] border border-[#8e86a3] bg-[#f5f3f8]" />时间盒</span>
+            <span className="flex items-center gap-1.5 text-xs text-ink-3"><span className="size-2 rounded-[2px] border border-[#b59a80] bg-[#f8f4ef]" />新日程</span>
           </div>
           <div className="grid grid-cols-[48px_minmax(0,1fr)]">
-            <div className="relative h-[361px] text-[11px] text-[#aeaeb2] tabular-nums">
+            <div className="relative h-[361px] text-[11px] text-ink-4 tabular-nums">
               <span className="absolute -top-[7px]">10:00</span>
               <span className="absolute top-[53px] text-[#d2d0cb]">10:30</span>
               <span className="absolute top-[113px]">11:00</span>
@@ -814,19 +621,19 @@ function Disrupt({ v }: { v: View }) {
             </div>
           </div>
           <div className="flex min-h-[52px] flex-col gap-2.5 pl-12">
-            <div className="flex items-center gap-2 text-[13px] text-[#6b6b70]">
+            <div className="flex items-center gap-2 text-[13px] text-ink-3">
               <span className="size-1.5 shrink-0 rounded-full transition-colors" style={{ background: v.dDot }} />
               <span>{v.dResult}</span>
             </div>
             {v.askShow ? (
               <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.32, ease }} className="flex flex-wrap items-center gap-x-[18px] gap-y-1.5 pl-3.5">
                 {v.askOpts.map((o) => (
-                  <button key={o.label} type="button" onClick={o.pick} aria-pressed={o.on === 'true'} className="relative h-7 cursor-pointer border-0 bg-transparent p-0 font-[inherit] text-[13px] tabular-nums transition-colors hover:text-[#1c1c1e]" style={{ color: o.fg }}>
+                  <button key={o.label} type="button" onClick={o.pick} aria-pressed={o.on === 'true'} className="relative h-7 cursor-pointer border-0 bg-transparent p-0 font-[inherit] text-[13px] tabular-nums transition-colors hover:text-foreground" style={{ color: o.fg }}>
                     {o.label}
-                    <span className="absolute right-0 bottom-0.5 left-0 h-px origin-left bg-[#1c1c1e] transition-transform duration-[260ms]" style={{ transform: `scaleX(${o.bar})` }} />
+                    <span className="absolute right-0 bottom-0.5 left-0 h-px origin-left bg-foreground transition-transform duration-[260ms]" style={{ transform: `scaleX(${o.bar})` }} />
                   </button>
                 ))}
-                <button type="button" onClick={v.askConfirm} className="h-7 cursor-pointer rounded-[7px] border-0 bg-[#1c1c1e] px-3 font-[inherit] text-[12.5px] font-medium text-white hover:bg-[#3a3a3c]">确认</button>
+                <button type="button" onClick={v.askConfirm} className="h-7 cursor-pointer rounded-[7px] border-0 bg-foreground px-3 font-[inherit] text-[12.5px] font-medium text-white hover:bg-[#333336]">确认</button>
               </motion.div>
             ) : null}
           </div>
@@ -840,23 +647,23 @@ function Focus({ v }: { v: View }) {
   const r = v.refs
   const tr = useTranslate()
   return tr(
-    <section id="focus" className="border-y border-[#f0efec] bg-[#fafaf9] px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(40px,5vw,64px)]">
+    <section id="focus" className="bg-muted py-[clamp(96px,12vw,168px)]">
+      <div className="mx-auto flex max-w-[1180px] flex-col gap-[clamp(40px,5vw,64px)] px-5 sm:px-8">
         <div data-rv="0" className="flex max-w-[640px] flex-col gap-[18px]">
-          <div className="text-sm font-medium text-[#1463d9]">04 · 专注与笔记</div>
-          <h2 className="m-0 text-[clamp(28px,3vw,40px)] leading-[1.25] font-normal tracking-[-0.02em] text-balance">开始专注，结束时留下一段笔记。</h2>
-          <p className="m-0 max-w-[520px] text-base leading-[1.75] text-[#6b6b70] text-pretty">从时间盒一键开始番茄钟，剩余时间一直显示在菜单栏。结束后，记录实际专注时长和关联时间盒，也可以留下自己的笔记。</p>
+          <div className={eyebrowClass}>专注与笔记</div>
+          <h2 className={titleClass}>开始专注，结束时留下一段笔记。</h2>
+          <p className={`${ledeClass} max-w-[560px]`}>从时间盒一键开始番茄钟，剩余时间一直显示在菜单栏。结束后，记录实际专注时长和关联时间盒，也可以留下自己的笔记。</p>
         </div>
         <div className="flex flex-wrap items-start gap-x-[clamp(28px,4vw,56px)] gap-y-8">
-          <div data-rv="1" className="flex min-w-0 flex-[1.35_1_440px] flex-wrap items-center gap-x-11 gap-y-7 rounded-[22px] border border-[#ecebe8] bg-white p-[clamp(24px,3vw,40px)]">
+          <div data-rv="1" className="flex min-w-0 flex-[1.35_1_440px] flex-wrap items-center gap-x-11 gap-y-7 rounded-[28px] bg-white p-[clamp(24px,3vw,44px)] shadow-[0_1px_2px_rgba(0,0,0,.04),0_24px_60px_rgba(0,0,0,.06)]">
             <Tomato v={v} />
             <div className="flex min-w-[min(100%,220px)] flex-[1_1_220px] flex-col gap-3.5">
               <div className="flex flex-col gap-1.5">
-                <div className="flex items-center gap-2 text-sm font-medium text-[#1c1c1e]">
+                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
                   <span className="size-[7px] shrink-0 rounded-[2px] bg-[#8e86a3]" />
                   <span data-no-translate={v.fUserTitle ? true : undefined}>{v.fUserTitle ?? 'PRD v2 · 收尾与评审'}</span>
                 </div>
-                <div className="flex items-center gap-2.5 text-[12.5px] text-[#8e8e93]">
+                <div className="flex items-center gap-2.5 text-[12.5px] text-ink-3">
                   <span className="flex gap-1">
                     {v.fDots.map((d, i) => (
                       <span key={i} className="size-1.5 rounded-full transition-colors" style={{ background: d.bg, boxShadow: `inset 0 0 0 1px ${d.bd}` }} />
@@ -865,51 +672,51 @@ function Focus({ v }: { v: View }) {
                   <span>{v.fStatus}</span>
                 </div>
               </div>
-              <div className="text-[clamp(38px,3.8vw,48px)] leading-[1.05] font-light tracking-[-0.03em] text-[#1c1c1e] tabular-nums">{v.fClock}</div>
+              <div className="text-[clamp(38px,3.8vw,48px)] leading-[1.05] font-light tracking-[-0.03em] text-foreground tabular-nums">{v.fClock}</div>
               <div className="mt-0.5 flex flex-wrap items-center gap-x-[18px]">
-                <motion.button type="button" onClick={v.fToggle} whileTap={{ scale: 0.98 }} className="h-9 cursor-pointer rounded-[10px] border-0 bg-[#1c1c1e] px-4 font-[inherit] text-sm font-medium text-white hover:bg-[#3a3a3c]">
+                <motion.button type="button" onClick={v.fToggle} whileTap={{ scale: 0.98 }} className="h-9 cursor-pointer rounded-[10px] border-0 bg-foreground px-4 font-[inherit] text-sm font-medium text-white hover:bg-[#333336]">
                   {v.fToggleLabel}
                 </motion.button>
-                <button type="button" onClick={v.fEnd} className="h-9 cursor-pointer border-0 bg-transparent px-0.5 font-[inherit] text-sm text-[#48484a] hover:text-[#1c1c1e]" style={{ display: v.fEndD }}>
+                <button type="button" onClick={v.fEnd} className="h-9 cursor-pointer border-0 bg-transparent px-0.5 font-[inherit] text-sm text-ink-2 hover:text-foreground" style={{ display: v.fEndD }}>
                   结束并记录
                 </button>
               </div>
             </div>
           </div>
-          <div data-rv="2" className="relative mt-[clamp(0px,3.4vw,52px)] flex min-w-[min(100%,300px)] flex-[1_1_300px] flex-col gap-3.5 border-l border-[#e3e1dd] py-0.5 pl-[clamp(20px,2.4vw,32px)]">
-            <span className="absolute top-2 -left-1 size-[7px] rounded-full border border-[#bdb9b2] bg-[#fafaf9]" />
-            <div className="text-[12.5px] text-[#8e8e93]">笔记 · 周三 11:20 · 点击即可编辑</div>
-            <input value={v.nTitle} onChange={v.onNTitle} aria-label="笔记标题" className="-mx-1.5 w-[calc(100%+12px)] rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-xl font-medium tracking-[-0.01em] text-[#1c1c1e] outline-none transition-[background,box-shadow] hover:bg-[#f3f2ef] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6]" />
-            <textarea ref={r.noteRef} value={v.nBody} onChange={v.onNBody} aria-label="笔记正文" rows={3} className="-mx-1.5 w-[calc(100%+12px)] resize-none overflow-hidden rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-base leading-[1.7] text-[#3a3a3c] outline-none transition-[background,box-shadow] hover:bg-[#f3f2ef] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6] sm:text-[15px]" />
-            <div className="relative flex flex-wrap items-center gap-2 text-sm text-[#6b6b70]">
+          <div data-rv="2" className="relative mt-[clamp(0px,3.4vw,52px)] flex min-w-[min(100%,300px)] flex-[1_1_300px] flex-col gap-3.5 border-l border-black/10 py-0.5 pl-[clamp(20px,2.4vw,32px)]">
+            <span className="absolute top-2 -left-1 size-[7px] rounded-full border border-black/25 bg-muted" />
+            <div className="text-[12.5px] text-ink-3">笔记 · 周三 11:20 · 点击即可编辑</div>
+            <input value={v.nTitle} onChange={v.onNTitle} aria-label="笔记标题" className="-mx-1.5 w-[calc(100%+12px)] rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-xl font-medium tracking-[-0.01em] text-foreground outline-none transition-[background,box-shadow] hover:bg-black/[0.04] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6]" />
+            <textarea ref={r.noteRef} value={v.nBody} onChange={v.onNBody} aria-label="笔记正文" rows={3} className="-mx-1.5 w-[calc(100%+12px)] resize-none overflow-hidden rounded-lg border-0 bg-transparent px-1.5 py-1 font-[inherit] text-base leading-[1.7] text-ink-2 outline-none transition-[background,box-shadow] hover:bg-black/[0.04] focus:bg-white focus:shadow-[0_0_0_1px_#dcdad6] sm:text-[15px]" />
+            <div className="relative flex flex-wrap items-center gap-2 text-sm text-ink-3">
               <span>关联任务</span>
               <button ref={r.lnkBtnRef} type="button" onClick={v.toggleLnk} aria-expanded={v.lnkExp === 'true'} className="cursor-pointer border-0 border-b border-[#b9cdf2] bg-transparent p-0 font-[inherit] text-sm text-[#1463d9] hover:border-[#1463d9] hover:text-[#0d4fb3]">
                 [[周五分享：做演示稿]]
               </button>
-              <div ref={r.lnkRef} role="dialog" aria-label="任务详情" className="absolute top-[calc(100%+8px)] left-0 z-5 flex w-[min(300px,100%)] flex-col gap-2 rounded-xl border border-[#e8e6e2] bg-white px-4 py-3.5 text-[#1c1c1e] shadow-[0_14px_36px_rgba(28,28,30,.10)] transition-[opacity,transform] duration-180" style={{ opacity: v.lnkOp, transform: `translateY(${v.lnkY}px)`, pointerEvents: v.lnkPE as 'auto' | 'none' }}>
+              <div ref={r.lnkRef} role="dialog" aria-label="任务详情" className="absolute top-[calc(100%+8px)] left-0 z-5 flex w-[min(300px,100%)] flex-col gap-2 rounded-xl border border-black/[0.08] bg-white px-4 py-3.5 text-foreground shadow-[0_14px_36px_rgba(28,28,30,.10)] transition-[opacity,transform] duration-180" style={{ opacity: v.lnkOp, transform: `translateY(${v.lnkY}px)`, pointerEvents: v.lnkPE as 'auto' | 'none' }}>
                 <div className="flex items-center gap-2">
                   <span className="size-[7px] rounded-[2px] bg-[#b59a80]" />
                   <b className="flex-1 text-sm font-medium">周五分享：做演示稿</b>
-                  <button type="button" onClick={v.closeLnk} aria-label="关闭" className="size-6 cursor-pointer rounded-md border-0 bg-transparent text-[15px] leading-none text-[#8e8e93] hover:bg-[#f3f2ef] hover:text-[#1c1c1e]">×</button>
+                  <button type="button" onClick={v.closeLnk} aria-label="关闭" className="size-6 cursor-pointer rounded-md border-0 bg-transparent text-[15px] leading-none text-ink-3 hover:bg-black/[0.04] hover:text-foreground">×</button>
                 </div>
-                <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-x-2.5 gap-y-1 text-[13px] text-[#6b6b70]">
-                  <span>时间</span><span className="text-[#1c1c1e] tabular-nums">周三 14:00 – 16:00</span>
-                  <span>类型</span><span className="text-[#1c1c1e]">AI 时间盒</span>
-                  <span>之后</span><span className="text-[#1c1c1e]">周四 14:00 分享彩排</span>
+                <div className="grid grid-cols-[44px_minmax(0,1fr)] gap-x-2.5 gap-y-1 text-[13px] text-ink-3">
+                  <span>时间</span><span className="text-foreground tabular-nums">周三 14:00 – 16:00</span>
+                  <span>类型</span><span className="text-foreground">AI 时间盒</span>
+                  <span>之后</span><span className="text-foreground">周四 14:00 分享彩排</span>
                 </div>
               </div>
             </div>
             {v.hasRecs ? (
               <div className="flex flex-col gap-1.5 pt-1">
                 {v.fRecs.map((rc) => (
-                  <motion.div key={rc.text + String(rc.ms)} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, ease }} className="flex items-center gap-2.5 text-sm text-[#3a3a3c]">
+                  <motion.div key={rc.text + String(rc.ms)} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.52, ease }} className="flex items-center gap-2.5 text-sm text-ink-2">
                     <span className="size-1.5 shrink-0 rounded-full bg-[#c4553f]" />
                     <span>{rc.userTitle ? <span data-no-translate>{rc.userTitle} · </span> : null}{rc.text}</span>
                   </motion.div>
                 ))}
               </div>
             ) : null}
-            <div className="flex items-center gap-2 border-t border-[#efeeeb] pt-3 text-[12.5px] text-[#6b6b70]">
+            <div className="flex items-center gap-2 border-t border-black/[0.08] pt-3 text-[12.5px] text-ink-3">
               <span className="size-1.5 shrink-0 rounded-full transition-colors" style={{ background: v.fFootDot }} />
               <span>{v.fFoot}</span>
             </div>
@@ -952,18 +759,18 @@ function Tomato({ v }: { v: View }) {
 function Templates({ v }: { v: View }) {
   const tr = useTranslate()
   return tr(
-    <section className="px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(32px,4vw,48px)]">
+    <section id="styles" className="py-[clamp(96px,12vw,168px)]">
+      <div className="mx-auto flex max-w-[1180px] flex-col gap-[clamp(32px,4vw,48px)] px-5 sm:px-8">
         <div data-rv="0" className="flex flex-wrap items-end justify-between gap-x-16 gap-y-4">
           <div className="flex max-w-[560px] flex-col gap-[18px]">
-            <div className="text-sm font-medium text-[#1463d9]">排程性格</div>
-            <h2 className="m-0 text-[clamp(28px,3vw,40px)] leading-[1.25] font-normal tracking-[-0.02em] text-balance">按你的节奏排，不按别人的。</h2>
+            <div className={eyebrowClass}>排程性格</div>
+            <h2 className={titleClass}>按你的节奏排，不按别人的。</h2>
           </div>
-          <p className="m-0 max-w-[400px] text-[15px] leading-[1.75] text-[#6b6b70]">告诉 AI 你几点起床、什么时候最专注、容不容易分心。也可以从模板开始，切换看看同一天怎么排。</p>
+          <p className="m-0 max-w-[400px] text-[17px] leading-[1.65] text-ink-3">告诉 AI 你几点起床、什么时候最专注、容不容易分心。也可以从模板开始，切换看看同一天怎么排。</p>
         </div>
-        <div data-rv="1" role="tablist" aria-label="排程模板" className="flex max-w-full flex-wrap gap-1.5 self-start rounded-2xl bg-[#f7f6f4] p-[5px]">
+        <div data-rv="1" role="tablist" aria-label="排程模板" className="flex max-w-full flex-wrap gap-1 self-start rounded-[20px] bg-muted p-1">
           {v.tpls.map((t) => (
-            <button key={t.name} type="button" role="tab" aria-selected={t.sel === 'true'} onClick={t.pick} className="flex cursor-pointer items-center gap-3 rounded-[11px] border-0 py-[9px] pr-4 pl-3 text-left font-[inherit] transition-[background,color,box-shadow] duration-[220ms] hover:text-[#1c1c1e]" style={{ background: t.bg, boxShadow: t.sh, color: t.fg }}>
+            <button key={t.name} type="button" role="tab" aria-selected={t.sel === 'true'} onClick={t.pick} className="flex cursor-pointer items-center gap-3 rounded-[16px] border-0 py-[9px] pr-4 pl-3 text-left font-[inherit] select-none transition-[background-color,color,box-shadow,transform] duration-[220ms] ease-out hover:text-foreground active:scale-[0.97]" style={{ background: t.bg, boxShadow: t.sh, color: t.fg }}>
               <svg width="34" height="20" viewBox="0 0 34 20" aria-hidden="true" className="shrink-0">
                 {t.rects.map((rect, i) => (
                   <rect key={i} x={rect.x} y={rect.y} width={rect.w} height={rect.h} rx="1.8" fill="currentColor" opacity={rect.o} />
@@ -978,16 +785,16 @@ function Templates({ v }: { v: View }) {
         </div>
         <div data-rv="2" className="flex flex-col gap-[18px]">
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3.5">
-            <p className="m-0 max-w-[520px] text-base text-[#3a3a3c]">{v.tplDesc}</p>
+            <p className="m-0 max-w-[520px] text-base text-ink-2">{v.tplDesc}</p>
             <div className="flex gap-7">
               <Stat n={v.tsFocus} l="专注总时长" />
               <Stat n={v.tsCount} l="专注段数" />
               <Stat n={v.tsLong} l="最长一段" />
             </div>
           </div>
-          <div className="overflow-x-auto pb-1.5">
+          <div className="overflow-x-auto rounded-[28px] bg-muted p-[clamp(16px,2.6vw,32px)] pb-[clamp(16px,2.4vw,28px)]">
             <div className="min-w-[760px]">
-              <div className="relative h-28 border-y border-[#ecebe8] bg-[repeating-linear-gradient(90deg,#f0efec_0_1px,transparent_1px_11.111%),linear-gradient(90deg,#f5f6f8_0_5.556%,#fff_5.556%_72.222%,#f5f6f8_72.222%_100%)]">
+              <div className="relative h-28 border-y border-black/[0.08] bg-[repeating-linear-gradient(90deg,#f0efec_0_1px,transparent_1px_11.111%),linear-gradient(90deg,#f5f6f8_0_5.556%,#fff_5.556%_72.222%,#f5f6f8_72.222%_100%)]">
                 {v.tBlocks.map((b, i) => (
                   <motion.div
                     key={i}
@@ -1000,16 +807,16 @@ function Templates({ v }: { v: View }) {
                   </motion.div>
                 ))}
               </div>
-              <div className="relative mt-2 h-5 text-[11px] text-[#aeaeb2] tabular-nums">
+              <div className="relative mt-2 h-5 text-[11px] text-ink-4 tabular-nums">
                 {['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'].map((t, i) => (
                   <span key={t} className="absolute -translate-x-1/2" style={{ left: `${(5.556 + i * 11.111).toFixed(3)}%` }}>{t}</span>
                 ))}
               </div>
-              <div className="mt-1.5 flex flex-wrap gap-[18px] text-xs text-[#8e8e93]">
+              <div className="mt-1.5 flex flex-wrap gap-[18px] text-xs text-ink-3">
                 <Legend bg="#ece7f4" bd="#cfc6e0" label="专注" />
                 <Legend bg="#f7f0e8" bd="#e3d2bf" label="会议" />
                 <Legend bg="#f3f2ef" bd="#e1dfda" label="轻事务" />
-                <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-[3px] border border-[#e8e6e2] bg-[repeating-linear-gradient(135deg,#fff_0_2px,#eeece8_2px_4px)]" />休息</span>
+                <span className="flex items-center gap-1.5"><span className="size-2.5 rounded-[3px] border border-black/[0.08] bg-[repeating-linear-gradient(135deg,#fff_0_2px,#eeece8_2px_4px)]" />休息</span>
                 <span className="flex-1" />
                 <span>模板均为示例，可按自己的作息修改</span>
               </div>
@@ -1026,7 +833,7 @@ function Stat({ n, l }: { n: string; l: string }) {
   return tr(
     <div className="flex flex-col gap-0.5">
       <span className="text-[22px] font-normal tracking-[-0.02em] whitespace-nowrap tabular-nums">{n}</span>
-      <span className="text-xs whitespace-nowrap text-[#8e8e93]">{l}</span>
+      <span className="text-xs whitespace-nowrap text-ink-3">{l}</span>
     </div>
   )
 }
@@ -1054,21 +861,21 @@ function Plugins({ v }: { v: View }) {
   const r = v.refs
   const tr = useTranslate()
   return tr(
-    <section id="plugins" className="border-t border-[#f0efec] px-[clamp(20px,5vw,72px)] py-[clamp(72px,9vw,128px)]">
-      <div className="mx-auto flex max-w-[1200px] flex-col gap-[clamp(36px,4vw,56px)]">
+    <section id="plugins" className="py-[clamp(96px,12vw,168px)]">
+      <div className="mx-auto flex max-w-[1180px] flex-col gap-[clamp(36px,4vw,56px)] px-5 sm:px-8">
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,380px),1fr))] items-center gap-[clamp(32px,6vw,96px)]">
           <div data-rv="0" className="flex max-w-[520px] flex-col gap-[18px]">
-            <div className="text-sm font-medium text-[#1463d9]">05 · 插件市场</div>
-            <h2 className="m-0 text-[clamp(30px,3.4vw,46px)] leading-[1.22] font-medium tracking-[-0.025em]">需要什么，装什么。</h2>
-            <p className="m-0 text-base leading-[1.75] text-[#6b6b70] text-pretty">插件都挂在日历上：专注计时写回时间盒，GitHub 的 Issue 变成待排期任务，写代码的活可以按时间盒交给 AI 执行。</p>
-            <motion.a href="#plugin-list" whileTap={{ scale: 0.98 }} className="mt-1.5 flex h-[46px] items-center self-start rounded-xl bg-[#1c1c1e] px-5 text-[15px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">
+            <div className={eyebrowClass}>插件市场</div>
+            <h2 className={titleClass}>需要什么，装什么。</h2>
+            <p className={ledeClass}>插件都挂在日历上：专注计时写回时间盒，GitHub 的 Issue 变成待排期任务，写代码的活可以按时间盒交给 AI 执行。</p>
+            <motion.a href="#plugin-list" whileTap={{ scale: 0.98 }} className="mt-1.5 flex h-11 items-center self-start rounded-full bg-foreground px-6 text-[15px] font-medium text-white hover:bg-[#333336] hover:text-white">
               浏览全部插件
             </motion.a>
           </div>
           <div data-hive="1" className="relative h-[420px] w-[min(100%,430px)] justify-self-center drop-shadow-[0_18px_36px_rgba(28,28,30,.07)]">
             <div data-rv="0" className="absolute top-[calc(50%-74px)] left-[calc(50%-64px)] h-[148px] w-32">
-              <div className="flex size-full items-center justify-center bg-[#1c1c1e] [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]">
-                <span className="flex size-[60px] overflow-hidden rounded-full bg-white"><Logo /></span>
+              <div className="flex size-full items-center justify-center bg-foreground [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]">
+                <span className="flex size-[64px] items-center justify-center rounded-[18px] bg-white p-1.5"><Logo /></span>
               </div>
             </div>
             {HIVE.map((h) => (
@@ -1077,11 +884,11 @@ function Plugins({ v }: { v: View }) {
                   <div className="absolute inset-0 bg-[#e6e4e0] [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" />
                   <div className="absolute inset-px flex flex-col items-center justify-center gap-2 bg-[#fbfaf9] text-center [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]">
                     <span className="flex size-[34px] items-center justify-center rounded-[10px]" style={{ background: h.tint, color: h.ink }}>
-                      <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={h.icon} /></svg>
+                      {brandFor(h.name) ? <BrandMark id={brandFor(h.name)!} size={34} /> : <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={h.icon} /></svg>}
                     </span>
                     <span className="flex flex-col gap-px">
-                      <span className="text-[13.5px] font-medium whitespace-nowrap text-[#1c1c1e]">{h.name}</span>
-                      <span className="text-[11px] text-[#8e8e93]">{h.cat}</span>
+                      <span className="text-[13.5px] font-medium whitespace-nowrap text-foreground">{h.name}</span>
+                      <span className="text-[11px] text-ink-3">{h.cat}</span>
                     </span>
                   </div>
                 </motion.div>
@@ -1089,11 +896,11 @@ function Plugins({ v }: { v: View }) {
             ))}
           </div>
         </div>
-        <div id="plugin-list" className="flex flex-wrap items-center justify-between gap-4 border-t border-[#f0efec] pt-[clamp(8px,2vw,24px)]">
-          <div className="text-[15px] font-medium">全部插件</div>
-          <div role="tablist" className="flex max-w-full shrink-0 gap-1 overflow-x-auto rounded-xl bg-[#f3f2ef] p-1">
+        <div id="plugin-list" className="flex flex-wrap items-center justify-between gap-4 border-t border-black/10 pt-[clamp(16px,2.4vw,32px)]">
+          <div className="text-[21px] font-semibold tracking-[-0.015em]">全部插件</div>
+          <div role="tablist" aria-label="插件分类" className="flex max-w-full shrink-0 gap-1 overflow-x-auto rounded-full bg-muted p-1">
             {v.pcats.map((c) => (
-              <button key={c.label} type="button" onClick={c.pick} className="h-[34px] cursor-pointer rounded-[9px] border-0 px-3.5 font-[inherit] text-[13.5px] font-medium transition-[background,color] hover:text-[#1c1c1e]" style={{ background: c.bg, color: c.fg, boxShadow: c.sh }}>
+              <button key={c.label} type="button" role="tab" aria-selected={c.bg !== 'transparent'} onClick={c.pick} className="h-9 cursor-pointer rounded-full border-0 px-4 font-[inherit] text-[13.5px] font-medium select-none transition-[background-color,color,transform] duration-150 ease-out hover:text-foreground active:scale-[0.97]" style={{ background: c.bg, color: c.fg, boxShadow: c.sh }}>
                 {c.label}
               </button>
             ))}
@@ -1110,7 +917,7 @@ function Plugins({ v }: { v: View }) {
                     <span className="size-2 rounded-[2px] transition-colors" style={{ background: v.selInk }} />
                     <b className="leading-[1.3] font-medium whitespace-nowrap" style={{ fontSize: v.detName }}>{v.selName}</b>
                   </span>
-                  <span className="leading-[1.5] text-[#48484a] text-pretty wrap-break-word" style={{ fontSize: v.detFs }}>{v.selDesc}</span>
+                  <span className="leading-[1.5] text-ink-2 text-pretty wrap-break-word" style={{ fontSize: v.detFs }}>{v.selDesc}</span>
                 </span>
               </span>
             </div>
@@ -1124,7 +931,7 @@ function Plugins({ v }: { v: View }) {
                 aria-pressed={p.on === 'true'}
                 tabIndex={p.tab}
                 aria-label={p.name}
-                className="absolute top-0 left-0 cursor-pointer border-0 bg-transparent p-0 font-[inherit] text-[#1c1c1e] transition-[transform,opacity] duration-[520ms]"
+                className="absolute top-0 left-0 cursor-pointer border-0 bg-transparent p-0 font-[inherit] text-foreground transition-[transform,opacity] duration-[520ms]"
                 style={{
                   width: v.hexW,
                   height: v.hexH,
@@ -1138,10 +945,10 @@ function Plugins({ v }: { v: View }) {
                 <span data-hex-ring="1" className="absolute inset-0 transition-colors [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)]" style={{ background: p.bd }} />
                 <span data-hex-face="1" className="absolute flex flex-col items-center justify-center gap-1.5 px-[16%] text-center transition-[background,inset] [clip-path:polygon(50%_0,100%_25%,100%_75%,50%_100%,0_75%,0_25%)] hover:bg-[#faf9f7]" style={{ inset: p.inset, background: p.bg }}>
                   <span className="flex size-[34px] shrink-0 items-center justify-center rounded-[10px]" style={{ background: p.tint, color: p.ink }}>
-                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={p.icon} /></svg>
+                    {brandFor(p.name) ? <BrandMark id={brandFor(p.name)!} size={34} /> : <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"><path d={p.icon} /></svg>}
                   </span>
                   <span className="text-sm leading-[1.3] font-medium whitespace-nowrap">{p.name}</span>
-                  <span className="text-xs leading-[1.4] whitespace-nowrap text-[#8e8e93]" style={{ display: v.shortD }}>{p.short}</span>
+                  <span className="text-xs leading-[1.4] whitespace-nowrap text-ink-3" style={{ display: v.shortD }}>{p.short}</span>
                 </span>
               </button>
             ))}
@@ -1151,27 +958,3 @@ function Plugins({ v }: { v: View }) {
     </section>
   )
 }
-
-// 不依赖演示状态，避免随动画计时反复渲染。
-const Download = memo(function Download() {
-  const lang = useSiteLang()
-  const tr = useTranslate()
-  return tr(
-    <section id="download" className="border-t border-[#f0efec] px-[clamp(20px,5vw,72px)] py-[clamp(96px,12vw,168px)] text-center">
-      <div data-rv="0" className="mx-auto flex max-w-[720px] flex-col items-center gap-6">
-        <span className="flex size-14 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white"><Logo /></span>
-        <h2 className="m-0 text-[clamp(32px,4vw,56px)] leading-[1.18] font-medium tracking-[-0.03em] text-balance">
-          从这周开始，{' '}
-          <br />
-          让每件事都有时间。
-        </h2>
-        <p className="m-0 text-[17px] text-[#6b6b70]">免费下载，接入现有日历账户即可使用。</p>
-        <div className="mt-1 flex flex-wrap justify-center gap-3">
-          <motion.a href={downloadPath} whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#1c1c1e] px-6 text-[15.5px] font-medium text-white hover:bg-[#3a3a3c] hover:text-white">下载 macOS 版</motion.a>
-          <motion.a href="#flow" whileTap={{ scale: 0.98 }} className="flex h-[50px] items-center rounded-[14px] bg-[#f3f2ef] px-6 text-[15.5px] font-medium text-[#1c1c1e] hover:bg-[#e9e7e3]">再看一遍</motion.a>
-        </div>
-        <div className="text-[13px] text-[#8e8e93]">{lang === 'en' ? 'For Apple silicon Macs, macOS 13 or later' : '适用于 Apple 芯片 Mac，macOS 13 及以上'}</div>
-      </div>
-    </section>
-  )
-})

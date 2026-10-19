@@ -1,4 +1,5 @@
 import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
+import { MotionConfig } from 'motion/react'
 import { NotFoundPage } from '../components/NotFoundPage'
 import { useSiteLang } from '../lib/lang'
 import appCss from '../styles.css?url'
@@ -35,7 +36,10 @@ function RootComponent() {
         <HeadContent />
       </head>
       <body>
-        <Outlet />
+        {/* 系统开启「减少动态效果」时，motion 的位移与缩放动画一并省略。 */}
+        <MotionConfig reducedMotion="user">
+          <Outlet />
+        </MotionConfig>
         <Scripts />
       </body>
     </html>

@@ -1,7 +1,11 @@
+import { cn } from '@/lib/utils'
 import { releases } from '../content/changelog'
 import { formatDate } from '../content/posts'
 import { LangLink } from './LangLink'
-import { SiteFrame, useEn } from './SiteFrame'
+import { PageHero, SiteFrame, useEn } from './SiteFrame'
+import { ArrowLink } from './site/primitives'
+
+const focusRing = 'outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-brand'
 
 export function AboutPage() {
   const en = useEn()
@@ -50,44 +54,75 @@ export function AboutPage() {
         },
       ]
 
+  // 一眼可读的事实，全部取自上面的正文与更新日志。
+  const facts = [
+    { label: en ? 'Current release' : '当前版本', value: release.version },
+    { label: en ? 'Published' : '发布日期', value: formatDate(release.published, en) },
+    { label: en ? 'Runs on' : '适用于', value: en ? 'Apple silicon · macOS 13+' : 'Apple 芯片 · macOS 13+' },
+    { label: en ? 'Based in' : '所在地', value: en ? 'Sydney, Australia' : '澳大利亚悉尼' },
+  ]
+
   return (
-    <SiteFrame>
-      <div className="flex flex-col gap-3">
-        <div className="text-sm font-medium text-[#1463d9]">{en ? 'About' : '关于'}</div>
-        <h1 className="m-0 text-[clamp(32px,4vw,48px)] leading-[1.2] font-medium tracking-[-0.03em]">
-          {en ? 'About Void Calendar' : '关于 Void Calendar'}
-        </h1>
+    <SiteFrame wide className="gap-[clamp(64px,9vw,112px)]">
+      <PageHero
+        eyebrow={en ? 'About' : '关于'}
+        title={en ? 'About Void Calendar' : '关于 Void Calendar'}
+        lede={en ? 'A calendar and time-boxing app for Mac, made by Void Vision in Sydney.' : 'Mac 上的日历与时间盒应用，由悉尼的 Void Vision 开发。'}
+      />
+
+      <dl className="m-0 grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {facts.map((fact) => (
+          <div key={fact.label} className="flex min-w-0 flex-col gap-2 rounded-2xl bg-muted px-5 py-6 sm:px-7 sm:py-8">
+            <dt className="text-[13px] font-medium text-ink-3">{fact.label}</dt>
+            <dd className="m-0 text-[clamp(17px,1.8vw,22px)] leading-[1.3] font-semibold tracking-[-0.015em] break-words text-foreground">{fact.value}</dd>
+          </div>
+        ))}
+      </dl>
+
+      <div className="flex flex-col">
+        {sections.map((section, index) => (
+          <section
+            key={section.title}
+            aria-labelledby={`about-${index + 1}`}
+            className="grid gap-6 border-t border-border py-[clamp(40px,6vw,72px)] md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-12 lg:gap-20"
+          >
+            <div className="flex flex-col gap-3 md:sticky md:top-24 md:self-start">
+              <span aria-hidden="true" className="text-[15px] font-semibold text-ink-3 tabular-nums">{String(index + 1).padStart(2, '0')}</span>
+              <h2 id={`about-${index + 1}`} className="t-title m-0">{section.title}</h2>
+            </div>
+            <div className="flex flex-col gap-5">
+              {section.body.map((paragraph) => (
+                <p key={paragraph} className="m-0 text-[clamp(17px,1.5vw,19px)] leading-[1.7] text-ink-2">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </section>
+        ))}
       </div>
-      {sections.map((section) => (
-        <section key={section.title} className="flex flex-col gap-3 border-t border-[#f0efec] pt-8">
-          <h2 className="m-0 text-[22px] leading-[1.35] font-medium tracking-[-0.02em]">{section.title}</h2>
-          {section.body.map((paragraph) => (
-            <p key={paragraph} className="m-0 text-[#3a3a3c]">
-              {paragraph}
+
+      <section aria-labelledby="about-contact" className="grid gap-10 rounded-3xl bg-muted px-6 py-10 sm:px-10 sm:py-14 md:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] md:gap-12 lg:gap-20 lg:px-14">
+        <h2 id="about-contact" className="t-title m-0">{en ? 'Contact' : '联系方式'}</h2>
+        <div className="flex min-w-0 flex-col gap-8">
+          <div className="flex flex-col gap-1">
+            <p className="m-0 text-[14px] font-medium text-ink-3">{en ? 'Support and feedback' : '支持与反馈'}</p>
+            <a href="mailto:contact@voidvision.ai" className={cn('w-fit text-[clamp(21px,2.4vw,28px)] leading-[1.3] font-semibold tracking-[-0.02em] break-all text-link hover:underline', focusRing)}>
+              contact@voidvision.ai
+            </a>
+          </div>
+          <div className="flex flex-col gap-1">
+            <p className="m-0 text-[14px] font-medium text-ink-3">{en ? 'Company' : '公司'}</p>
+            <p className="m-0 text-[17px] leading-[1.6] text-ink-2">
+              <a href="https://voidvision.ai" className={cn('text-link hover:underline', focusRing)}>Void Vision</a>
+              {en ? ' · Sydney, NSW, Australia' : ' · 澳大利亚新南威尔士州悉尼'}
             </p>
-          ))}
-        </section>
-      ))}
-      <section className="flex flex-col gap-3 border-t border-[#f0efec] pt-8">
-        <h2 className="m-0 text-[22px] leading-[1.35] font-medium tracking-[-0.02em]">{en ? 'Contact' : '联系方式'}</h2>
-        <ul className="m-0 flex list-none flex-col gap-2 p-0 text-[#3a3a3c]">
-          <li>
-            {en ? 'Support and feedback: ' : '支持与反馈：'}
-            <a href="mailto:contact@voidvision.ai" className="text-[#1463d9] hover:text-[#0d4fb3]">contact@voidvision.ai</a>
-          </li>
-          <li>
-            {en ? 'Company: ' : '公司：'}
-            <a href="https://voidvision.ai" className="text-[#1463d9] hover:text-[#0d4fb3]">Void Vision</a>
-            {en ? ' · Sydney, NSW, Australia' : ' · 澳大利亚新南威尔士州悉尼'}
-          </li>
-          <li>
-            <LangLink to="/changelog" className="text-[#1463d9] hover:text-[#0d4fb3]">{en ? 'Changelog' : '更新日志'}</LangLink>
-            {' · '}
-            <LangLink to="/privacy" className="text-[#1463d9] hover:text-[#0d4fb3]">{en ? 'Privacy' : '隐私协议'}</LangLink>
-            {' · '}
-            <LangLink to="/terms" className="text-[#1463d9] hover:text-[#0d4fb3]">{en ? 'Terms' : '服务条款'}</LangLink>
-          </li>
-        </ul>
+          </div>
+          <nav aria-label={en ? 'More about Void Calendar' : '更多信息'} className="flex flex-wrap gap-x-7 border-t border-border pt-4">
+            <LangLink to="/changelog" className={cn('group flex min-h-11 items-center', focusRing)}><ArrowLink>{en ? 'Changelog' : '更新日志'}</ArrowLink></LangLink>
+            <LangLink to="/privacy" className={cn('group flex min-h-11 items-center', focusRing)}><ArrowLink>{en ? 'Privacy' : '隐私协议'}</ArrowLink></LangLink>
+            <LangLink to="/terms" className={cn('group flex min-h-11 items-center', focusRing)}><ArrowLink>{en ? 'Terms' : '服务条款'}</ArrowLink></LangLink>
+          </nav>
+        </div>
       </section>
     </SiteFrame>
   )
