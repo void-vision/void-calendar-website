@@ -5,6 +5,8 @@ import { nitro } from 'nitro/vite'
 import { defineConfig } from 'vite'
 
 export default defineConfig({
+  // shadcn / React Bits 组件使用 tsconfig 中的 `@/*` 别名。
+  resolve: { tsconfigPaths: true },
   plugins: [
     tanstackStart(),
     nitro({

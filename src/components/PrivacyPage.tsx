@@ -1,65 +1,30 @@
-import { Link } from '@tanstack/react-router'
-import { useAlternateLink, useSiteLang } from '../lib/lang'
+import { useSiteLang } from '../lib/lang'
 import { LangLink } from './LangLink'
+import { LegalLayout } from './LegalLayout'
 
 const updated = '2026年10月10日'
 const updatedEn = 'October 10, 2026'
 
 export function PrivacyPage() {
-  const lang = useSiteLang()
-  const en = lang === 'en'
-  const alternate = useAlternateLink()
+  const en = useSiteLang() === 'en'
   return (
-    <div className="min-h-screen bg-white text-[15px] leading-[1.75] text-[#1c1c1e]">
-      <header className="sticky top-0 z-30 border-b border-[#f0efec] bg-white/82 backdrop-blur-[16px]">
-        <div className="mx-auto flex h-[68px] max-w-[800px] items-center gap-4 px-5">
-          <LangLink to="/" className="flex items-center gap-2.5 text-[#1c1c1e]">
-            <span className="flex size-8 items-center justify-center overflow-hidden rounded-full border border-[#e8e6e2] bg-white">
-              <img src="/logo-128.png" alt="" width={128} height={128} className="size-full object-contain" />
-            </span>
-            <span className="font-semibold">Void Calendar</span>
+    <LegalLayout
+      en={en}
+      eyebrow={en ? 'Privacy' : '隐私协议'}
+      title={en ? 'Privacy Policy' : '隐私协议'}
+      sections={en ? enSections : zhSections}
+      intro={
+        <>
+          {en
+            ? `Effective ${updatedEn}. This policy describes the Void Calendar macOS app and this website, operated by VOID VISION PTY LTD. Product use is covered by the `
+            : `生效日期：${updated}。本协议说明 VOID VISION PTY LTD 运营的 Void Calendar macOS 应用，以及这个网站如何处理信息。使用产品的约定见`}
+          <LangLink to="/terms" className="text-link hover:underline">
+            {en ? 'Terms of Service' : '服务条款'}
           </LangLink>
-          <span className="flex-1" />
-          <Link
-            {...alternate}
-            hrefLang={en ? 'zh-Hans' : 'en'}
-            className="flex h-[38px] items-center cursor-pointer rounded-[10px] border border-[#e3e1dd] bg-white px-3 text-[13px] font-medium"
-          >
-            {en ? '中文' : 'EN'}
-          </Link>
-          <LangLink to="/" className="text-sm text-[#48484a] hover:text-[#1c1c1e]">
-            {en ? 'Home' : '返回首页'}
-          </LangLink>
-        </div>
-      </header>
-      <main className="mx-auto flex max-w-[800px] flex-col gap-8 px-5 py-16">
-        <div className="flex flex-col gap-3">
-          <div className="text-sm font-medium text-[#1463d9]">{en ? 'Privacy' : '隐私协议'}</div>
-          <h1 className="m-0 text-[clamp(32px,4vw,48px)] leading-[1.2] font-medium tracking-[-0.03em]">
-            {en ? 'Privacy Policy' : '隐私协议'}
-          </h1>
-          <p className="m-0 text-[#6b6b70]">
-            {en
-              ? `Effective ${updatedEn}. This policy describes the Void Calendar macOS app and this website, operated by VOID VISION PTY LTD. Product use is covered by the `
-              : `生效日期：${updated}。本协议说明 VOID VISION PTY LTD 运营的 Void Calendar macOS 应用，以及这个网站如何处理信息。使用产品的约定见`}
-            <LangLink to="/terms" className="text-[#1463d9] hover:text-[#0d4fb3]">
-              {en ? 'Terms of Service' : '服务条款'}
-            </LangLink>
-            {en ? '.' : '。'}
-          </p>
-        </div>
-        {(en ? enSections : zhSections).map((section) => (
-          <section key={section.title} className="flex flex-col gap-3 border-t border-[#f0efec] pt-8">
-            <h2 className="m-0 text-[22px] leading-[1.35] font-medium tracking-[-0.02em]">{section.title}</h2>
-            {section.body.map((paragraph) => (
-              <p key={paragraph} className="m-0 text-[#3a3a3c]">
-                {paragraph}
-              </p>
-            ))}
-          </section>
-        ))}
-      </main>
-    </div>
+          {en ? '.' : '。'}
+        </>
+      }
+    />
   )
 }
 

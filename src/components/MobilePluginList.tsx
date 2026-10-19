@@ -1,5 +1,6 @@
 import type { useDemo } from '../demo/useDemo'
 import { useTranslate } from '../demo/i18n'
+import { BrandMark, brandFor } from './site/brands'
 
 type PluginView = Pick<ReturnType<typeof useDemo>, 'plugins' | 'selName' | 'selDesc' | 'selInk'>
 
@@ -26,11 +27,11 @@ export function MobilePluginList({ v }: { v: PluginView }) {
             className="flex min-w-0 cursor-pointer flex-col items-start gap-3 rounded-2xl border p-4 text-left font-[inherit] transition-[background,border-color]"
             style={{ background: plugin.bg, borderColor: plugin.bd }}
           >
-            <span className="flex size-[34px] shrink-0 items-center justify-center rounded-[10px]" style={{ background: plugin.tint, color: plugin.ink }}>
+            {brandFor(plugin.name) ? <BrandMark id={brandFor(plugin.name)!} size={34} /> : <span className="flex size-[34px] shrink-0 items-center justify-center rounded-[10px]" style={{ background: plugin.tint, color: plugin.ink }}>
               <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <path d={plugin.icon} />
               </svg>
-            </span>
+            </span>}
             <span className="flex min-w-0 flex-col gap-1">
               <span className="text-sm leading-[1.4] font-medium break-words">{plugin.name}</span>
               <span className="text-xs leading-[1.5] text-[#8e8e93]">{plugin.short}</span>

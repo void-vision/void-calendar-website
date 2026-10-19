@@ -453,6 +453,8 @@ export function useDemo(lang: SiteLang) {
 
     let raf = 0
     let pe: number | undefined
+    let mobileApplied = false
+    const narrow = window.matchMedia('(max-width: 767px)')
     const onScroll = () => {
       if (raf) return
       raf = requestAnimationFrame(() => {
@@ -460,18 +462,21 @@ export function useDemo(lang: SiteLang) {
         const st = stageRef.current
         const mk = mockRef.current
         if (!st || !mk) return
-        const sec = st.closest('section')
-        if (!sec) return
-        const r = sec.getBoundingClientRect()
-        const vh = innerHeight
-        // 手机不固定整屏演示，避免浏览器工具栏变化时内容被裁切。
-        if (window.matchMedia('(max-width: 767px)').matches) {
+        // 手机不固定整屏演示，避免浏览器工具栏变化时内容被裁切；样式只写一次，滚动时不再读布局。
+        if (narrow.matches) {
+          if (mobileApplied) return
+          mobileApplied = true
           pe = undefined
           st.style.transform = 'none'
           mk.style.borderRadius = '14px'
           mk.style.boxShadow = '0 20px 60px rgba(28,28,30,.08)'
           return
         }
+        mobileApplied = false
+        const sec = st.closest('section')
+        if (!sec) return
+        const r = sec.getBoundingClientRect()
+        const vh = innerHeight
         const span = Math.max(1, vh * 0.9 + (r.height - vh) * 0.55)
         let p = (vh * 0.9 - r.top) / span
         p = reduced.current ? 1 : Math.max(0, Math.min(1, p))

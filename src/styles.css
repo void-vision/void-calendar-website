@@ -1,10 +1,192 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
+
+/* 设计基调：Apple 式中性灰阶 + 单一强调蓝。组件只用这些语义变量，不写零散色值。 */
+:root {
+  --radius: 18px;
+  --background: #ffffff;
+  --foreground: #1d1d1f;
+  --card: #ffffff;
+  --card-foreground: #1d1d1f;
+  --popover: #ffffff;
+  --popover-foreground: #1d1d1f;
+  --primary: #1d1d1f;
+  --primary-foreground: #ffffff;
+  --secondary: #f5f5f7;
+  --secondary-foreground: #1d1d1f;
+  --muted: #f5f5f7;
+  --muted-foreground: #6e6e73;
+  --accent: #f5f5f7;
+  --accent-foreground: #1d1d1f;
+  --destructive: #e30000;
+  --border: rgb(0 0 0 / 0.1);
+  --input: rgb(0 0 0 / 0.14);
+  --ring: #0071e3;
+  --brand: #0071e3;
+  --brand-hover: #0077ed;
+  --link: #0066cc;
+  --ink-2: #424245;
+  --ink-3: #6e6e73;
+  --ink-4: #86868b;
+  --night: #000000;
+  --night-2: #161617;
+  --night-fg: #f5f5f7;
+  --night-muted: #a1a1a6;
+  --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-link: var(--link);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-ink-4: var(--ink-4);
+  --color-night: var(--night);
+  --color-night-2: var(--night-2);
+  --color-night-fg: var(--night-fg);
+  --color-night-muted: var(--night-muted);
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 6px);
+  --radius-lg: calc(var(--radius) - 4px);
+  --radius-xl: var(--radius);
+  --radius-2xl: calc(var(--radius) + 6px);
+  --radius-3xl: calc(var(--radius) + 14px);
+  --ease-apple: var(--ease-apple);
+}
 
 html,
 body {
   margin: 0;
-  background: #fff;
+  background: var(--background);
 }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* 首屏入场用 CSS 动画：服务端 HTML 即可播放，不等脚本加载。 */
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+    filter: blur(6px);
+  }
+}
+
+.hero-rise {
+  animation: hero-rise 0.9s var(--ease-apple) both;
+  animation-delay: var(--rise-delay, 0s);
+}
+
+/* 触屏上输入框不足 16px 时 iOS 会放大页面。 */
+@media (pointer: coarse) {
+  .demo-capture input,
+  .demo-capture textarea,
+  .demo-capture select,
+  .vi-note-entry textarea,
+  .demo-search input,
+  .demo-ai textarea {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* 版式：标题收紧字距、正文舒展，对应 Apple 的 display / body 两套节奏。 */
+@utility t-hero {
+  font-size: clamp(44px, 7.4vw, 96px);
+  line-height: 1.06;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+@utility t-display {
+  font-size: clamp(34px, 5vw, 64px);
+  line-height: 1.1;
+  font-weight: 600;
+  letter-spacing: -0.016em;
+  text-wrap: balance;
+}
+
+@utility t-title {
+  font-size: clamp(26px, 3.2vw, 40px);
+  line-height: 1.18;
+  font-weight: 600;
+  letter-spacing: -0.008em;
+  text-wrap: balance;
+}
+
+@utility t-lede {
+  font-size: clamp(17px, 1.6vw, 21px);
+  line-height: 1.62;
+  letter-spacing: -0.005em;
+  text-wrap: pretty;
+}
+
+@utility t-eyebrow {
+  font-size: 13px;
+  line-height: 1.4;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* 中文版式：方块字铺满字面，不再收紧字距；标题行距放宽；眉题不转大写、不加宽。 */
+html:lang(zh) :is(.t-hero, .t-display, .t-title) {
+  letter-spacing: 0;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+html:lang(zh) .t-hero {
+  line-height: 1.16;
+}
+
+html:lang(zh) .t-display {
+  line-height: 1.2;
+}
+
+html:lang(zh) .t-title {
+  line-height: 1.28;
+}
+
+html:lang(zh) .t-eyebrow {
+  text-transform: none;
+  letter-spacing: 0.02em;
+}
+
+/* 英文导语行距收紧，中文保持 1.62。 */
+html:lang(en) .t-lede {
+  line-height: 1.45;
+}
+
 
 /* Keep short events tall enough for a complete text line instead of compressing 12 hours
    into the showcase height. Event positions still follow their actual duration. */
@@ -17,10 +199,12 @@ body {
 
 body {
   font-family:
-    -apple-system, BlinkMacSystemFont, 'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC',
-    'Microsoft YaHei', sans-serif;
+    system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue',
+    'PingFang SC', 'Hiragino Sans GB', 'Noto Sans SC', 'Microsoft YaHei', sans-serif;
   -webkit-font-smoothing: antialiased;
-  color: #1c1c1e;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern';
+  color: var(--foreground);
 }
 
 a {
@@ -28,7 +212,7 @@ a {
 }
 
 .md {
-  color: #3a3a3c;
+  color: var(--ink-2);
   font-size: 1.0625rem;
   line-height: 1.8;
 }
@@ -39,18 +223,18 @@ a {
 
 .md h2 {
   margin-top: 2.6em;
-  color: #1c1c1e;
-  font-size: clamp(1.35rem, 2vw, 1.6rem);
-  font-weight: 500;
-  letter-spacing: -0.025em;
+  color: var(--foreground);
+  font-size: clamp(1.5rem, 2.4vw, 1.875rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
   line-height: 1.35;
 }
 
 .md h3 {
   margin-top: 2em;
-  color: #1c1c1e;
-  font-size: 1.15rem;
-  font-weight: 500;
+  color: var(--foreground);
+  font-size: 1.2rem;
+  font-weight: 600;
   letter-spacing: -0.015em;
 }
 
@@ -60,24 +244,24 @@ a {
 }
 
 .md a {
-  color: #1463d9;
+  color: var(--link);
   text-decoration: underline;
   text-decoration-thickness: 1px;
   text-underline-offset: 3px;
 }
 
 .md a:hover {
-  color: #0d4fb3;
+  color: var(--link);
 }
 
 .md strong {
-  color: #1c1c1e;
+  color: var(--foreground);
   font-weight: 600;
 }
 
 .md .md-caption {
   margin-top: 0.7em;
-  color: #8e8e93;
+  color: var(--ink-3);
   font-size: 0.8125rem;
   line-height: 1.7;
 }
@@ -106,8 +290,8 @@ a {
 .md blockquote {
   margin: 1.8em 0;
   padding-left: 1.05em;
-  border-left: 2px solid #1c1c1e;
-  color: #1c1c1e;
+  border-left: 2px solid var(--brand);
+  color: var(--foreground);
   font-size: 1.2rem;
   line-height: 1.6;
   letter-spacing: -0.015em;
@@ -120,7 +304,7 @@ a {
 .md code {
   padding: 0.12em 0.38em;
   border-radius: 5px;
-  background: #f4f3f0;
+  background: var(--muted);
   font-family: ui-monospace, 'SF Mono', Menlo, monospace;
   font-size: 0.9em;
 }
@@ -129,7 +313,7 @@ a {
   overflow: auto;
   padding: 16px 18px;
   border-radius: 14px;
-  background: #1c1c1e;
+  background: var(--night-2);
   color: #f6f5f3;
 }
 
@@ -142,15 +326,15 @@ a {
 .md hr {
   margin: 2.4em 0;
   border: 0;
-  border-top: 1px solid #f0efec;
+  border-top: 1px solid var(--border);
 }
 
 .md-table-scroll {
   max-width: 100%;
   overflow-x: auto;
   overscroll-behavior-x: contain;
-  border: 1px solid #e8e6e2;
-  border-radius: 12px;
+  border: 1px solid var(--border);
+  border-radius: 18px;
 }
 
 .md table {
@@ -169,19 +353,19 @@ a {
 }
 
 .md th {
-  background: #f7f6f4;
-  color: #1c1c1e;
+  background: var(--muted);
+  color: var(--foreground);
   font-weight: 500;
 }
 
 .md tbody tr + tr,
 .md tbody tr:first-child {
-  border-top: 1px solid #e8e6e2;
+  border-top: 1px solid var(--border);
 }
 
 .md th + th,
 .md td + td {
-  border-left: 1px solid #e8e6e2;
+  border-left: 1px solid var(--border);
 }
 
 * {
@@ -190,7 +374,7 @@ a {
 
 section[id],
 #plugin-list {
-  scroll-margin-top: 88px;
+  scroll-margin-top: 72px;
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
@@ -207,61 +391,7 @@ section[id],
 @media (max-width: 767px) {
   section[id],
   #plugin-list {
-    scroll-margin-top: 112px;
-  }
-
-  .home-header {
-    height: auto;
-    min-height: 96px;
-    flex-wrap: wrap;
-    gap: 0 8px;
-    padding-top: 10px;
-    padding-bottom: 4px;
-  }
-
-  .home-brand {
-    min-width: 0;
-    gap: 8px;
-  }
-
-  .home-brand > span:first-child {
-    width: 28px;
-    height: 28px;
-  }
-
-  .home-brand > span:last-child {
-    font-size: 14px;
-  }
-
-  .home-actions {
-    margin-left: auto;
-    gap: 6px;
-  }
-
-  .home-actions > a,
-  .home-actions > button {
-    height: 40px;
-    padding-right: 10px;
-    padding-left: 10px;
-    font-size: 12px;
-  }
-
-  .home-nav {
-    order: 3;
-    flex: 0 0 100%;
-    justify-content: flex-start;
-    gap: 24px;
-    font-size: 13px;
-  }
-
-  .home-nav a {
-    display: flex;
-    min-height: 40px;
-    align-items: center;
-  }
-
-  #top {
-    padding-top: 64px;
+    scroll-margin-top: 72px;
   }
 
   #showcase {
@@ -423,17 +553,13 @@ section[id],
 }
 
 @media (max-width: 359px) {
-  .home-actions svg {
-    display: none;
-  }
-
   [data-hive] {
     transform: scale(0.64);
   }
 }
 
 :focus-visible {
-  outline: 2px solid #1463d9;
+  outline: 2px solid var(--ring);
   outline-offset: 3px;
 }
 
@@ -610,8 +736,9 @@ nav::-webkit-scrollbar {
   *,
   *::before,
   *::after {
-    animation: none !important;
-    transition: none !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-property: color, background-color, border-color, opacity, box-shadow !important;
   }
 }
 
