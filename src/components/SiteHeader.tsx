@@ -109,7 +109,7 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
             <span>{langLabel}</span>
           </Link>
           <a href={downloadPath} className={`hidden h-8 items-center rounded-full bg-brand px-4 text-[12.5px] font-medium whitespace-nowrap text-white hover:bg-brand-hover hover:text-white sm:flex ${press}`}>
-            {en ? 'Download' : '下载'}
+            {en ? 'Download Beta' : '下载 Beta'}
           </a>
 
           <Sheet open={open} onOpenChange={setOpen}>
@@ -145,7 +145,7 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
                 ))}
               </nav>
               <a href={downloadPath} className={`mt-6 flex h-12 items-center justify-center rounded-full bg-brand text-[15px] font-medium text-white hover:text-white ${press}`}>
-                {en ? 'Download for Mac' : '下载 Mac 版'}
+                {en ? 'Download Beta for Mac' : '下载 Mac Beta'}
               </a>
             </SheetContent>
           </Sheet>

@@ -13,6 +13,8 @@ export default defineConfig({
       // 应用更新清单不需要被搜索引擎收录。
       routeRules: {
         '/updates/**': { headers: { 'X-Robots-Tag': 'noindex' } },
+        '/review': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
+        '/en/review': { headers: { 'X-Robots-Tag': 'noindex, nofollow' } },
       },
       vercel: {
         functions: {

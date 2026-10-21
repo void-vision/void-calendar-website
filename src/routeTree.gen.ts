@@ -14,6 +14,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as ChangelogRouteImport } from './routes/changelog'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ReviewRouteImport } from './routes/review'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
@@ -24,8 +25,10 @@ import { Route as EnAboutRouteImport } from './routes/en/about'
 import { Route as EnChangelogRouteImport } from './routes/en/changelog'
 import { Route as EnPricingRouteImport } from './routes/en/pricing'
 import { Route as EnPrivacyRouteImport } from './routes/en/privacy'
+import { Route as EnReviewRouteImport } from './routes/en/review'
 import { Route as EnTermsRouteImport } from './routes/en/terms'
 import { Route as UpdatesStableDotjsonRouteImport } from './routes/updates.stable[.]json'
+import { Route as DownloadReviewMacRouteImport } from './routes/download/review/mac'
 import { Route as EnBlogIndexRouteImport } from './routes/en/blog/index'
 import { Route as EnBlogSlugRouteImport } from './routes/en/blog/$slug'
 
@@ -52,6 +55,11 @@ const PricingRoute = PricingRouteImport.update({
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewRoute = ReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -104,6 +112,11 @@ const EnPrivacyRoute = EnPrivacyRouteImport.update({
   path: '/en/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EnReviewRoute = EnReviewRouteImport.update({
+  id: '/en/review',
+  path: '/en/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const EnTermsRoute = EnTermsRouteImport.update({
   id: '/en/terms',
   path: '/en/terms',
@@ -112,6 +125,11 @@ const EnTermsRoute = EnTermsRouteImport.update({
 const UpdatesStableDotjsonRoute = UpdatesStableDotjsonRouteImport.update({
   id: '/updates/stable.json',
   path: '/updates/stable.json',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DownloadReviewMacRoute = DownloadReviewMacRouteImport.update({
+  id: '/download/review/mac',
+  path: '/download/review/mac',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnBlogIndexRoute = EnBlogIndexRouteImport.update({
@@ -131,6 +149,7 @@ export interface FileRoutesByFullPath {
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/review': typeof ReviewRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -139,10 +158,12 @@ export interface FileRoutesByFullPath {
   '/en/changelog': typeof EnChangelogRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
+  '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog/': typeof BlogIndexRoute
   '/en/': typeof EnIndexRoute
+  '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
   '/en/blog/': typeof EnBlogIndexRoute
 }
@@ -152,6 +173,7 @@ export interface FileRoutesByTo {
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/review': typeof ReviewRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -160,10 +182,12 @@ export interface FileRoutesByTo {
   '/en/changelog': typeof EnChangelogRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
+  '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog': typeof BlogIndexRoute
   '/en': typeof EnIndexRoute
+  '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
   '/en/blog': typeof EnBlogIndexRoute
 }
@@ -174,6 +198,7 @@ export interface FileRoutesById {
   '/changelog': typeof ChangelogRoute
   '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
+  '/review': typeof ReviewRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/terms': typeof TermsRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -182,10 +207,12 @@ export interface FileRoutesById {
   '/en/changelog': typeof EnChangelogRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
+  '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog/': typeof BlogIndexRoute
   '/en/': typeof EnIndexRoute
+  '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
   '/en/blog/': typeof EnBlogIndexRoute
 }
@@ -197,6 +224,7 @@ export interface FileRouteTypes {
     | '/changelog'
     | '/pricing'
     | '/privacy'
+    | '/review'
     | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
@@ -205,10 +233,12 @@ export interface FileRouteTypes {
     | '/en/changelog'
     | '/en/pricing'
     | '/en/privacy'
+    | '/en/review'
     | '/en/terms'
     | '/updates/stable.json'
     | '/blog/'
     | '/en/'
+    | '/download/review/mac'
     | '/en/blog/$slug'
     | '/en/blog/'
   fileRoutesByTo: FileRoutesByTo
@@ -218,6 +248,7 @@ export interface FileRouteTypes {
     | '/changelog'
     | '/pricing'
     | '/privacy'
+    | '/review'
     | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
@@ -226,10 +257,12 @@ export interface FileRouteTypes {
     | '/en/changelog'
     | '/en/pricing'
     | '/en/privacy'
+    | '/en/review'
     | '/en/terms'
     | '/updates/stable.json'
     | '/blog'
     | '/en'
+    | '/download/review/mac'
     | '/en/blog/$slug'
     | '/en/blog'
   id:
@@ -239,6 +272,7 @@ export interface FileRouteTypes {
     | '/changelog'
     | '/pricing'
     | '/privacy'
+    | '/review'
     | '/sitemap.xml'
     | '/terms'
     | '/blog/$slug'
@@ -247,10 +281,12 @@ export interface FileRouteTypes {
     | '/en/changelog'
     | '/en/pricing'
     | '/en/privacy'
+    | '/en/review'
     | '/en/terms'
     | '/updates/stable.json'
     | '/blog/'
     | '/en/'
+    | '/download/review/mac'
     | '/en/blog/$slug'
     | '/en/blog/'
   fileRoutesById: FileRoutesById
@@ -261,6 +297,7 @@ export interface RootRouteChildren {
   ChangelogRoute: typeof ChangelogRoute
   PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
+  ReviewRoute: typeof ReviewRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   TermsRoute: typeof TermsRoute
   BlogSlugRoute: typeof BlogSlugRoute
@@ -269,10 +306,12 @@ export interface RootRouteChildren {
   EnChangelogRoute: typeof EnChangelogRoute
   EnPricingRoute: typeof EnPricingRoute
   EnPrivacyRoute: typeof EnPrivacyRoute
+  EnReviewRoute: typeof EnReviewRoute
   EnTermsRoute: typeof EnTermsRoute
   UpdatesStableDotjsonRoute: typeof UpdatesStableDotjsonRoute
   BlogIndexRoute: typeof BlogIndexRoute
   EnIndexRoute: typeof EnIndexRoute
+  DownloadReviewMacRoute: typeof DownloadReviewMacRoute
   EnBlogSlugRoute: typeof EnBlogSlugRoute
   EnBlogIndexRoute: typeof EnBlogIndexRoute
 }
@@ -312,6 +351,13 @@ declare module '@tanstack/react-router' {
       path: '/privacy'
       fullPath: '/privacy'
       preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/review': {
+      id: '/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof ReviewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -384,6 +430,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnPrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/review': {
+      id: '/en/review'
+      path: '/en/review'
+      fullPath: '/en/review'
+      preLoaderRoute: typeof EnReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/en/terms': {
       id: '/en/terms'
       path: '/en/terms'
@@ -396,6 +449,13 @@ declare module '@tanstack/react-router' {
       path: '/updates/stable.json'
       fullPath: '/updates/stable.json'
       preLoaderRoute: typeof UpdatesStableDotjsonRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/download/review/mac': {
+      id: '/download/review/mac'
+      path: '/download/review/mac'
+      fullPath: '/download/review/mac'
+      preLoaderRoute: typeof DownloadReviewMacRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/blog/': {
@@ -421,6 +481,7 @@ const rootRouteChildren: RootRouteChildren = {
   ChangelogRoute: ChangelogRoute,
   PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
+  ReviewRoute: ReviewRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   TermsRoute: TermsRoute,
   BlogSlugRoute: BlogSlugRoute,
@@ -429,10 +490,12 @@ const rootRouteChildren: RootRouteChildren = {
   EnChangelogRoute: EnChangelogRoute,
   EnPricingRoute: EnPricingRoute,
   EnPrivacyRoute: EnPrivacyRoute,
+  EnReviewRoute: EnReviewRoute,
   EnTermsRoute: EnTermsRoute,
   UpdatesStableDotjsonRoute: UpdatesStableDotjsonRoute,
   BlogIndexRoute: BlogIndexRoute,
   EnIndexRoute: EnIndexRoute,
+  DownloadReviewMacRoute: DownloadReviewMacRoute,
   EnBlogSlugRoute: EnBlogSlugRoute,
   EnBlogIndexRoute: EnBlogIndexRoute,
 }
