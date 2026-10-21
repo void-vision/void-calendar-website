@@ -26,7 +26,7 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
             <LangLink to="/" hash="focus" className={linkClass}>{en ? 'Focus & Island' : '专注与 Island'}</LangLink>
             <LangLink to="/" hash="plugins" className={linkClass}>{en ? 'Plugins' : '插件'}</LangLink>
             <LangLink to="/pricing" className={linkClass}>{en ? 'Pricing' : '定价'}</LangLink>
-            <a href={downloadPath} className={linkClass}>{en ? downloadLabel.en : downloadLabel.zh}</a>
+            <LangLink to={downloadPath} className={linkClass}>{en ? downloadLabel.en : downloadLabel.zh}</LangLink>
           </nav>
 
           <nav aria-labelledby="footer-compare-heading" className="flex flex-col">

@@ -108,9 +108,9 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
             </svg>
             <span>{langLabel}</span>
           </Link>
-          <a href={downloadPath} className={`hidden h-8 items-center rounded-full bg-brand px-4 text-[12.5px] font-medium whitespace-nowrap text-white hover:bg-brand-hover hover:text-white sm:flex ${press}`}>
+          <LangLink to={downloadPath} className={`hidden h-8 items-center rounded-full bg-brand px-4 text-[12.5px] font-medium whitespace-nowrap text-white hover:bg-brand-hover hover:text-white sm:flex ${press}`}>
             {en ? downloadLabel.en : downloadLabel.zh}
-          </a>
+          </LangLink>
 
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -144,9 +144,9 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
                   </LangLink>
                 ))}
               </nav>
-              <a href={downloadPath} className={`mt-6 flex h-12 items-center justify-center rounded-full bg-brand text-[15px] font-medium text-white hover:text-white ${press}`}>
+              <LangLink to={downloadPath} onClick={() => setOpen(false)} className={`mt-6 flex h-12 items-center justify-center rounded-full bg-brand text-[15px] font-medium text-white hover:text-white ${press}`}>
                 {en ? downloadLabel.en : downloadLabel.zh}
-              </a>
+              </LangLink>
             </SheetContent>
           </Sheet>
         </div>

@@ -1,3 +1,4 @@
+import { LangLink } from '../LangLink'
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { downloadLabel, downloadPath } from '@/lib/download'
@@ -58,10 +59,10 @@ export const pillStyles = {
 /** 主下载按钮：所有下载入口共用同一段文案和路径。 */
 export function DownloadButton({ en, variant = 'brand', className }: { en: boolean; variant?: keyof typeof pillStyles; className?: string }) {
   return (
-    <a href={downloadPath} className={cn(pillStyles[variant], className)}>
+    <LangLink to={downloadPath} className={cn(pillStyles[variant], className)}>
       <AppleLogo />
       {en ? downloadLabel.en : downloadLabel.zh}
-    </a>
+    </LangLink>
   )
 }
 

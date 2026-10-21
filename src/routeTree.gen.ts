@@ -19,10 +19,12 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as DownloadIndexRouteImport } from './routes/download/index'
 import { Route as DownloadMacRouteImport } from './routes/download/mac'
 import { Route as EnIndexRouteImport } from './routes/en/index'
 import { Route as EnAboutRouteImport } from './routes/en/about'
 import { Route as EnChangelogRouteImport } from './routes/en/changelog'
+import { Route as EnDownloadRouteImport } from './routes/en/download'
 import { Route as EnPricingRouteImport } from './routes/en/pricing'
 import { Route as EnPrivacyRouteImport } from './routes/en/privacy'
 import { Route as EnReviewRouteImport } from './routes/en/review'
@@ -82,6 +84,11 @@ const BlogSlugRoute = BlogSlugRouteImport.update({
   path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DownloadIndexRoute = DownloadIndexRouteImport.update({
+  id: '/download/',
+  path: '/download/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DownloadMacRoute = DownloadMacRouteImport.update({
   id: '/download/mac',
   path: '/download/mac',
@@ -100,6 +107,11 @@ const EnAboutRoute = EnAboutRouteImport.update({
 const EnChangelogRoute = EnChangelogRouteImport.update({
   id: '/en/changelog',
   path: '/en/changelog',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnDownloadRoute = EnDownloadRouteImport.update({
+  id: '/en/download',
+  path: '/en/download',
   getParentRoute: () => rootRouteImport,
 } as any)
 const EnPricingRoute = EnPricingRouteImport.update({
@@ -156,12 +168,14 @@ export interface FileRoutesByFullPath {
   '/download/mac': typeof DownloadMacRoute
   '/en/about': typeof EnAboutRoute
   '/en/changelog': typeof EnChangelogRoute
+  '/en/download': typeof EnDownloadRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog/': typeof BlogIndexRoute
+  '/download/': typeof DownloadIndexRoute
   '/en/': typeof EnIndexRoute
   '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
@@ -180,12 +194,14 @@ export interface FileRoutesByTo {
   '/download/mac': typeof DownloadMacRoute
   '/en/about': typeof EnAboutRoute
   '/en/changelog': typeof EnChangelogRoute
+  '/en/download': typeof EnDownloadRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog': typeof BlogIndexRoute
+  '/download': typeof DownloadIndexRoute
   '/en': typeof EnIndexRoute
   '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
@@ -205,12 +221,14 @@ export interface FileRoutesById {
   '/download/mac': typeof DownloadMacRoute
   '/en/about': typeof EnAboutRoute
   '/en/changelog': typeof EnChangelogRoute
+  '/en/download': typeof EnDownloadRoute
   '/en/pricing': typeof EnPricingRoute
   '/en/privacy': typeof EnPrivacyRoute
   '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog/': typeof BlogIndexRoute
+  '/download/': typeof DownloadIndexRoute
   '/en/': typeof EnIndexRoute
   '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
@@ -231,12 +249,14 @@ export interface FileRouteTypes {
     | '/download/mac'
     | '/en/about'
     | '/en/changelog'
+    | '/en/download'
     | '/en/pricing'
     | '/en/privacy'
     | '/en/review'
     | '/en/terms'
     | '/updates/stable.json'
     | '/blog/'
+    | '/download/'
     | '/en/'
     | '/download/review/mac'
     | '/en/blog/$slug'
@@ -255,12 +275,14 @@ export interface FileRouteTypes {
     | '/download/mac'
     | '/en/about'
     | '/en/changelog'
+    | '/en/download'
     | '/en/pricing'
     | '/en/privacy'
     | '/en/review'
     | '/en/terms'
     | '/updates/stable.json'
     | '/blog'
+    | '/download'
     | '/en'
     | '/download/review/mac'
     | '/en/blog/$slug'
@@ -279,12 +301,14 @@ export interface FileRouteTypes {
     | '/download/mac'
     | '/en/about'
     | '/en/changelog'
+    | '/en/download'
     | '/en/pricing'
     | '/en/privacy'
     | '/en/review'
     | '/en/terms'
     | '/updates/stable.json'
     | '/blog/'
+    | '/download/'
     | '/en/'
     | '/download/review/mac'
     | '/en/blog/$slug'
@@ -304,12 +328,14 @@ export interface RootRouteChildren {
   DownloadMacRoute: typeof DownloadMacRoute
   EnAboutRoute: typeof EnAboutRoute
   EnChangelogRoute: typeof EnChangelogRoute
+  EnDownloadRoute: typeof EnDownloadRoute
   EnPricingRoute: typeof EnPricingRoute
   EnPrivacyRoute: typeof EnPrivacyRoute
   EnReviewRoute: typeof EnReviewRoute
   EnTermsRoute: typeof EnTermsRoute
   UpdatesStableDotjsonRoute: typeof UpdatesStableDotjsonRoute
   BlogIndexRoute: typeof BlogIndexRoute
+  DownloadIndexRoute: typeof DownloadIndexRoute
   EnIndexRoute: typeof EnIndexRoute
   DownloadReviewMacRoute: typeof DownloadReviewMacRoute
   EnBlogSlugRoute: typeof EnBlogSlugRoute
@@ -388,6 +414,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/download/': {
+      id: '/download/'
+      path: '/download'
+      fullPath: '/download/'
+      preLoaderRoute: typeof DownloadIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/download/mac': {
       id: '/download/mac'
       path: '/download/mac'
@@ -414,6 +447,13 @@ declare module '@tanstack/react-router' {
       path: '/en/changelog'
       fullPath: '/en/changelog'
       preLoaderRoute: typeof EnChangelogRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/download': {
+      id: '/en/download'
+      path: '/en/download'
+      fullPath: '/en/download'
+      preLoaderRoute: typeof EnDownloadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/en/pricing': {
@@ -488,12 +528,14 @@ const rootRouteChildren: RootRouteChildren = {
   DownloadMacRoute: DownloadMacRoute,
   EnAboutRoute: EnAboutRoute,
   EnChangelogRoute: EnChangelogRoute,
+  EnDownloadRoute: EnDownloadRoute,
   EnPricingRoute: EnPricingRoute,
   EnPrivacyRoute: EnPrivacyRoute,
   EnReviewRoute: EnReviewRoute,
   EnTermsRoute: EnTermsRoute,
   UpdatesStableDotjsonRoute: UpdatesStableDotjsonRoute,
   BlogIndexRoute: BlogIndexRoute,
+  DownloadIndexRoute: DownloadIndexRoute,
   EnIndexRoute: EnIndexRoute,
   DownloadReviewMacRoute: DownloadReviewMacRoute,
   EnBlogSlugRoute: EnBlogSlugRoute,

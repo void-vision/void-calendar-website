@@ -23,6 +23,11 @@ export const pages = {
       description: 'Plan your week on Mac in one sentence. AI fits tasks into time that is actually free, with focus and notes alongside. Syncs iCloud and Google Calendar.',
     },
   },
+  download: {
+    path: '/download',
+    zh: { title: '下载 · Void Calendar', description: '下载适用于 Apple Silicon Mac 的 Void Calendar 公开测试版，查看 Intel 版本状态、系统要求与安装指南。' },
+    en: { title: 'Download · Void Calendar', description: 'Download the Void Calendar public beta for Apple Silicon Mac. Find Intel availability, system requirements and installation help.' },
+  },
   pricing: {
     path: '/pricing',
     zh: {
