@@ -57,7 +57,7 @@ export function BlogPostPage({ slug }: { slug: string }) {
           <img src="/logo-128.png" alt="" width={56} height={56} className="size-14 object-contain" />
           <p className="m-0 text-[clamp(24px,3vw,32px)] leading-[1.2] font-semibold tracking-[-0.025em]">{en ? 'Try it with your own week.' : '用自己的一周试试看。'}</p>
           <p className="m-0 text-[17px] text-ink-3">{en ? 'Free public beta for Apple silicon Macs.' : '免费公开测试版，适用于 Apple 芯片 Mac。'}</p>
-          <DownloadButton en={en} label={en ? 'Download for macOS' : '下载 macOS 版'} className="mt-2" />
+          <DownloadButton en={en} className="mt-2" />
         </aside>
 
         <RelatedPosts slug={post.slug} en={en} />

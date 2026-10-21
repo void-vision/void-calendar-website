@@ -2,7 +2,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { MenuIcon, XIcon } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
-import { downloadPath } from '../lib/download'
+import { downloadLabel, downloadPath } from '../lib/download'
 import { localizePath, useAlternateLink, type SiteLang } from '../lib/lang'
 import { LangLink } from './LangLink'
 
@@ -109,7 +109,7 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
             <span>{langLabel}</span>
           </Link>
           <a href={downloadPath} className={`hidden h-8 items-center rounded-full bg-brand px-4 text-[12.5px] font-medium whitespace-nowrap text-white hover:bg-brand-hover hover:text-white sm:flex ${press}`}>
-            {en ? 'Download Beta' : '下载 Beta'}
+            {en ? downloadLabel.en : downloadLabel.zh}
           </a>
 
           <Sheet open={open} onOpenChange={setOpen}>
@@ -145,7 +145,7 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
                 ))}
               </nav>
               <a href={downloadPath} className={`mt-6 flex h-12 items-center justify-center rounded-full bg-brand text-[15px] font-medium text-white hover:text-white ${press}`}>
-                {en ? 'Download Beta for Mac' : '下载 Mac Beta'}
+                {en ? downloadLabel.en : downloadLabel.zh}
               </a>
             </SheetContent>
           </Sheet>

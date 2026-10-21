@@ -12,3 +12,6 @@ export function getMacDownloadUrl(country: string | null) {
 
 /** 站内下载入口：按访问地区跳转到 DMG 安装包，链接和结构化数据共用此入口。 */
 export const downloadPath = '/download/mac'
+
+/** 所有公开下载入口共用这一句。当前发行版都是公开 Beta。 */
+export const downloadLabel = { en: 'Download Beta', zh: '下载 Beta' } as const

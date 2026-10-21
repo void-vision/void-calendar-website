@@ -15,7 +15,6 @@ const focusRing = 'outline-none focus-visible:outline-2 focus-visible:outline-of
 
 export function PricingPage() {
   const en = useEn()
-  const downloadLabel = en ? 'Download for macOS' : '下载 macOS 版'
   const plans = [
     {
       name: en ? 'Monthly' : '月付',
@@ -96,7 +95,7 @@ export function PricingPage() {
                 </li>
               ))}
             </ul>
-            <DownloadButton en={en} label={downloadLabel} />
+            <DownloadButton en={en} />
           </div>
         </section>
 
@@ -180,7 +179,7 @@ export function PricingPage() {
       <section aria-labelledby="pricing-cta-heading" className="flex flex-col items-center gap-5 rounded-3xl bg-muted px-6 py-[clamp(56px,8vw,96px)] text-center">
         <h2 id="pricing-cta-heading" className="t-title m-0">{en ? 'Try it with your own day.' : '先用自己的一天试试看。'}</h2>
         <p className="m-0 max-w-[480px] text-[17px] leading-[1.6] text-ink-3">{en ? 'Pro purchases are not open yet. The Mac app is available to download.' : 'Pro 购买暂未开放，macOS 版可以先下载体验。'}</p>
-        <DownloadButton en={en} label={downloadLabel} className="mt-2" />
+        <DownloadButton en={en} className="mt-2" />
       </section>
     </SiteFrame>
   )

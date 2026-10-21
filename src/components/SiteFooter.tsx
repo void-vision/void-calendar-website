@@ -1,6 +1,6 @@
 import { LangLink } from './LangLink'
 import { comparisons } from '../content/comparisons'
-import { downloadPath } from '../lib/download'
+import { downloadLabel, downloadPath } from '../lib/download'
 import type { SiteLang } from '../lib/lang'
 
 /** Apple 式页脚：浅灰底、12px 小字、细分隔线。 */
@@ -26,7 +26,7 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
             <LangLink to="/" hash="focus" className={linkClass}>{en ? 'Focus & Island' : '专注与 Island'}</LangLink>
             <LangLink to="/" hash="plugins" className={linkClass}>{en ? 'Plugins' : '插件'}</LangLink>
             <LangLink to="/pricing" className={linkClass}>{en ? 'Pricing' : '定价'}</LangLink>
-            <a href={downloadPath} className={linkClass}>{en ? 'Download Beta' : '下载 Beta'}</a>
+            <a href={downloadPath} className={linkClass}>{en ? downloadLabel.en : downloadLabel.zh}</a>
           </nav>
 
           <nav aria-labelledby="footer-compare-heading" className="flex flex-col">

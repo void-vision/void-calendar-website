@@ -1,6 +1,6 @@
 import type { ReactNode } from 'react'
 import { cn } from '@/lib/utils'
-import { downloadPath } from '@/lib/download'
+import { downloadLabel, downloadPath } from '@/lib/download'
 
 /** 全站内容宽度：与 Apple 产品页一致，宽屏 1180px，两侧留出呼吸感。 */
 export function Container({ className, children }: { className?: string; children: ReactNode }) {
@@ -56,11 +56,11 @@ export const pillStyles = {
 }
 
 /** 主下载按钮：所有下载入口共用同一段文案和路径。 */
-export function DownloadButton({ en, variant = 'brand', className, label }: { en: boolean; variant?: keyof typeof pillStyles; className?: string; label?: string }) {
+export function DownloadButton({ en, variant = 'brand', className }: { en: boolean; variant?: keyof typeof pillStyles; className?: string }) {
   return (
     <a href={downloadPath} className={cn(pillStyles[variant], className)}>
       <AppleLogo />
-      {label ?? (en ? 'Download for Mac' : '下载 Mac 版')}
+      {en ? downloadLabel.en : downloadLabel.zh}
     </a>
   )
 }
