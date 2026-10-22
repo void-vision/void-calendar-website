@@ -2,17 +2,22 @@ import { useEffect, useState, type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
 import { PageHero, SiteFrame } from './SiteFrame'
 
-export type LegalSection = { title: string; body: string[] }
+export type LegalSection = {
+  id?: string
+  title: string
+  body: string[]
+  table?: { columns: string[]; rows: string[][] }
+}
 
 /** 隐私协议与服务条款共用的阅读版式：左对齐标题，宽屏左侧吸顶目录，右侧正文。 */
 export function LegalLayout({ en, eyebrow, title, intro, sections }: { en: boolean; eyebrow: string; title: string; intro: ReactNode; sections: LegalSection[] }) {
-  const ids = sections.map((_, index) => `section-${index + 1}`)
+  const ids = sections.map((section, index) => section.id ?? `section-${index + 1}`)
   const [active, setActive] = useState(ids[0])
 
   // 目录高亮当前阅读的章节；不支持 IntersectionObserver 时只是没有高亮。
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return
-    const targets = sections.map((_, index) => document.getElementById(`section-${index + 1}`)).filter((node): node is HTMLElement => !!node)
+    const targets = sections.map((section, index) => document.getElementById(section.id ?? `section-${index + 1}`)).filter((node): node is HTMLElement => !!node)
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
@@ -67,6 +72,24 @@ export function LegalLayout({ en, eyebrow, title, intro, sections }: { en: boole
                   {paragraph}
                 </p>
               ))}
+              {section.table && (
+                <div className="max-w-full overflow-x-auto rounded-xl border border-border">
+                  <table className="w-full min-w-[640px] border-collapse text-left text-[14px] leading-relaxed">
+                    <caption className="sr-only">{section.title}</caption>
+                    <thead className="bg-secondary">
+                      <tr>{section.table.columns.map((column) => <th key={column} scope="col" className="border-b border-border px-4 py-3 align-top font-semibold">{column}</th>)}</tr>
+                    </thead>
+                    <tbody>
+                      {section.table.rows.map(([recipient, ...cells]) => (
+                        <tr key={recipient} className="border-b border-border last:border-b-0">
+                          <th scope="row" className="w-[25%] px-4 py-4 align-top font-medium [overflow-wrap:anywhere]">{recipient}</th>
+                          {cells.map((cell, cellIndex) => <td key={cellIndex} className="px-4 py-4 align-top text-ink-2 [overflow-wrap:anywhere]">{cell}</td>)}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </section>
           ))}
         </div>

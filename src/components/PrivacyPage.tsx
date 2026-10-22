@@ -1,9 +1,10 @@
 import { useSiteLang } from '../lib/lang'
 import { LangLink } from './LangLink'
 import { LegalLayout } from './LegalLayout'
+import { googleDataSharing } from '../content/google-data-sharing'
 
-const updated = '2026年10月21日'
-const updatedEn = 'October 21, 2026'
+const updated = '2026年10月22日'
+const updatedEn = 'October 22, 2026'
 
 export function PrivacyPage() {
   const en = useSiteLang() === 'en'
@@ -29,7 +30,9 @@ export function PrivacyPage() {
           <a href="https://developers.google.com/terms/api-services-user-data-policy#additional_requirements_for_specific_api_scopes" className="text-link hover:underline">
             Limited Use
           </a>
-          {en ? ' requirements.' : ' 要求。'}
+          {en ? ' requirements. See ' : ' 要求。具体接收方见'}
+          <a href="#google-data-sharing" className="text-link hover:underline">{en ? 'who receives Google user data and why' : 'Google 用户数据共享说明'}</a>
+          {en ? '.' : '。'}
         </>
       }
     />
@@ -47,7 +50,7 @@ const zhSections = [
     title: '本机存储和可选云同步',
     body: [
       '日历、任务、收件箱、笔记、专注记录和 AI 对话默认保存在本机数据库里。不开启账号云同步时，这些本机记录不会作为工作区上传给我们。开启云同步后，项目、任务（包括从 Google Tasks 导入的任务）、时间盒、笔记、每日记录、聊天和已结束的 AI 操作记录，以及正文引用的图片，会传到 VOID VISION 的同步服务，以便在你的设备之间同步。外部日历缓存和设备连接配置不参加工作区云同步。',
-      'Google 授权、iCloud 的 App 专用密码，以及你自己填写的 AI API 密钥，保存在本机加密凭据库中，不写入日程数据库，也不上传到我们的服务器。',
+      'Google Calendar/Tasks 授权令牌、iCloud 的 App 专用密码，以及你自己填写的 AI API 密钥，保存在本机加密凭据库中，不写入日程数据库，也不上传到我们的服务器。',
     ],
   },
   {
@@ -67,12 +70,13 @@ const zhSections = [
       'Google 日历：使用 https://www.googleapis.com/auth/calendar.calendarlist.readonly 读取已订阅日历的 ID、名称、颜色、时区、主日历标记和访问角色，以便选择日历并判断是否可写；使用 https://www.googleapis.com/auth/calendar.events 读取日程的标题、时间、地点、说明、参与者邮箱和回复状态、重复规则、会议链接，并在你有写入权限的日历中创建、修改或删除日程。这些数据用于显示日程、判断时间冲突和执行你确认的排程操作，也可在你请求时创建 Google Meet 链接。我们支持你有编辑权限的共享日历，不限于你拥有的日历；不申请创建或删除日历、管理共享权限或修改日历属性的权限。发送邀请时由 Google 向参与者发送通知；普通保存使用不主动通知参与者的设置，Google 仍可能发送其服务必需的邮件。',
       'Google 任务：使用 https://www.googleapis.com/auth/tasks 读取任务列表和任务，并把你选择同步的任务标题、备注、到期日期、完成状态以及新建和删除操作同步回 Google Tasks。双向同步需要写入权限，因此不再重复请求 tasks.readonly。另申请 openid 和 email，读取账号标识与邮箱，用于标明连接并隔离不同账号的任务，不申请个人资料权限。新的本地任务只有在创建或编辑时为该条任务选择 Google Tasks 清单，才会建立上传关系。在账号设置中选择同步清单不会批量导出本地任务，不依赖标签或全局默认导出清单；已有关系保留原清单并继续同步。取消新建表单不会上传草稿；行内编辑正式选定清单会立即保存。精确到期时刻、优先级和提醒保留在本地。',
       '用 Google 登录 Void Calendar 账号，是与日历和任务连接分开的身份授权，不会自动连接这两项服务。Supabase Auth 处理 Google 返回的账号标识、邮箱，以及登录提供方返回的基本资料（如姓名和头像），用于建立登录会话；VOID VISION 的账号服务使用账号标识和邮箱识别工作区与会员。Supabase Google 登录默认请求 email 和 profile；使用 OpenID Connect 时包含 openid。email、profile 在 Google Console 中对应 https://www.googleapis.com/auth/userinfo.email、https://www.googleapis.com/auth/userinfo.profile。身份登录不需要 Calendar 或 Tasks 权限。',
-      'Google 用户数据的接收方和用途：Google 接收你要求同步回 Calendar 或 Tasks 的修改；你发送邀请时，受邀人会收到相关日程信息。Supabase Auth 为账号登录处理上述身份信息。开启账号云同步后，VOID VISION 的同步服务及提供存储和托管的基础设施服务商处理工作区记录，包括从 Google Tasks 导入的任务，以及笔记、时间盒、对话或 AI 操作记录中的 Google 日程内容，以提供多设备同步。Google 日历的原始缓存和 Calendar/Tasks OAuth 令牌不作为工作区上传。',
+      'Google 用户数据的接收方和用途：Google 接收你要求同步回 Calendar 或 Tasks 的修改；你发送邀请时，受邀人会收到相关日程信息。Supabase Auth 为账号登录处理上述身份信息。开启账号云同步后，VOID VISION 的同步服务及下表列明的 Supabase、Amazon Web Services（AWS）处理相关工作区记录，包括从 Google Tasks 导入的任务，以及笔记、时间盒、对话或 AI 操作记录中的 Google 日程内容，以提供多设备同步。Google 日历的原始缓存和 Calendar/Tasks OAuth 令牌不作为工作区上传。',
       '对从 Google API 收到的信息的使用遵守 Google API Services User Data Policy，包括 Limited Use 要求。',
       'AI 数据传输：当你使用 AI 并提供或允许其读取日程或任务上下文时，所选服务会接收完成请求所需的内容，可能包括 Google 数据。自配 API 直连所选模型服务商；CLI Agent 由所选 Agent 及其模型服务处理；使用已启用的托管 AI 时，请求经 VOID VISION 后端转发给配置的模型服务商。接收方随你选择的接入方式和模型而变。我们仅将这些内容用于你使用的排程、问答和操作功能，不出售、不用于广告或信用评估，也不使用 Google API 数据开发、改进或训练通用或非个性化 AI/ML 模型。Google 数据的传输限于 Limited Use 允许的情形，包括经你同意提供必要的可见功能、安全目的或法律要求；你的同意不会使政策禁止的用途变得允许。我们有责任确保我们安排的处理符合这些限制。自配接口和 CLI Agent 的接收方、数据保留与训练设置取决于你选择的服务和账号，应用不会自动验证每个自定义服务的合同或设置。不要通过不符合这些限制的服务处理 Google 数据；仅关闭云同步不会阻止你启用的 AI 功能发送上下文。',
       '敏感数据保护：与 Google 及正式云服务的网络通信使用 HTTPS；桌面授权回调仅在本机 loopback 地址使用 HTTP，并验证 OAuth state，授权码交换使用 PKCE。Calendar/Tasks 的访问令牌和刷新令牌使用 AES-256-GCM 加密后保存在本机凭据库，不参加工作区云同步。macOS 凭据目录和文件限制为当前系统用户访问；自动解锁密钥也保存在本机，因此这不隔离同一系统用户下的恶意程序，也不表示工作区正文数据库已加密。云同步通过账号鉴权、账号隔离和受限访问保护记录。托管 AI 网关不将提示词和回答正文保存为网关请求日志；你保存到工作区的对话仍按云同步设置处理。',
     ],
   },
+  googleDataSharing.zh,
   {
     title: 'AI',
     body: [
@@ -139,7 +143,7 @@ const enSections = [
     title: 'Local storage and optional cloud sync',
     body: [
       'Events, tasks, inbox items, notes, focus logs, and AI conversations are stored locally by default. Without account cloud sync, these local records are not uploaded to us as a workspace. With sync enabled, projects, tasks (including tasks imported from Google Tasks), time boxes, notes, daily records, chats, completed AI operation records, and images referenced by that content are sent to the VOID VISION sync service to synchronize your devices. External calendar caches and device connection settings are excluded from workspace sync.',
-      'Google authorization, your iCloud app-specific password, and any AI API key you enter are stored in an encrypted credential vault on your Mac. They are not written into the calendar database and are not uploaded to our servers.',
+      'Google Calendar/Tasks OAuth tokens, your iCloud app-specific password, and any AI API key you enter are stored in an encrypted credential vault on your Mac. They are not written into the calendar database and are not uploaded to our servers.',
     ],
   },
   {
@@ -159,12 +163,13 @@ const enSections = [
       'Google Calendar: https://www.googleapis.com/auth/calendar.calendarlist.readonly reads subscribed calendar IDs, names, colors, time zones, the primary flag, and access roles for calendar selection and write-access checks. https://www.googleapis.com/auth/calendar.events reads event titles, times, locations, descriptions, attendee email addresses and responses, recurrence, and meeting links, and creates, changes, or deletes events on calendars you can edit. This supports event display, conflict checks, confirmed scheduling operations, and Google Meet links when requested. We support shared calendars on which you have editor access, not only calendars you own. We do not request permission to create or delete calendars, manage sharing, or change calendar properties. Google sends invitations when you choose to notify attendees; ordinary saves request no attendee notifications, although Google may still send service-required emails.',
       'Google Tasks: https://www.googleapis.com/auth/tasks reads task lists and tasks and synchronizes the titles, notes, due dates, completion, creation, and deletion of tasks you choose to sync back to Google Tasks. Two-way sync requires write access, so we do not also request tasks.readonly. We request openid and email to read the account identifier and email, label the connection, and isolate tasks belonging to different accounts. This connection does not request the profile scope. New local uploads require you to select a Google Tasks list for that individual task when creating or editing it. Selecting lists in account settings does not bulk export local tasks. No hashtag or global default export list initiates new uploads; existing linked tasks keep their original list and continue syncing. Cancelling a new-task form does not upload the draft. Confirming a list in the inline editor saves immediately. Precise due times, priorities, and reminders remain local.',
       'Signing in to a Void Calendar account with Google is a separate identity authorization from connecting Calendar or Tasks, and does not automatically connect either service. Supabase Auth processes the account identifier, email, and basic profile information returned by the sign-in provider, such as name and avatar, to establish a session. VOID VISION account services use the identifier and email for workspace and membership identification. Supabase Google sign-in requests email and profile by default, with openid when using OpenID Connect. Google Console represents email and profile as https://www.googleapis.com/auth/userinfo.email and https://www.googleapis.com/auth/userinfo.profile. Identity sign-in does not require Calendar or Tasks access.',
-      'Recipients and purposes of Google user data: Google receives changes you request to sync back to Calendar or Tasks, and invited attendees receive the relevant event information when you send invitations. Supabase Auth processes the identity information described above for sign-in. With account sync enabled, the VOID VISION sync service and infrastructure providers supplying hosting and storage process workspace records for device synchronization. These include imported Google Tasks and Google event content saved in notes, time boxes, conversations, or AI operation records. The raw Google Calendar cache and Calendar/Tasks OAuth tokens are not uploaded as workspace data.',
+      'Recipients and purposes of Google user data: Google receives changes you request to sync back to Calendar or Tasks, and invited attendees receive the relevant event information when you send invitations. Supabase Auth processes the identity information described above for sign-in. With account sync enabled, the VOID VISION sync service and the named Supabase / Amazon Web Services (AWS) providers below process relevant workspace records for device synchronization. These include imported Google Tasks and Google event content saved in notes, time boxes, conversations, or AI operation records. The raw Google Calendar cache and Calendar/Tasks OAuth tokens are not uploaded as workspace data.',
       'Our use of information received from Google APIs adheres to the Google API Services User Data Policy, including the Limited Use requirements.',
       'AI transfers: when you use AI and supply or allow access to calendar or task context, the selected service receives the content needed for the request, which may include Google data. A custom API connection sends requests directly to your chosen model provider. A CLI Agent and its model service process requests in CLI mode. If hosted AI is enabled and used, requests pass through the VOID VISION backend to the configured model provider. Recipients depend on your selected connection and model. We use this content only for the scheduling, question-answering, and operation features you use. We do not sell it, use it for advertising or credit decisions, or use Google API data to develop, improve, or train generalized or non-personalized AI/ML models. Transfers of Google data are limited to cases permitted by Limited Use, including consented transfers needed for visible user-facing features, security purposes, or legal requirements. Consent does not permit uses prohibited by that policy. We are responsible for ensuring that processing we arrange meets these restrictions. For custom endpoints and CLI Agents, recipients, retention, and training settings depend on the service and account you select; the app does not automatically verify every custom service’s contracts or settings. Do not process Google data through a service that does not meet these restrictions. Turning cloud sync off does not stop an AI feature you enable from sending context.',
       'Protection of sensitive data: network connections to Google and production cloud services use HTTPS. Desktop authorization callbacks use HTTP only on a local loopback address, validate OAuth state, and use PKCE for authorization-code exchange. Calendar/Tasks access and refresh tokens are encrypted with AES-256-GCM in a local credential vault excluded from workspace sync. On macOS, vault directories and files are restricted to the current OS user. The automatic-unlock key is also local; this does not isolate malicious programs running as that user or mean that the workspace content database is encrypted. Cloud sync protects records through authenticated, account-isolated, restricted access. The hosted AI gateway does not persist prompt or answer bodies as gateway request logs; conversations saved in your workspace still follow your sync settings.',
     ],
   },
+  googleDataSharing.en,
   {
     title: 'AI',
     body: [
