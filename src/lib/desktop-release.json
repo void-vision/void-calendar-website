@@ -1,11 +1,15 @@
 {
-  "version": "0.1.0-beta.5",
-  "notes": "More visual AI replies with charts, schedule overviews and selectable times, a live thinking timeline, AI scheduling strategies, adjustable thinking effort and resumable runs. Custom API models can now propose calendar, task and note changes. New macOS Usage Tracking plugin keeps data locally, separately for each account, without syncing or AI access. Add locations with a map picker and Apple Maps search. Repeating events now sync as recurring series with Google Calendar, Outlook, iCloud/CalDAV and Apple Calendar. Refined charts, task picker, Island and plugin sidebar. Fixed chat scrolling, week-view alignment, Codex charts, agent detection and database retry handling. Beta notes: Usage Tracking and Apple Maps search require the macOS desktop app; map tiles require an internet connection.",
-  "pub_date": "2026-10-13T12:55:28Z",
+  "version": "0.1.0-beta.6",
+  "notes": "Intel Mac support; richer task Agent sessions and Island controls; Google Tasks list selection without tags; improved Reminders, recurring events, onboarding and payment return pages.",
+  "pub_date": "2026-10-22T06:23:18Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZHRzbnFpRzdQOGY1NGJ4UDMyYXR6MVVsT0ZjeUVyYnRIN2c1YWhjU2FoOEh0bjAvVzJiTHZvdlBzUVdzYndhVGt1ZXNZb0FkakJiL05DNFgxVC9xbWdHQXJGVTRaMHdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkxODk1ODA4CWZpbGU6Vm9pZCBDYWxlbmRhci5hcHAudGFyLmd6CXZlcnNpb246MC4xLjAtYmV0YS41Cmp1WE1BVGZEMWFORnpzc0duejBRUDM4MmR3VjJwdFR1NnloWVJtTFRKQmVjcFRpL29nQVYxSnpOWFU0ZnVQTzFBSXVPQ1o0Z1NSWVNncVRvS1N1akF3PT0K",
-      "url": "https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.5/Void.Calendar.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZHRzbnFpRzdQOGVuQ3VJeUQ4N3p5eFUxU0w4MGVrMHRSbU1WZ1kzSlFrMUNaRjBhalVOUVhGaXQzejFSdUZ4d0dkYTlvOXY4QkN5MVBCSUFRdXA4TCtrYXg4OVQ1dUFjPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNjQ5NDUyCWZpbGU6Vm9pZCBDYWxlbmRhci5hcHAudGFyLmd6CXZlcnNpb246MC4xLjAtYmV0YS42CjRNckgzZmMxVjVxMTRNaDhTR0RKcVgwTzJHeUxIYTJiaGovcnZHaituTUdTQXk5S3FTVlNkd0FQUW1Ybnd1MWZTdGxuZGNxYzdja1lGZ0FmaHBQU0F3PT0K",
+      "url": "https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.6/Void.Calendar.app.tar.gz"
+    },
+    "darwin-x86_64": {
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVTZHRzbnFpRzdQOFlyaWJpU28xdnJxLytLY1VUcnNHNDBFZXJwS3pJQVgvc0loN2o5UDRrN3NOa0pxNGp0THRMMDRLQUIrbFVDN3FtSVEyREhmWHA5THVjM01yY3NVR1FNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzkyNjQ5Nzk1CWZpbGU6Vm9pZCBDYWxlbmRhci5hcHAudGFyLmd6CXZlcnNpb246MC4xLjAtYmV0YS42CkZaMVJZNDhrdDBrdkxPODk1QkVDbUJYVmt3TXppNlozMlVJVFBIaTAzQmh1cHFwUVNKM2pmVmN3elB3K0dYUlJZSGJZd09NUTA2OWcrZUkwLytnd0NnPT0K",
+      "url": "https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.6/Void.Calendar_x64.app.tar.gz"
     }
   }
 }

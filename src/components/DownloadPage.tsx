@@ -6,7 +6,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { SiteFrame, useEn } from './SiteFrame'
 import { AppleLogo } from './site/primitives'
 import { LangLink } from './LangLink'
-import { macInstallerPath } from '@/lib/download'
+import { macInstallerPath, macIntelInstallerPath, intelAvailable } from '@/lib/download'
 import release from '@/lib/desktop-release.json'
 
 export function DownloadPage() {
@@ -14,11 +14,11 @@ export function DownloadPage() {
   const faqs = [
     {
       title: en ? 'Which version is right for my Mac?' : '如何确认我的 Mac 芯片？',
-      body: en ? 'Open the Apple menu  → About This Mac. If you see “Chip” followed by Apple M1, M2 or a later M-series chip, choose Apple Silicon. If you see an Intel processor, you will need the Intel version, which is not available in the current beta.' : '点击屏幕左上角的苹果菜单  →「关于本机」。如果「芯片」显示 Apple M1、M2 或更新的 M 系列，请选择 Apple Silicon；如果「处理器」显示 Intel，则需要 Intel 版本，目前的测试版尚未提供。',
+      body: en ? 'Open the Apple menu  → About This Mac. If you see “Chip” followed by Apple M1, M2 or a later M-series chip, choose Apple Silicon. If you see an Intel processor, choose the Intel version.' : '点击屏幕左上角的苹果菜单  →「关于本机」。如果「芯片」显示 Apple M1、M2 或更新的 M 系列，请选择 Apple Silicon；如果「处理器」显示 Intel，请选择 Intel 版本。',
     },
     {
       title: en ? 'How do I install Void Calendar?' : '下载后如何安装？',
-      body: en ? 'Open the downloaded .dmg file and drag Void Calendar into Applications. Then launch it from Applications or Launchpad. The current Apple Silicon beta requires macOS 13 or later.' : '打开下载的 .dmg 文件，将 Void Calendar 拖入「应用程序」文件夹，然后从「应用程序」或启动台打开。当前 Apple Silicon 测试版需要 macOS 13 或更高版本。',
+      body: en ? 'Open the downloaded .dmg file and drag Void Calendar into Applications. Then launch it from Applications or Launchpad. Apple Silicon requires macOS 13 or later; Intel requires macOS 13.4 or later.' : '打开下载的 .dmg 文件，将 Void Calendar 拖入「应用程序」文件夹，然后从「应用程序」或启动台打开。Apple Silicon 需要 macOS 13 或更高版本，Intel 需要 macOS 13.4 或更高版本。',
     },
     {
       title: en ? 'Is the beta free to use?' : '公开测试版可以免费使用吗？',
@@ -64,12 +64,12 @@ export function DownloadPage() {
             <CardContent className="flex h-full flex-col items-start p-7 sm:p-8">
               <div className="flex w-full items-start justify-between gap-4">
                 <div className="flex size-14 items-center justify-center rounded-2xl border border-black/8 bg-secondary"><AppleLogo className="size-7" /></div>
-                <Badge variant="secondary" className="rounded-full text-ink-3">{en ? 'Not yet available' : '暂未提供'}</Badge>
+                <Badge variant="secondary" className="rounded-full text-ink-3">{intelAvailable ? (en ? 'Available now' : '现已推出') : (en ? 'Not yet available' : '暂未提供')}</Badge>
               </div>
               <h3 className="mt-7 text-[24px] font-semibold tracking-tight">macOS Intel</h3>
               <p className="mt-2 text-[14px] leading-relaxed text-ink-3">{en ? 'For Macs with an Intel processor.' : '适用于搭载 Intel 处理器的 Mac。'}</p>
-              <p className="mt-4 text-[12px] text-ink-3">{en ? 'An Intel installer is not included in this beta.' : '当前公开测试版尚未提供 Intel 安装包。'}</p>
-              <Button disabled variant="secondary" className="mt-8 h-12 w-full rounded-full disabled:opacity-70">{en ? 'Intel version unavailable' : 'Intel 版本暂未提供'}</Button>
+              <p className="mt-4 text-[12px] text-ink-3">{en ? 'macOS 13.4 or later · Intel · .dmg' : 'macOS 13.4 及以上 · Intel · .dmg'}</p>
+              {intelAvailable ? <Button asChild variant="secondary" className="mt-8 h-12 w-full rounded-full"><a href={macIntelInstallerPath}><ArrowDownToLine aria-hidden="true" />{en ? 'Download for Intel' : '下载 Intel 版'}</a></Button> : <Button disabled variant="secondary" className="mt-8 h-12 w-full rounded-full">{en ? 'Intel version unavailable' : 'Intel 版本暂未提供'}</Button>}
             </CardContent>
           </Card>
         </div>

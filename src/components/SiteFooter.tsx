@@ -14,8 +14,8 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
       <div className="mx-auto flex max-w-[1180px] flex-col px-5 pt-10 pb-6 sm:px-8">
         <p className="m-0 border-b border-black/10 pb-4 leading-[1.6]">
           {en
-            ? 'Void Calendar is in public beta for Apple silicon Macs running macOS 13 or later. AI features support your configured model service, CLI tools, or an enabled hosted model service.'
-            : 'Void Calendar 目前为公开测试版，适用于 macOS 13 及以上的 Apple 芯片 Mac。AI 功能支持自配模型服务、CLI 工具或已启用的托管模型服务。'}
+            ? 'Void Calendar is in public beta for Apple Silicon (macOS 13+) and Intel (macOS 13.4+) Macs. AI features support your configured model service, CLI tools, or an enabled hosted model service.'
+            : 'Void Calendar 目前为公开测试版，适用于 Apple Silicon（macOS 13+）和 Intel（macOS 13.4+）Mac。AI 功能支持自配模型服务、CLI 工具或已启用的托管模型服务。'}
         </p>
 
         <div className="grid grid-cols-2 gap-x-8 gap-y-8 py-8 sm:grid-cols-4">

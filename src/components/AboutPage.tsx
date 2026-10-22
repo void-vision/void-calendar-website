@@ -22,7 +22,7 @@ export function AboutPage() {
         {
           title: 'Where it is today',
           body: [
-            `The current release is the public beta ${release.version}, published ${formatDate(release.published, true)}. It runs on Apple silicon Macs with macOS 13 or later, reads Apple Calendar, syncs selected Reminders lists, and connects Google Calendar and iCloud Calendar.`,
+            `The current release is the public beta ${release.version}, published ${formatDate(release.published, true)}. It runs on Apple Silicon Macs with macOS 13 or later and Intel Macs with macOS 13.4 or later, reads Apple Calendar, syncs selected Reminders lists, and connects Google Calendar and iCloud Calendar.`,
             'Planned next: apps for iPhone and Android, Windows and Linux builds, and connections to Todoist, Microsoft To Do, Google Tasks, and Outlook Calendar. These are not available yet, and the changelog only lists what has shipped.',
           ],
         },
@@ -44,7 +44,7 @@ export function AboutPage() {
         {
           title: '现在做到哪一步',
           body: [
-            `当前版本是 ${formatDate(release.published, false)} 发布的公开测试版 ${release.version}，适用于 Apple 芯片、macOS 13 及以上的 Mac。可以读取 Apple 日历、同步选定的提醒事项列表，并连接 Google 日历和 iCloud 日历。`,
+            `当前版本是 ${formatDate(release.published, false)} 发布的公开测试版 ${release.version}，适用于 Apple Silicon（macOS 13+）和 Intel（macOS 13.4+）Mac。可以读取 Apple 日历、同步选定的提醒事项列表，并连接 Google 日历和 iCloud 日历。`,
             '计划中的功能包括 iPhone 和 Android 客户端、Windows 和 Linux 版本，以及连接 Todoist、Microsoft To Do、Google Tasks 和 Outlook 日历。这些目前还不能使用，更新日志只记录已经发布的内容。',
           ],
         },
@@ -58,7 +58,7 @@ export function AboutPage() {
   const facts = [
     { label: en ? 'Current release' : '当前版本', value: release.version },
     { label: en ? 'Published' : '发布日期', value: formatDate(release.published, en) },
-    { label: en ? 'Runs on' : '适用于', value: en ? 'Apple silicon · macOS 13+' : 'Apple 芯片 · macOS 13+' },
+    { label: en ? 'Runs on' : '适用于', value: en ? 'Apple Silicon (macOS 13+) · Intel (macOS 13.4+)' : 'Apple Silicon（macOS 13+）· Intel（macOS 13.4+）' },
     { label: en ? 'Based in' : '所在地', value: en ? 'Sydney, Australia' : '澳大利亚悉尼' },
   ]
 

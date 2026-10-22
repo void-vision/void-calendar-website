@@ -4,10 +4,10 @@ import { getReviewMacDownloadUrl, reviewAssetUrl, reviewDownloadPath, reviewRele
 import stable from './desktop-release.json'
 import { Route } from '../routes/download/review/mac'
 
-test('review and beta use separate pinned assets in the same Release', () => {
+test('review stays pinned while the ordinary beta advances', () => {
   const beta = new URL(getMacDownloadUrl(null)).pathname
   expect(reviewAssetUrl).toBe('https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.5/Void.Calendar.OAuth.Review_0.1.0-beta.5-review.20261021_aarch64.dmg')
-  expect(beta).toContain('/releases/download/v0.1.0-beta.5/')
+  expect(beta).toContain('/releases/download/v0.1.0-beta.6/')
   expect(beta).not.toContain(reviewRelease.asset)
   expect(reviewDownloadPath).not.toBe('/download/mac')
   expect(reviewRelease.releaseTag).toBe('v0.1.0-beta.5')
@@ -30,7 +30,7 @@ test('review redirects are regional, uncached and never point to beta', () => {
 })
 
 test('the production updater continues to distribute only the ordinary beta', () => {
-  expect(stable.version).toBe('0.1.0-beta.5')
+  expect(stable.version).toBe('0.1.0-beta.6')
   expect(stable.version).not.toBe(reviewRelease.version)
   for (const platform of Object.values(stable.platforms)) {
     expect(platform.url).not.toContain('Review')

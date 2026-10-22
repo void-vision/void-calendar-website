@@ -161,7 +161,7 @@ export function DownloadBand({ en }: { en: boolean }) {
         </div>
         <p className="m-0 mt-6 flex items-center gap-1.5 text-[12.5px] text-white/65">
           <AppleLogo className="size-3" />
-          {en ? 'Apple silicon · macOS 13 or later' : 'Apple 芯片 · macOS 13 及以上'}
+          {en ? 'Apple Silicon & Intel · macOS 13+ / 13.4+' : 'Apple Silicon 与 Intel · macOS 13+ / 13.4+'}
         </p>
       </div>
     </section>
@@ -177,7 +177,7 @@ export function Faq({ en }: { en: boolean }) {
         ['Will AI change my calendar without asking?', 'No. Changes to events, tasks and notes arrive as proposals. You confirm before anything is written, and you can review and undo AI changes afterwards.'],
         ['Where is my data stored?', 'Your data is saved on your Mac first, and credentials stay in an encrypted local vault. Pro sync uploads your projects, tasks and notes so other devices can use them; credentials are never synced.'],
         ['Which calendars does it work with?', 'Apple Calendar, iCloud, Google Calendar and Outlook, with Apple Reminders lists on macOS. Generic CalDAV calendars can be added read-only.'],
-        ['What do I need to run it?', 'A Mac with Apple silicon running macOS 13 or later. The app is signed with Developer ID, notarized by Apple and updates itself.'],
+        ['What do I need to run it?', 'An Apple Silicon Mac running macOS 13 or later, or an Intel Mac running macOS 13.4 or later. The app is signed with Developer ID, notarized by Apple and updates itself.'],
       ]
     : [
         ['Void Calendar 免费吗？', '免费。免费版可以正常使用日历、任务、项目、笔记、AI 和专注。Pro 提供多设备之间的云同步。'],
@@ -185,7 +185,7 @@ export function Faq({ en }: { en: boolean }) {
         ['AI 会不会擅自改我的日程？', '不会。对日程、任务和笔记的修改都以提案出现，你确认后才写入；之后也可以查看并撤销 AI 的改动。'],
         ['我的数据存在哪里？', '数据先保存在你的 Mac 上，凭据存放在本机加密保险库中。开启 Pro 同步后，项目、任务和笔记会上传以便在其他设备使用；凭据永远不会同步。'],
         ['支持哪些日历？', 'Apple 日历、iCloud、Google 日历和 Outlook，macOS 上还可以同步提醒事项列表。通用 CalDAV 日历以只读方式接入。'],
-        ['需要什么配置？', '搭载 Apple 芯片、macOS 13 及以上的 Mac。应用使用 Developer ID 签名、经 Apple 公证，并会自动更新。'],
+        ['需要什么配置？', 'Apple Silicon Mac 需要 macOS 13 或更高版本，Intel Mac 需要 macOS 13.4 或更高版本。应用使用 Developer ID 签名、经 Apple 公证，并会自动更新。'],
       ]
   return (
     <section id="faq" aria-labelledby="faq-title" className="py-[clamp(88px,11vw,152px)]">

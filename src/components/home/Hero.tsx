@@ -51,7 +51,7 @@ export function Hero({ en }: { en: boolean }) {
         </div>
 
         <p {...rise(0.58)} className="hero-rise m-0 mt-6 text-[12.5px] text-white/65">
-          {en ? 'Free public beta · Apple silicon, macOS 13 or later · Works with iCloud, Google and Outlook calendars' : '免费公开测试版 · Apple 芯片，macOS 13 及以上 · 支持 iCloud、Google、Outlook 日历'}
+          {en ? 'Free public beta · Apple Silicon & Intel · macOS 13+ / 13.4+ · Works with iCloud, Google and Outlook calendars' : '免费公开测试版 · Apple Silicon 与 Intel · macOS 13+ / 13.4+ · 支持 iCloud、Google、Outlook 日历'}
         </p>
 
         <a href="#demo" aria-label={en ? 'Scroll to the demo' : '向下查看演示'} className="absolute bottom-6 left-1/2 flex size-11 -translate-x-1/2 items-center justify-center rounded-full text-white/50 transition-colors hover:text-white">

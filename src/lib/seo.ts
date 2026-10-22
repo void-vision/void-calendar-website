@@ -25,8 +25,8 @@ export const pages = {
   },
   download: {
     path: '/download',
-    zh: { title: '下载 · Void Calendar', description: '下载适用于 Apple Silicon Mac 的 Void Calendar 公开测试版，查看 Intel 版本状态、系统要求与安装指南。' },
-    en: { title: 'Download · Void Calendar', description: 'Download the Void Calendar public beta for Apple Silicon Mac. Find Intel availability, system requirements and installation help.' },
+    zh: { title: '下载 · Void Calendar', description: '下载适用于 Apple Silicon 和 Intel Mac 的 Void Calendar 公开测试版，查看系统要求与安装指南。' },
+    en: { title: 'Download · Void Calendar', description: 'Download the Void Calendar public beta for Apple Silicon and Intel Macs. Find system requirements and installation help.' },
   },
   pricing: {
     path: '/pricing',
@@ -203,8 +203,8 @@ export function homeJsonLd(lang: SiteLang) {
       '@id': appId,
       name: siteName,
       applicationCategory: 'BusinessApplication',
-      operatingSystem: 'macOS 13 or later',
-      processorRequirements: 'Apple silicon (arm64)',
+      operatingSystem: 'macOS 13+ (Apple Silicon), macOS 13.4+ (Intel)',
+      processorRequirements: 'Apple Silicon (arm64) or Intel (x86_64)',
       softwareVersion: releases[0].version,
       downloadUrl: absoluteUrl(downloadPath),
       description: pages.home[lang].description,

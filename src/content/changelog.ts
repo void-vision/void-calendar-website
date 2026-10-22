@@ -1,5 +1,43 @@
 export const releases = [
   {
+    version: '0.1.0-beta.6',
+    published: '2026-10-22',
+    summary: '新增 Intel Mac 支持，完善任务 Agent、Island、Google Tasks 清单同步、提醒事项与支付回跳体验。',
+    summaryEn: 'Intel Mac support, richer task Agent sessions and Island controls, list-based Google Tasks sync, Reminders improvements and payment return pages.',
+    items: [
+      '新增 Intel Mac 安装包与对应自动更新归档；Apple Silicon 与 Intel 分别下载适合各自芯片的版本。',
+      '任务中的 Agent 会话支持查看对话、继续发送消息、授权和用户问答；会话面板可折叠，并改善图片显示和输入提示。',
+      'Island 汇总 AI 会话、用量与完成提醒，支持会话管理、菜单栏图标入口、保持唤醒和可调整的布局。',
+      '接入官方 Google Antigravity ACP，沿用现有 Agent 权限和会话机制。',
+      'Google Tasks 改为按任务选择清单建立同步，不再依赖 #GoogleTasks 标签，并保留已有同步关系。',
+      '完善 Apple 提醒事项的子任务层级、标签、智能清单和重复规则处理，以及日历重复事件的编辑与删除。',
+      '新增外部 Agent MCP 接入，复用权限确认、变更提案和撤销机制。',
+      '新手设置与集成页面支持语言偏好和主题传递，改善系统权限引导与拖动操作。',
+      '新增支付成功与取消页面，支持中英文和当前主题；支付返回后重新核实会员状态。',
+    ],
+    itemsEn: [
+      'New Intel Mac installer and updater archive, with separate downloads for Apple Silicon and Intel.',
+      'Continue Agent conversations from tasks, review permissions and answer agent questions. Session panels can collapse, with improved image rendering and composer hints.',
+      'Island brings together AI sessions, usage and completion notifications, with session management, menu bar shortcuts, keep-awake controls and adjustable layouts.',
+      'Added official Google Antigravity ACP support using the existing Agent permissions and session flow.',
+      'Choose a Google Tasks list when creating or editing a task to link it for sync. The #GoogleTasks tag is no longer required, and existing links are preserved.',
+      'Improved Apple Reminders handling for subtasks, tags, smart lists and recurrence, alongside calendar recurring-event edits and deletion.',
+      'Added external Agent access through MCP, reusing permission checks, change proposals and undo safeguards.',
+      'Onboarding and integration pages carry language and appearance preferences, with improved system-permission guidance and dragging behavior.',
+      'New localized, theme-aware payment success and cancellation pages recheck verified membership after Checkout.',
+    ],
+    notes: [
+      'Apple Silicon 需要 macOS 13 或更高版本；Intel 需要 macOS 13.4 或更高版本。',
+      '部分 Agent、系统日历、提醒事项、菜单栏与辅助功能需要对应的本机工具或系统权限。云端功能取决于服务配置和账号权限。',
+      'Google OAuth 审核安装包继续独立提供，固定在原审核版本，不通过普通 Beta 自动更新通道分发。',
+    ],
+    notesEn: [
+      'Apple Silicon requires macOS 13 or later; Intel requires macOS 13.4 or later.',
+      'Some Agent, system calendar, Reminders, menu bar and Accessibility features require local tools or system permissions. Cloud features depend on service configuration and account access.',
+      'The Google OAuth review build remains separately pinned and is excluded from the normal beta update channel.',
+    ],
+  },
+  {
     version: '0.1.0-beta.5',
     published: '2026-10-13',
     summary: 'AI 回复更直观、思考过程更透明，新增使用时长追踪插件与地图选址，完善重复事件同步。',

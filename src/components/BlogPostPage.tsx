@@ -56,7 +56,7 @@ export function BlogPostPage({ slug }: { slug: string }) {
         <aside aria-label={en ? 'Try Void Calendar' : '试用 Void Calendar'} className="mt-[clamp(56px,8vw,88px)] flex flex-col items-center gap-4 rounded-3xl bg-muted px-6 py-12 text-center sm:px-10">
           <img src="/logo-128.png" alt="" width={56} height={56} className="size-14 object-contain" />
           <p className="m-0 text-[clamp(24px,3vw,32px)] leading-[1.2] font-semibold tracking-[-0.025em]">{en ? 'Try it with your own week.' : '用自己的一周试试看。'}</p>
-          <p className="m-0 text-[17px] text-ink-3">{en ? 'Free public beta for Apple silicon Macs.' : '免费公开测试版，适用于 Apple 芯片 Mac。'}</p>
+          <p className="m-0 text-[17px] text-ink-3">{en ? 'Free public beta for Apple Silicon and Intel Macs.' : '免费公开测试版，适用于 Apple Silicon 和 Intel Mac。'}</p>
           <DownloadButton en={en} className="mt-2" />
         </aside>
 
