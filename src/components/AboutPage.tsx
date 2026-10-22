@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { companyWebsiteUrl } from '@/lib/company'
 import { releases } from '../content/changelog'
 import { formatDate } from '../content/posts'
 import { LangLink } from './LangLink'
@@ -15,7 +16,7 @@ export function AboutPage() {
         {
           title: 'What Void Calendar is',
           body: [
-            'Void Calendar is a calendar and time-boxing app for Mac. Tell AI what you need to do, and it places the work into time that is actually free, next to your existing events. Tasks, notes, and focus records live in the same place.',
+            'Void Calendar is an AI calendar and time-boxing app for Mac. Tell AI what you need to do, and it places the work into time that is actually free, next to your existing events. Tasks, notes, and focus records live in the same place.',
             'Your events, tasks, notes, and AI conversations stay in a database on your Mac. AI scheduling uses your own model endpoint and API key, so requests go from your Mac straight to the provider you chose.',
           ],
         },
@@ -37,7 +38,7 @@ export function AboutPage() {
         {
           title: 'Void Calendar 是什么',
           body: [
-            'Void Calendar 是 Mac 上的日历与时间盒应用。告诉 AI 要做什么，它会避开已有日程，把任务放进真正空着的时间。任务、笔记和专注记录也放在同一个地方。',
+            'Void Calendar 是 Mac 上的 AI 日历与时间盒应用。告诉 AI 要做什么，它会避开已有日程，把任务放进真正空着的时间。任务、笔记和专注记录也放在同一个地方。',
             '日程、任务、笔记和 AI 对话保存在你 Mac 上的数据库里。AI 排程使用你自己的模型接口和 API 密钥，请求从你的 Mac 直接发给你选择的模型服务。',
           ],
         },
@@ -67,7 +68,7 @@ export function AboutPage() {
       <PageHero
         eyebrow={en ? 'About' : '关于'}
         title={en ? 'About Void Calendar' : '关于 Void Calendar'}
-        lede={en ? 'A calendar and time-boxing app for Mac, made by Void Vision in Sydney.' : 'Mac 上的日历与时间盒应用，由悉尼的 Void Vision 开发。'}
+        lede={en ? 'An AI calendar and time-boxing app for Mac, made by Void Vision in Sydney.' : 'Mac 上的 AI 日历与时间盒应用，由悉尼的 Void Vision 开发。'}
       />
 
       <dl className="m-0 grid grid-cols-2 gap-3 lg:grid-cols-4">
@@ -113,7 +114,7 @@ export function AboutPage() {
           <div className="flex flex-col gap-1">
             <p className="m-0 text-[14px] font-medium text-ink-3">{en ? 'Company' : '公司'}</p>
             <p className="m-0 text-[17px] leading-[1.6] text-ink-2">
-              <a href="https://voidvision.ai" className={cn('text-link hover:underline', focusRing)}>Void Vision</a>
+              <a href={companyWebsiteUrl} className={cn('text-link hover:underline', focusRing)}>Void Vision</a>
               {en ? ' · Sydney, NSW, Australia' : ' · 澳大利亚新南威尔士州悉尼'}
             </p>
           </div>

@@ -33,9 +33,9 @@ export function DownloadPage() {
         <div className="mb-7 flex size-20 items-center justify-center rounded-[22px] border border-black/5 bg-white shadow-[0_12px_40px_rgb(0_71_143/.1)]">
           <img src="/logo.png" width={64} height={64} alt="" className="size-14 object-contain" />
         </div>
-        <p className="t-eyebrow mb-4 text-brand">{en ? 'VOID CALENDAR FOR MAC' : '为 Mac 而生'}</p>
+        <p className="t-eyebrow mb-4 text-brand">{en ? 'DOWNLOAD VOID CALENDAR' : '下载 Void Calendar'}</p>
         <h1 id="download-title" className="t-display">{en ? 'Make time for your ideas.' : '让想法，有时间发生。'}</h1>
-        <p className="t-lede mt-5 max-w-[560px] text-ink-3">{en ? 'Your calendar, tasks, notes and AI. Together on your Mac, ready for what comes next.' : '日历、任务、笔记与 AI，在 Mac 上相遇。\n从一个想法，开始有条理的一天。'}</p>
+        <p className="t-lede mt-5 max-w-[560px] text-ink-3">{en ? 'Void Calendar brings your calendar, tasks, notes and AI together on your Mac. Download the free public beta.' : '下载 Void Calendar 免费公开测试版，让日历、任务、笔记与 AI 在你的 Mac 上相遇。'}</p>
         <div className="mt-7 flex flex-wrap items-center justify-center gap-x-3 gap-y-2 text-[12px] text-ink-3">
           <Badge variant="secondary" className="gap-1.5 rounded-full px-3 py-1 font-medium"><span className="size-1.5 rounded-full bg-brand" />{en ? 'Public beta' : '公开测试版'}</Badge>
           <span>v{release.version}</span><span aria-hidden="true">·</span><span>{en ? 'Free to get started' : '免费开始使用'}</span>

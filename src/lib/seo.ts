@@ -1,6 +1,7 @@
 import { releases } from '../content/changelog'
 import type { Post } from '../content/posts'
 import { downloadPath } from './download'
+import { companyLinkedInUrl, companyOrganizationId, companyWebsiteUrl } from './company'
 import { localizePath, type SiteLang } from './lang'
 
 /** Public site origin. Override with VITE_SITE_URL when the live domain is different. */
@@ -16,17 +17,17 @@ export const pages = {
     path: '/',
     zh: {
       title: 'Void Calendar — Mac 上的 AI 日历与时间盒',
-      description: '在 Mac 上用一句话安排一周。AI 读取已有日程，把任务放进真正空着的时间，并和专注、笔记放在一起。可同步 iCloud 与 Google 日历。',
+      description: 'Void Calendar 是 Mac 上的 AI 日历与时间盒应用，将日程、任务、笔记与专注放在一起。用一句话安排一周，连接 Apple 日历、iCloud、Google 和 Outlook。免费公开测试版，支持 Apple Silicon 与 Intel。',
     },
     en: {
-      title: 'Void Calendar — AI calendar and time boxing for Mac',
-      description: 'Plan your week on Mac in one sentence. AI fits tasks into time that is actually free, with focus and notes alongside. Syncs iCloud and Google Calendar.',
+      title: 'Void Calendar — AI Calendar & Time Blocking for Mac',
+      description: 'Void Calendar is an AI calendar and time-blocking app for Mac. Plan tasks around your events, keep notes and focus in one place. Free beta for Apple Silicon and Intel.',
     },
   },
   download: {
     path: '/download',
-    zh: { title: '下载 · Void Calendar', description: '下载适用于 Apple Silicon 和 Intel Mac 的 Void Calendar 公开测试版，查看系统要求与安装指南。' },
-    en: { title: 'Download · Void Calendar', description: 'Download the Void Calendar public beta for Apple Silicon and Intel Macs. Find system requirements and installation help.' },
+    zh: { title: '下载 Void Calendar · Mac AI 日历', description: '下载适用于 Apple Silicon 和 Intel Mac 的 Void Calendar 公开测试版，查看系统要求与安装指南。' },
+    en: { title: 'Download Void Calendar · AI Calendar for Mac', description: 'Download the Void Calendar public beta for Apple Silicon and Intel Macs. Find system requirements and installation help.' },
   },
   pricing: {
     path: '/pricing',
@@ -157,23 +158,41 @@ export function pageHead({ title, description, path, lang, type = 'website', pub
       { name: 'twitter:image', content: imageUrl },
     ],
     links: [{ rel: 'canonical', href: url }, ...alternateLinks(path)],
-    scripts: jsonLd.map((data) => ({ type: 'application/ld+json', children: JSON.stringify(data) })),
+    scripts: jsonLd.map((data) => ({ type: 'application/ld+json', children: JSON.stringify(data).replace(/</g, '\\u003c') })),
   }
 }
 
 export function staticPageHead(key: PageKey, lang: SiteLang, jsonLd: object[] = []) {
   const page = pages[key]
-  return pageHead({ ...page[lang], path: page.path, lang, jsonLd })
+  return pageHead({
+    ...page[lang], path: page.path, lang,
+    jsonLd: [
+      ...jsonLd,
+      ...(key === 'home' ? [] : [{
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { name: siteName, path: '/' },
+          { name: page[lang].title, path: page.path },
+        ].map((item, index) => ({
+          '@type': 'ListItem', position: index + 1,
+          name: item.name, item: absoluteUrl(localizePath(item.path, lang)),
+        })),
+      }]),
+    ],
+  })
 }
 
-/** 与母站 voidvision.ai 使用同一个组织实体，搜索引擎会把两个站点认作同一家公司。 */
+/** 组织 ID 与公司官网一致，应用通过 publisher / creator 关联开发公司。 */
 const organization = {
   '@type': 'Organization',
-  '@id': 'https://voidvision.ai/#organization',
+  '@id': companyOrganizationId,
   name: 'Void Vision',
   legalName: 'Void Vision Pty Ltd',
-  url: 'https://voidvision.ai',
+  url: companyWebsiteUrl,
+  sameAs: [companyLinkedInUrl],
   logo: 'https://voidvision.ai/images/vv-mark.png',
+  email: 'hello@voidvision.ai',
 }
 
 const appId = `${siteUrl}/#app`
@@ -202,14 +221,22 @@ export function homeJsonLd(lang: SiteLang) {
       '@type': 'SoftwareApplication',
       '@id': appId,
       name: siteName,
-      applicationCategory: 'BusinessApplication',
+      applicationCategory: 'ProductivityApplication',
+      applicationSubCategory: 'AI calendar and time blocking',
+      creator: { '@id': organization['@id'] },
+      mainEntityOfPage: { '@id': `${absoluteUrl(localizePath('/', lang))}#webpage` },
+      isPartOf: { '@id': websiteId },
+      featureList: lang === 'en'
+        ? ['AI scheduling', 'Calendar sync', 'Tasks and notes', 'Time blocking', 'Focus timer']
+        : ['AI 排程', '日历同步', '任务与笔记', '时间盒', '专注计时'],
+      // 应用图标与分享图分别声明，避免把分享图当作品牌图标。
+      image: absoluteUrl('/logo.png'),
       operatingSystem: 'macOS 13+ (Apple Silicon), macOS 13.4+ (Intel)',
       processorRequirements: 'Apple Silicon (arm64) or Intel (x86_64)',
       softwareVersion: releases[0].version,
       downloadUrl: absoluteUrl(downloadPath),
       description: pages.home[lang].description,
       url: absoluteUrl(localizePath('/', lang)),
-      image: absoluteUrl(ogImage[lang]),
       offers: {
         '@type': 'Offer',
         price: '0',
@@ -226,6 +253,20 @@ export function homeJsonLd(lang: SiteLang) {
       name: siteName,
       url: absoluteUrl('/'),
       inLanguage: [hreflang.zh, hreflang.en],
+      description: 'Void Calendar — AI calendar and time blocking for Mac.',
+      about: { '@id': appId },
+      publisher: { '@id': organization['@id'] },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      '@id': `${absoluteUrl(localizePath('/', lang))}#webpage`,
+      url: absoluteUrl(localizePath('/', lang)),
+      name: pages.home[lang].title,
+      description: pages.home[lang].description,
+      inLanguage: hreflang[lang],
+      isPartOf: { '@id': websiteId },
+      mainEntity: { '@id': appId },
       publisher: { '@id': organization['@id'] },
     },
   ]

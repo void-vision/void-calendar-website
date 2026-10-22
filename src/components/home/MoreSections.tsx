@@ -172,6 +172,7 @@ export function DownloadBand({ en }: { en: boolean }) {
 export function Faq({ en }: { en: boolean }) {
   const items = en
     ? [
+        ['What is Void Calendar?', 'Void Calendar is an AI calendar and time-blocking app for Mac, made by Void Vision. It brings calendars, tasks, notes and focus together, and helps you fit work around your existing events.'],
         ['Is Void Calendar free?', 'Yes. The free version includes calendars, tasks, projects, notes, AI and focus for normal use. Pro adds cloud sync between devices.'],
         ['Does AI cost extra?', 'Void Calendar does not charge for AI. Use AI tools already installed on your Mac, or your own API key — any usage fees come from the provider you choose.'],
         ['Will AI change my calendar without asking?', 'No. Changes to events, tasks and notes arrive as proposals. You confirm before anything is written, and you can review and undo AI changes afterwards.'],
@@ -180,6 +181,7 @@ export function Faq({ en }: { en: boolean }) {
         ['What do I need to run it?', 'An Apple Silicon Mac running macOS 13 or later, or an Intel Mac running macOS 13.4 or later. The app is signed with Developer ID, notarized by Apple and updates itself.'],
       ]
     : [
+        ['Void Calendar 是什么？', 'Void Calendar 是由 Void Vision 开发的 Mac AI 日历与时间盒应用。它将日历、任务、笔记与专注放在一起，让 AI 避开已有日程，帮你把事情安排进真正空着的时间。'],
         ['Void Calendar 免费吗？', '免费。免费版可以正常使用日历、任务、项目、笔记、AI 和专注。Pro 提供多设备之间的云同步。'],
         ['AI 需要另外付费吗？', 'Void Calendar 不对 AI 收费。可以直接用你 Mac 上已安装的 AI 工具，或填入自己的 API 密钥；用量费用由你选择的服务商收取。'],
         ['AI 会不会擅自改我的日程？', '不会。对日程、任务和笔记的修改都以提案出现，你确认后才写入；之后也可以查看并撤销 AI 的改动。'],
@@ -206,6 +208,7 @@ export function Faq({ en }: { en: boolean }) {
               </AccordionTrigger>
               <AccordionContent className="pr-10 pb-6">
                 <p className="m-0 text-[16px] leading-[1.7] text-ink-3">{answer}</p>
+                {i === 0 ? <LangLink to="/about" className="mt-3 inline-flex text-[14px] text-link hover:underline">{en ? 'About Void Calendar →' : '了解 Void Calendar →'}</LangLink> : null}
               </AccordionContent>
             </AccordionItem>
           ))}

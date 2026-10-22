@@ -1,6 +1,7 @@
 import { LangLink } from './LangLink'
+import { companyLinkedInUrl, companyWebsiteUrl } from '@/lib/company'
 import { comparisons } from '../content/comparisons'
-import { downloadLabel, downloadPath } from '../lib/download'
+import { downloadPath } from '../lib/download'
 import type { SiteLang } from '../lib/lang'
 
 /** Apple 式页脚：浅灰底、12px 小字、细分隔线。 */
@@ -26,7 +27,7 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
             <LangLink to="/" hash="focus" className={linkClass}>{en ? 'Focus & Island' : '专注与 Island'}</LangLink>
             <LangLink to="/" hash="plugins" className={linkClass}>{en ? 'Plugins' : '插件'}</LangLink>
             <LangLink to="/pricing" className={linkClass}>{en ? 'Pricing' : '定价'}</LangLink>
-            <LangLink to={downloadPath} className={linkClass}>{en ? downloadLabel.en : downloadLabel.zh}</LangLink>
+            <LangLink to={downloadPath} className={linkClass}>{en ? 'Download Void Calendar' : '下载 Void Calendar'}</LangLink>
           </nav>
 
           <nav aria-labelledby="footer-compare-heading" className="flex flex-col">
@@ -47,6 +48,8 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
 
           <nav aria-labelledby="footer-company-heading" className="flex min-w-0 flex-col">
             <p id="footer-company-heading" className={headingClass}>{en ? 'Company' : '公司'}</p>
+            <a href={companyWebsiteUrl} className={linkClass}>Void Vision</a>
+            <a href={companyLinkedInUrl} className={linkClass}>{en ? 'LinkedIn' : '领英 LinkedIn'}</a>
             <LangLink to="/about" className={linkClass}>{en ? 'About' : '关于我们'}</LangLink>
             <LangLink to="/privacy" className={linkClass}>{en ? 'Privacy' : '隐私政策'}</LangLink>
             <LangLink to="/terms" className={linkClass}>{en ? 'Terms' : '服务条款'}</LangLink>

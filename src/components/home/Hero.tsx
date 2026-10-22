@@ -26,7 +26,7 @@ export function Hero({ en }: { en: boolean }) {
         </div>
 
         <p {...rise(0.08)} className="hero-rise t-eyebrow m-0 mb-4 text-white/85 [text-shadow:0_1px_12px_rgb(0_0_0/.5)]">
-          {en ? 'AI calendar & time-blocking for Mac' : 'Mac 上的 AI 日历与时间盒'}
+          {en ? 'Void Calendar · AI calendar & time-blocking for Mac' : 'Void Calendar · Mac 上的 AI 日历与时间盒'}
         </p>
 
         <h1 id="hero-title" className="t-hero m-0 max-w-[14ch] text-white">
@@ -39,8 +39,8 @@ export function Hero({ en }: { en: boolean }) {
 
         <p {...rise(0.4)} className="hero-rise t-lede m-0 mt-6 max-w-[600px] text-white/72">
           {en
-            ? 'AI, calendar, tasks, notes and focus in one place. Tell AI what needs doing — it works around your meetings and finds time that is actually free.'
-            : 'AI、日历、任务、笔记与专注，在同一个地方。告诉 AI 要做什么，它会避开已有日程，把事情放进真正空着的时间。'}
+            ? 'Void Calendar brings AI, calendars, tasks, notes and focus together on your Mac. Tell AI what needs doing — it works around your meetings and finds time that is actually free.'
+            : 'Void Calendar 将 AI、日历、任务、笔记与专注，放在你的 Mac 上。告诉 AI 要做什么，它会避开已有日程，把事情放进真正空着的时间。'}
         </p>
 
         <div {...rise(0.5)} className="hero-rise mt-9 flex flex-wrap items-center justify-center gap-3">
