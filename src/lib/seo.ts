@@ -33,11 +33,11 @@ export const pages = {
     path: '/pricing',
     zh: {
       title: '定价 · Void Calendar',
-      description: 'Void Calendar 免费版正常使用全部功能，Pro 提供同步：早鸟月付 US$4.99、年付 US$29.99。购买暂未开放。',
+      description: 'Void Calendar 本地工作区免费使用。Pro 月付与年付权益相同，提供跨设备同步：早鸟月付 US$4.99，年付 US$29.99。购买暂未开放。',
     },
     en: {
       title: 'Pricing · Void Calendar',
-      description: 'Void Calendar is free with every feature. Pro adds sync: early-bird monthly at US$4.99 or annual billing at US$29.99. Purchases are not open yet.',
+      description: 'Void Calendar is free locally. Pro includes the same sync features on early-bird monthly (US$4.99) and yearly (US$29.99) billing. Purchases are not open yet.',
     },
   },
   changelog: {
