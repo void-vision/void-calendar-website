@@ -34,7 +34,7 @@ export function MobilePluginList({ v }: { v: PluginView }) {
             </span>}
             <span className="flex min-w-0 flex-col gap-1">
               <span className="text-sm leading-[1.4] font-medium break-words">{plugin.name}</span>
-              <span className="text-xs leading-[1.5] text-[#8e8e93]">{plugin.short}</span>
+              <span className="text-xs leading-[1.5] text-ink-3">{plugin.short}</span>
             </span>
           </button>
         ))}

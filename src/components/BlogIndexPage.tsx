@@ -80,7 +80,7 @@ function PostCard({ post, en, featured = false }: { post: Post; en: boolean; fea
 
       <div className={cn('flex min-w-0 flex-1 flex-col items-start gap-3', featured ? 'p-7 sm:p-10 md:order-1 md:justify-center md:p-14' : 'p-6 sm:p-7')}>
         <p className="m-0 flex flex-wrap items-center gap-x-2 gap-y-1 text-[13px] text-ink-3">
-          {featured && <span className="font-semibold text-brand">{en ? 'Featured' : '精选'}</span>}
+          {featured && <span className="font-semibold text-link">{en ? 'Featured' : '精选'}</span>}
           {featured && <span aria-hidden="true">·</span>}
           <time dateTime={post.published}>{formatDate(post.published, en)}</time>
           <span aria-hidden="true">·</span>

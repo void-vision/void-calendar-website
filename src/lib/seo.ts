@@ -1,6 +1,6 @@
 import { releases } from '../content/changelog'
 import type { Post } from '../content/posts'
-import { downloadPath } from './download'
+import { downloadPath, githubRepoUrl } from './download'
 import { companyLinkedInUrl, companyOrganizationId, companyWebsiteUrl } from './company'
 import { localizePath, type SiteLang } from './lang'
 
@@ -28,6 +28,28 @@ export const pages = {
     path: '/download',
     zh: { title: '下载 Void Calendar · Mac AI 日历', description: '下载适用于 Apple Silicon 和 Intel Mac 的 Void Calendar 公开测试版，查看系统要求与安装指南。' },
     en: { title: 'Download Void Calendar · AI Calendar for Mac', description: 'Download the Void Calendar public beta for Apple Silicon and Intel Macs. Find system requirements and installation help.' },
+  },
+  product: {
+    path: '/product',
+    zh: {
+      title: 'Void Calendar 功能 · Mac AI 日历与时间盒',
+      description: 'Void Calendar 的基础功能：日历与时间盒、AI 排程、捕获想法、任务与项目、双向链接笔记和番茄钟。附真实应用截图与常用快捷键。',
+    },
+    en: {
+      title: 'Void Calendar Features · AI Calendar & Time Blocking for Mac',
+      description: 'What Void Calendar does: calendar and time boxes, AI scheduling, quick capture, tasks and projects, linked notes and a Pomodoro timer. With real app screenshots and shortcuts.',
+    },
+  },
+  island: {
+    path: '/product/island',
+    zh: {
+      title: 'Void Calendar for Island · 刘海里的工作台',
+      description: 'Island 集成在 Void Calendar 中：悬停刘海即可打开任务地图、专注计时、日记和 AI 编程会话，并能保持 Mac 唤醒。',
+    },
+    en: {
+      title: 'Void Calendar for Island · A Workspace in Your Notch',
+      description: 'Island comes with Void Calendar. Hover the notch for your task map, focus timer, journal and AI coding sessions, and keep your Mac awake.',
+    },
   },
   pricing: {
     path: '/pricing',
@@ -195,6 +217,9 @@ const organization = {
   email: 'hello@voidvision.ai',
 }
 
+/** 应用的官方站外主页；新增 Product Hunt、X 等账号后追加，供 Google 关联品牌实体。 */
+const appProfiles = [githubRepoUrl]
+
 const appId = `${siteUrl}/#app`
 const websiteId = `${siteUrl}/#website`
 
@@ -224,6 +249,7 @@ export function homeJsonLd(lang: SiteLang) {
       applicationCategory: 'ProductivityApplication',
       applicationSubCategory: 'AI calendar and time blocking',
       creator: { '@id': organization['@id'] },
+      sameAs: appProfiles,
       mainEntityOfPage: { '@id': `${absoluteUrl(localizePath('/', lang))}#webpage` },
       isPartOf: { '@id': websiteId },
       featureList: lang === 'en'

@@ -1,18 +1,19 @@
 import { Link, useRouterState } from '@tanstack/react-router'
-import { MenuIcon, XIcon } from 'lucide-react'
+import { ChevronDownIcon, MenuIcon, XIcon } from 'lucide-react'
+import { NavigationMenu } from 'radix-ui'
 import { useEffect, useRef, useState } from 'react'
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { productEntries, productSectionPath } from '../content/products'
 import { downloadLabel, downloadPath } from '../lib/download'
 import { localizePath, useAlternateLink, type SiteLang } from '../lib/lang'
 import { LangLink } from './LangLink'
+import { ProductMark } from './site/ProductMark'
 
 function useNav(en: boolean) {
   return [
-    { to: '/', hash: 'features', label: en ? 'Features' : '功能' },
     { to: '/pricing', label: en ? 'Pricing' : '定价' },
     { to: '/blog', label: en ? 'Blog' : '博客' },
     { to: '/changelog', label: en ? 'Changelog' : '更新日志' },
-    { to: '/about', label: en ? 'About' : '关于' },
   ]
 }
 
@@ -60,7 +61,9 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
   const nav = useNav(en)
   const langLabel = en ? '中文' : 'EN'
   const langAria = en ? '切换为中文' : 'Switch to English'
-  const isActive = (to: string, hash?: string) => !hash && to !== '/' && pathname.startsWith(localizePath(to, lang))
+  const isActive = (to: string) => pathname.startsWith(localizePath(to, lang))
+  const productLabel = en ? 'Product' : '产品'
+  const navLink = 'text-[13px] text-ink-2 transition-colors duration-200 hover:text-foreground aria-[current=page]:text-foreground group-data-[tone=dark]/header:text-white/75 group-data-[tone=dark]/header:hover:text-white group-data-[tone=dark]/header:aria-[current=page]:text-white'
   const press = 'select-none transition-[background-color,color,transform] duration-150 ease-out active:scale-[0.97]'
 
   return (
@@ -77,22 +80,50 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
           <span className="text-[15px] font-semibold tracking-[-0.01em]">Void Calendar</span>
         </LangLink>
 
-        <nav aria-label={en ? 'Main navigation' : '主导航'} className="hidden flex-1 items-center justify-center gap-8 md:flex">
-          {nav.map((item) => (
-            <LangLink
-              key={item.label}
-              to={item.to}
-              hash={item.hash}
-              // 「功能」是首页锚点，只在地址带上该锚点时才算当前页。
-              activeOptions={item.hash ? { exact: true, includeHash: true } : undefined}
-              aria-current={isActive(item.to, item.hash) ? 'page' : undefined}
-              // 当前页只改颜色不加粗，切换页面时导航不会左右挪动。
-              className="text-[13px] text-ink-2 transition-colors duration-200 hover:text-foreground aria-[current=page]:text-foreground group-data-[tone=dark]/header:text-white/75 group-data-[tone=dark]/header:hover:text-white group-data-[tone=dark]/header:aria-[current=page]:text-white"
-            >
-              {item.label}
-            </LangLink>
-          ))}
-        </nav>
+        <NavigationMenu.Root aria-label={en ? 'Main navigation' : '主导航'} delayDuration={80} className="hidden flex-1 justify-center md:flex">
+          <NavigationMenu.List className="m-0 flex list-none items-center gap-8 p-0">
+            <NavigationMenu.Item className="relative">
+              <NavigationMenu.Trigger
+                aria-current={isActive(productSectionPath) ? 'page' : undefined}
+                // 当前页只改颜色不加粗，切换页面时导航不会左右挪动。
+                className={`group/trigger flex cursor-pointer items-center gap-1 border-0 bg-transparent p-0 font-[inherit] data-[state=open]:text-foreground group-data-[tone=dark]/header:data-[state=open]:text-white ${navLink}`}
+              >
+                {productLabel}
+                <ChevronDownIcon aria-hidden="true" strokeWidth={1.8} className="size-3 transition-transform duration-200 ease-ui group-data-[state=open]/trigger:rotate-180" />
+              </NavigationMenu.Trigger>
+              {/* 下拉从触发处的上沿展开；减少动态效果时只保留淡入淡出。 */}
+              <NavigationMenu.Content className="absolute top-full left-1/2 mt-3 w-[560px] -translate-x-1/2 origin-top rounded-2xl border border-black/[0.08] bg-popover p-2 text-popover-foreground shadow-[0_1px_0_rgb(255_255_255/0.6)_inset,0_12px_32px_rgb(0_0_0/0.12),0_2px_6px_rgb(0_0_0/0.06)] data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=open]:zoom-in-[0.96] data-[state=open]:duration-200 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-[0.96] data-[state=closed]:duration-150 ease-ui motion-reduce:data-[state=open]:zoom-in-100 motion-reduce:data-[state=closed]:zoom-out-100">
+                <ul className="m-0 grid list-none grid-cols-2 gap-1 p-0">
+                  {productEntries.map((product) => (
+                    <li key={product.id}>
+                      <NavigationMenu.Link asChild active={pathname === localizePath(product.path, lang)}>
+                        <LangLink
+                          to={product.path}
+                          className="flex h-full gap-3.5 rounded-xl p-3.5 transition-colors duration-150 hover:bg-secondary focus-visible:bg-secondary data-[active]:bg-secondary"
+                        >
+                          <ProductMark id={product.id} />
+                          <span className="flex min-w-0 flex-col gap-1">
+                            <span className="text-[14px] leading-[1.3] font-semibold text-foreground">{product.name}</span>
+                            <span className="text-[12.5px] leading-[1.5] text-ink-3">{product.summary[lang]}</span>
+                          </span>
+                        </LangLink>
+                      </NavigationMenu.Link>
+                    </li>
+                  ))}
+                </ul>
+              </NavigationMenu.Content>
+            </NavigationMenu.Item>
+            {nav.map((item) => (
+              <NavigationMenu.Item key={item.label}>
+                <NavigationMenu.Link asChild>
+                  <LangLink to={item.to} aria-current={isActive(item.to) ? 'page' : undefined} className={navLink}>
+                    {item.label}
+                  </LangLink>
+                </NavigationMenu.Link>
+              </NavigationMenu.Item>
+            ))}
+          </NavigationMenu.List>
+        </NavigationMenu.Root>
 
         <div className="ml-auto flex shrink-0 items-center gap-1.5 md:ml-0">
           <Link
@@ -132,11 +163,28 @@ export function SiteHeader({ lang }: { lang: SiteLang }) {
                 </SheetClose>
               </SheetHeader>
               <nav aria-label={en ? 'Mobile navigation' : '移动端导航'} className="flex flex-col">
+                <p className="m-0 pt-1 pb-2 text-[12px] font-semibold text-ink-3">{productLabel}</p>
+                <ul className="m-0 mb-2 flex list-none flex-col gap-1 border-b border-black/[0.06] p-0 pb-3">
+                  {productEntries.map((product) => (
+                    <li key={product.id}>
+                      <LangLink
+                        to={product.path}
+                        onClick={() => setOpen(false)}
+                        className="-mx-2 flex items-center gap-3 rounded-xl px-2 py-2 select-none transition-colors active:bg-black/[0.04]"
+                      >
+                        <ProductMark id={product.id} className="size-9" />
+                        <span className="flex min-w-0 flex-col">
+                          <span className="text-[17px] leading-[1.3] font-semibold text-foreground">{product.name}</span>
+                          <span className="text-[13px] leading-[1.45] text-ink-3">{product.summary[lang]}</span>
+                        </span>
+                      </LangLink>
+                    </li>
+                  ))}
+                </ul>
                 {nav.map((item) => (
                   <LangLink
                     key={item.label}
                     to={item.to}
-                    hash={item.hash}
                     onClick={() => setOpen(false)}
                     className="-mx-2 flex min-h-12 items-center rounded-lg border-b border-black/[0.06] px-2 text-[22px] font-semibold tracking-[-0.02em] text-foreground select-none transition-colors active:bg-black/[0.04]"
                   >

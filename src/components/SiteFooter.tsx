@@ -22,9 +22,9 @@ export function SiteFooter({ lang }: { lang: SiteLang }) {
         <div className="grid grid-cols-2 gap-x-8 gap-y-8 py-8 sm:grid-cols-4">
           <nav aria-labelledby="footer-product-heading" className="flex flex-col">
             <p id="footer-product-heading" className={headingClass}>{en ? 'Product' : '产品'}</p>
-            <LangLink to="/" hash="features" className={linkClass}>{en ? 'Features' : '功能'}</LangLink>
-            <LangLink to="/" hash="ai" className={linkClass}>{en ? 'AI scheduling' : 'AI 排程'}</LangLink>
-            <LangLink to="/" hash="focus" className={linkClass}>{en ? 'Focus & Island' : '专注与 Island'}</LangLink>
+            <LangLink to="/product" className={linkClass}>Void Calendar</LangLink>
+            <LangLink to="/product/island" className={linkClass}>Void Calendar for Island</LangLink>
+            <LangLink to="/product" hash="ai" className={linkClass}>{en ? 'AI scheduling' : 'AI 排程'}</LangLink>
             <LangLink to="/" hash="plugins" className={linkClass}>{en ? 'Plugins' : '插件'}</LangLink>
             <LangLink to="/pricing" className={linkClass}>{en ? 'Pricing' : '定价'}</LangLink>
             <LangLink to={downloadPath} className={linkClass}>{en ? 'Download Void Calendar' : '下载 Void Calendar'}</LangLink>

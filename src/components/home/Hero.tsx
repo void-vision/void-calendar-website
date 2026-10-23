@@ -21,11 +21,14 @@ export function Hero({ en }: { en: boolean }) {
         </div>
         <div aria-hidden="true" className="absolute inset-0 -z-10 bg-[radial-gradient(120%_70%_at_50%_0%,transparent_30%,rgba(0,0,0,.55)_75%,#000_100%)]" />
 
+        {/* §7.2 / §5.6：窄屏标题与极光亮带重叠，限制背景峰值而不改变动画。 */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 bg-black/55 sm:bg-transparent" />
+
         <div {...rise(0)} className="hero-rise mb-7 flex size-[88px] items-center justify-center rounded-[22px] bg-white shadow-[0_20px_60px_rgba(61,90,254,.35),inset_0_0_0_1px_rgba(0,0,0,.04)] sm:size-[104px] sm:rounded-[26px]">
           <img src="/logo.png" alt="" width={256} height={256} decoding="async" className="size-[74%] object-contain" />
         </div>
 
-        <p {...rise(0.08)} className="hero-rise t-eyebrow m-0 mb-4 text-white/85 [text-shadow:0_1px_12px_rgb(0_0_0/.5)]">
+        <p {...rise(0.08)} className="hero-rise t-eyebrow m-0 mb-4 text-night-fg [text-shadow:0_1px_12px_rgb(0_0_0/.5)]">
           {en ? 'Void Calendar · AI calendar & time-blocking for Mac' : 'Void Calendar · Mac 上的 AI 日历与时间盒'}
         </p>
 
@@ -37,7 +40,7 @@ export function Hero({ en }: { en: boolean }) {
           ))}
         </h1>
 
-        <p {...rise(0.4)} className="hero-rise t-lede m-0 mt-6 max-w-[600px] text-white/72">
+        <p {...rise(0.4)} className="hero-rise t-lede m-0 mt-6 max-w-[600px] text-left text-white/72 sm:text-center">
           {en
             ? 'Void Calendar brings AI, calendars, tasks, notes and focus together on your Mac. Tell AI what needs doing — it works around your meetings and finds time that is actually free.'
             : 'Void Calendar 将 AI、日历、任务、笔记与专注，放在你的 Mac 上。告诉 AI 要做什么，它会避开已有日程，把事情放进真正空着的时间。'}

@@ -17,6 +17,7 @@ import { AgentSection } from './home/AgentSection'
 import { DownloadBand, Essentials, Faq, Statement } from './home/MoreSections'
 import { SectionIntro } from './site/primitives'
 import { BrandMark, brandFor } from './site/brands'
+import { handleTabKeyDown, panelProps, tabProps } from './site/tab-keyboard'
 
 const ease = [0.22, 0.61, 0.36, 1] as const
 const MemoSiteHeader = memo(SiteHeader)
@@ -37,7 +38,7 @@ function Logo({ className = 'size-full object-contain' }: { className?: string }
 }
 
 /** 区块眉题与标题：沿用中文原文，英文由演示翻译表转换。 */
-const eyebrowClass = 't-eyebrow text-brand'
+const eyebrowClass = 't-eyebrow text-link'
 const titleClass = 't-display m-0'
 const ledeClass = 't-lede m-0 text-ink-3'
 
@@ -67,7 +68,7 @@ export function HomePage() {
       <section id="showcase" aria-label={en ? 'Interactive demo' : '交互演示'} className="relative mt-[clamp(32px,4vw,56px)] h-[160vh]">
         <div className="showcase-content sticky top-[56px] flex h-[calc(100svh-56px)] min-h-[480px] flex-col items-center justify-center gap-6 px-[clamp(16px,3vw,40px)]">
           <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] md:will-change-transform [transform:translate3d(0,24px,0)_scale(.84)]">
-            <div ref={r.mockRef} className="relative w-full overflow-hidden rounded-[22px] border border-black/[0.08] bg-linear-to-b from-[#eef2f8] to-[#e4e9f1] text-foreground shadow-[0_30px_80px_rgba(0,0,0,.12)]">
+            <div ref={r.mockRef} {...panelProps('demo-scene', v.tabs.findIndex((tb) => tb.fg === '#1c1c1e'))} className="relative w-full overflow-hidden rounded-[22px] border border-black/[0.08] bg-linear-to-b from-[#eef2f8] to-[#e4e9f1] text-foreground shadow-[0_30px_80px_rgba(0,0,0,.12)]">
               <ShowcaseProgress />
               <MenuBar v={v} />
               <MemoVoidIslandDemo lang={lang} onExpandedChange={v.holdIsland} seconds={v.islandSeconds} duration={v.islandDuration} running={v.fRunning} started={v.islandStarted} focusTitle={v.fUserTitle} focusMinutes={v.islandMinutes} focusRounds={v.fRecs.length} onStartFocus={v.islandStartFocus} onToggleFocus={v.islandToggleFocus} onDuration={v.islandSetDuration} />
@@ -79,12 +80,12 @@ export function HomePage() {
             </div>
           </div>
           <div className="flex w-full max-w-[1360px] flex-wrap items-start gap-x-10 gap-y-4">
-            <div role="tablist" aria-label={en ? 'Demo scenes' : '演示场景'} className="flex min-w-[min(100%,420px)] flex-[1_1_420px] gap-1 rounded-full bg-muted p-1">
-              {v.tabs.map((tb) => {
+            <div role="tablist" onKeyDown={handleTabKeyDown} aria-label={en ? 'Demo scenes' : '演示场景'} className="flex min-w-[min(100%,420px)] flex-[1_1_420px] gap-1 rounded-full bg-muted p-1">
+              {v.tabs.map((tb, index) => {
                 // 当前场景用白色胶囊标出，底部细线表示自动播放进度。
                 const on = tb.fg === '#1c1c1e'
                 return (
-                  <button key={tb.n} type="button" role="tab" aria-selected={on} onClick={tb.go} className="relative flex min-h-10 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-full px-2 font-[inherit] text-[13px] font-medium text-ink-3 select-none transition-[color,background-color,box-shadow,transform] duration-300 ease-apple active:scale-[0.97] hover:text-foreground aria-selected:bg-white aria-selected:text-foreground aria-selected:shadow-[0_1px_3px_rgba(0,0,0,.08),0_0_0_.5px_rgba(0,0,0,.04)] max-sm:text-[11.5px]">
+                  <button key={tb.n} type="button" {...tabProps('demo-scene', index, on)} onClick={tb.go} className="relative flex min-h-10 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-full px-2 font-[inherit] text-[13px] font-medium text-ink-3 select-none transition-[color,background-color,box-shadow,transform] duration-300 ease-apple active:scale-[0.97] hover:text-foreground aria-selected:bg-white aria-selected:text-foreground aria-selected:shadow-[0_1px_3px_rgba(0,0,0,.08),0_0_0_.5px_rgba(0,0,0,.04)] max-sm:text-[11.5px]">
                     <span className="relative">{tb.label}</span>
                     {on ? <span aria-hidden="true" className="absolute bottom-[5px] left-1/2 h-[2px] w-8 -translate-x-1/2 overflow-hidden rounded-full bg-black/8"><span className="block h-full bg-brand" style={{ width: `${tb.pct}%` }} /></span> : null}
                   </button>
@@ -94,7 +95,7 @@ export function HomePage() {
             <div className="flex min-h-16 min-w-[min(100%,320px)] flex-[1_1_320px] flex-col gap-1">
               <div className="text-[17px] font-semibold tracking-[-0.015em]">{v.capTitle}</div>
               <div className="text-sm text-ink-3">{v.capSub}</div>
-              <div className="mt-0.5 text-[12.5px] text-ink-4">
+              <div className="mt-0.5 text-[12.5px] text-ink-3">
                 <span className="hidden md:inline">可以直接上手：按 C 捕获想法，⌘K 搜索，点击日程选中</span>
                 <span className="md:hidden">左右滑动查看整周，点击捕获想法或日程试试</span>
               </div>
@@ -205,7 +206,7 @@ function MenuBar({ v }: { v: View }) {
           style={{ opacity: v.popOp, transform: `translateY(${v.popY}px)`, pointerEvents: v.popPE as 'auto' | 'none', transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}
         >
           <div className="flex flex-col gap-2.5 px-[18px] pt-4 pb-3.5">
-            <div className="flex items-center gap-2 text-[11.5px] text-[#8e8e93]">
+            <div className="flex items-center gap-2 text-[11.5px] text-ink-3">
               <span>{v.popTag}</span><span className="flex-1" /><span className="tabular-nums">{v.focusWhen}</span>
             </div>
             <div className="flex items-baseline gap-3">
@@ -225,7 +226,7 @@ function MenuBar({ v }: { v: View }) {
             </div>
           </div>
           <div className="border-t border-[#efeeeb] px-[18px] pt-2.5 pb-3">
-            <div className="py-0.5 text-[11.5px] text-[#8e8e93]">接下来</div>
+            <div className="py-0.5 text-[11.5px] text-ink-3">接下来</div>
             <NextRow time="14:00" color="#e0782f" title="周五分享：做演示稿" />
             <NextRow time="18:00" color="#3a9a5b" title="健身" />
           </div>
@@ -250,7 +251,7 @@ function NextRow({ time, color, title }: { time: string; color: string; title: s
   const tr = useTranslate()
   return tr(
     <div className="grid grid-cols-[44px_8px_minmax(0,1fr)] items-center gap-x-2.5 py-[7px]">
-      <span className="text-[#8e8e93] tabular-nums">{time}</span>
+      <span className="text-ink-3 tabular-nums">{time}</span>
       <span className="size-1.5 rounded-full" style={{ background: color }} />
       <span className="truncate">{title}</span>
     </div>
@@ -316,12 +317,12 @@ function DemoChrome({ v }: { v: View }) {
           <span className="pointer-events-none absolute top-[7px] right-[11px] text-[10.5px] text-[#aeaeb2]">⌘K</span>
           {v.searchOpen ? (
             <div className="vc-in absolute top-[34px] right-0 left-0 z-30 flex flex-col gap-px rounded-[10px] border border-[#e6e4e0] bg-white p-1.5 shadow-[0_14px_36px_rgba(0,0,0,.16)]">
-              <div className="px-2 py-1 text-[11px] text-[#8e8e93]">{v.searchHead}</div>
+              <div className="px-2 py-1 text-[11px] text-ink-3">{v.searchHead}</div>
               {v.searchRes.map((item) => (
                 <button key={item.title + item.when} type="button" onMouseDown={(event) => event.preventDefault()} onClick={item.pick} className="flex cursor-pointer items-center gap-2 rounded-md px-2 py-[7px] text-left font-[inherit] hover:bg-[#f4f3f0]">
                   <span className="size-1.5 shrink-0 rounded-full" style={{ background: item.dot }} />
                   <span data-no-translate={item.userTitle ? true : undefined} className="min-w-0 flex-1 truncate">{item.userTitle ?? item.title}</span>
-                  <span className="whitespace-nowrap text-[#8e8e93] tabular-nums">{item.when}</span>
+                  <span className="whitespace-nowrap text-ink-3 tabular-nums">{item.when}</span>
                 </button>
               ))}
               {v.searchRes.length === 0 ? <div className="p-2 text-[#aeaeb2]">没有匹配的结果</div> : null}
@@ -332,14 +333,14 @@ function DemoChrome({ v }: { v: View }) {
         <div className="demo-toolbar-extra w-16" />
         <button type="button" onClick={v.openCap} className="h-9 shrink-0 cursor-pointer rounded-lg border border-[#e6e4e0] bg-white px-2.5 text-xs lg:hidden">捕获想法</button>
       </div>
-      <div role="tablist" aria-label="工作区切换" className="demo-workspace-switcher flex shrink-0 gap-1 overflow-x-auto border-b border-[#e8e6e2] bg-[#f6f5f3] px-2 py-1.5 lg:hidden">
-        {v.navWork.map((item) => (
-          <button key={item.id} type="button" role="tab" aria-selected={item.active} onClick={item.pick} className="min-h-8 shrink-0 cursor-pointer rounded-md px-2.5 font-[inherit] text-xs whitespace-nowrap" style={{ background: item.bg, color: item.fg }}>{item.label}</button>
+      <div role="tablist" onKeyDown={handleTabKeyDown} aria-label="工作区切换" className="demo-workspace-switcher flex shrink-0 gap-1 overflow-x-auto border-b border-[#e8e6e2] bg-[#f6f5f3] px-2 py-1.5 lg:hidden">
+        {v.navWork.map((item, index) => (
+          <button key={item.id} type="button" {...tabProps('demo-workspace', index, item.active)} onClick={item.pick} className="min-h-8 shrink-0 cursor-pointer rounded-md px-2.5 font-[inherit] text-xs whitespace-nowrap" style={{ background: item.bg, color: item.fg }}>{item.label}</button>
         ))}
       </div>
       <div data-workspace={v.navSel === 'proj' || v.navSel === 'memo' ? 'expanded' : undefined} className="demo-body relative flex h-[clamp(200px,calc(100svh-400px),600px)] text-xs">
         <DemoSidebar v={v} />
-        <div className="demo-calendar relative flex min-w-0 flex-1 flex-col">
+        <div {...panelProps('demo-workspace', v.navWork.findIndex((item) => item.active))} className="demo-calendar relative flex min-w-0 flex-1 flex-col">
           {v.navSel === 'pomo' ? <DemoFocusPanel v={v} /> : v.navSel === 'capture-result' ? <DemoCaptureResult v={v} /> : v.navSel === 'proj' ? <DemoProjects v={v} /> : v.navSel === 'memo' ? <DemoNotes v={v} /> : v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
             <div ref={calendarRef} className="demo-calendar-scroll flex min-h-0 flex-1 flex-col">
               <div className="demo-week flex min-h-[620px] flex-1 flex-col">
@@ -403,7 +404,7 @@ function DemoChrome({ v }: { v: View }) {
           )}
           {v.selectedEvent ? (
             <div ref={r.eventRef} role="dialog" aria-label="日程详情" className="demo-event-detail vc-in absolute top-14 right-3 z-8 flex w-[280px] max-w-[calc(100%-24px)] flex-col gap-3 rounded-xl border border-[#e3e1dd] bg-white p-4 shadow-[0_12px_32px_rgba(28,28,30,.12)]">
-              <div className="flex items-center gap-2 text-[11px] text-[#8e8e93]">
+              <div className="flex items-center gap-2 text-[11px] text-ink-3">
                 <span className="size-1.5 rounded-full" style={{ background: v.selectedEvent.dot }} />
                 <span className="flex-1">{v.selectedEvent.kind}</span>
                 <button type="button" onClick={v.closeEvent} aria-label="关闭日程详情" className="flex size-7 cursor-pointer items-center justify-center rounded-md text-base hover:bg-[#f4f3f0]">×</button>
@@ -444,15 +445,15 @@ function DemoChrome({ v }: { v: View }) {
             ))}
             {v.suggestions.length ? (
               <div className="demo-plan vc-in flex shrink-0 flex-col overflow-hidden rounded-xl border border-[#e8e6e2] bg-[#fafaf9]">
-                <div className="border-b border-[#eeece8] px-3 py-2 text-[11px] text-[#8e8e93]">建议的时间盒 · 待确认</div>
+                <div className="border-b border-[#eeece8] px-3 py-2 text-[11px] text-ink-3">建议的时间盒 · 待确认</div>
                 {v.suggestions.map((event) => (
                   <div key={event.id} className="flex items-start gap-2 px-3 py-3">
                     <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#2f6fe0]" />
                     <div className="flex min-w-0 flex-1 flex-col gap-1">
                       <span data-no-translate className="text-xs leading-relaxed font-medium break-words">{event.userTitle}</span>
-                      <span className="text-[11px] text-[#8e8e93] tabular-nums">{event.when}</span>
+                      <span className="text-[11px] text-ink-3 tabular-nums">{event.when}</span>
                     </div>
-                    <span className="shrink-0 text-[11px] text-[#8e8e93]">{event.duration}</span>
+                    <span className="shrink-0 text-[11px] text-ink-3">{event.duration}</span>
                   </div>
                 ))}
                 <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 border-t border-[#eeece8] p-2.5">
@@ -506,7 +507,7 @@ function DemoFocusPanel({ v }: { v: View }) {
     <div className="text-sm font-semibold">番茄钟</div>
     <div data-no-translate={v.fUserTitle ? true : undefined} className="text-xs text-[#6b6b70]">{v.fUserTitle ?? 'PRD v2 · 收尾与评审'}</div>
     <div className="text-[40px] leading-tight font-light tabular-nums">{v.fClock}</div>
-    <div className="text-[11px] text-[#8e8e93]">{v.fStatus}</div>
+    <div className="text-[11px] text-ink-3">{v.fStatus}</div>
     <div className="flex gap-3"><button type="button" onClick={v.fToggle} className="min-h-8 cursor-pointer rounded-lg bg-[#1c1c1e] px-3 text-xs text-white">{v.fToggleLabel}</button>{v.fEndD !== 'none' ? <button type="button" onClick={v.fEnd} className="min-h-8 cursor-pointer text-xs text-[#6b6b70]">结束并记录</button> : null}</div>
     {v.fRecs.map((record, index) => <div key={index} className="w-full border-t border-[#efeeeb] pt-2 text-left text-[11px] text-[#6b6b70]">{record.userTitle ? <span data-no-translate>{record.userTitle} · </span> : null}{record.text}</div>)}
   </div>)
@@ -526,7 +527,7 @@ function DemoCollection({ v }: { v: View }) {
             <button type="button" data-no-translate={item.userTitle ? true : undefined} onClick={item.toggle} aria-label={`${v.lang === 'en' ? item.done ? 'Mark incomplete' : 'Complete' : item.done ? '取消完成' : '完成'}：${item.userTitle ?? item.title}`} aria-pressed={item.done} className="mt-0.5 flex size-4 shrink-0 cursor-pointer items-center justify-center rounded border border-[#cfcdc8] text-[10px]" style={{ background: item.done ? '#1c1c1e' : 'white', color: item.done ? 'white' : '#1c1c1e' }}>{item.done ? '✓' : ''}</button>
           ) : <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#c7c4be]" />}
           <span data-no-translate={item.userTitle ? true : undefined} className="min-w-0 flex-1 text-xs leading-relaxed" style={{ textDecoration: item.done ? 'line-through' : 'none', color: item.done ? '#aeaeb2' : '#1c1c1e' }}>{item.userTitle ?? item.title}</span>
-          <span className="shrink-0 text-[10px] text-[#8e8e93]">{item.when}</span>
+          <span className="shrink-0 text-[10px] text-ink-3">{item.when}</span>
         </div>
       ))}
       <button type="button" onClick={v.openCap} className="mt-1 min-h-9 cursor-pointer self-start rounded-lg border border-[#e3e1dd] bg-white px-3 text-xs hover:bg-[#f4f3f0]">捕获想法</button>
@@ -556,9 +557,9 @@ function Disrupt({ v }: { v: View }) {
             告诉 AI 怎么调整。
           </h2>
           <p className={`${ledeClass} max-w-[440px]`}>用自然语言说明调整方式：顺延、另选时间，或拆成短段。先看建议，再确认写入。</p>
-          <div role="tablist" aria-label="调整需求示例" className="mt-2.5 flex max-w-[440px] gap-4 border-b border-black/[0.08] sm:gap-7">
-            {v.modes.map((m) => (
-              <button key={m.name} type="button" role="tab" aria-selected={m.sel === 'true'} onClick={m.pick} className="relative cursor-pointer border-0 bg-transparent p-0 pb-3 font-[inherit] text-[15px] whitespace-nowrap transition-colors duration-200 hover:text-foreground" style={{ color: m.fg }}>
+          <div role="tablist" onKeyDown={handleTabKeyDown} aria-label="调整需求示例" className="mt-2.5 grid max-w-[440px] grid-cols-3 gap-2 border-b border-black/[0.08] sm:gap-5">
+            {v.modes.map((m, index) => (
+              <button key={m.name} type="button" {...tabProps('reschedule', index, m.sel === 'true')} onClick={m.pick} className="relative min-h-12 cursor-pointer border-0 bg-transparent px-1 pt-1 pb-3 font-[inherit] text-[13px] leading-snug whitespace-normal transition-colors duration-200 hover:text-foreground sm:text-[15px]" style={{ color: m.sel === 'true' ? 'var(--foreground)' : 'var(--ink-3)' }}>
                 {m.name}
                 <span className="absolute right-0 bottom-[-1px] left-0 h-[1.5px] origin-left bg-foreground transition-transform duration-300" style={{ transform: `scaleX(${m.bar})`, transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }} />
               </button>
@@ -574,7 +575,7 @@ function Disrupt({ v }: { v: View }) {
             </button>
           </div>
         </div>
-        <div data-rv="1" className="flex min-w-0 flex-col gap-4 rounded-[28px] bg-muted p-[clamp(18px,3vw,36px)]">
+        <div {...panelProps('reschedule', v.modes.findIndex((m) => m.sel === 'true'))} data-rv="1" className="flex min-w-0 flex-col gap-4 rounded-[28px] bg-muted p-[clamp(18px,3vw,36px)]">
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2 border-b border-black/[0.08] pb-3 text-[13px]">
             <span className="font-medium">周三 9月30日</span>
             <span className="text-ink-3">上午</span>
@@ -583,13 +584,13 @@ function Disrupt({ v }: { v: View }) {
             <span className="flex items-center gap-1.5 text-xs text-ink-3"><span className="size-2 rounded-[2px] border border-[#b59a80] bg-[#f8f4ef]" />新日程</span>
           </div>
           <div className="grid grid-cols-[48px_minmax(0,1fr)]">
-            <div className="relative h-[361px] text-[11px] text-ink-4 tabular-nums">
+            <div className="relative h-[361px] text-[11px] text-ink-3 tabular-nums">
               <span className="absolute -top-[7px]">10:00</span>
-              <span className="absolute top-[53px] text-[#d2d0cb]">10:30</span>
+              <span className="absolute top-[53px] text-ink-3">10:30</span>
               <span className="absolute top-[113px]">11:00</span>
-              <span className="absolute top-[173px] text-[#d2d0cb]">11:30</span>
+              <span className="absolute top-[173px] text-ink-3">11:30</span>
               <span className="absolute top-[233px]">12:00</span>
-              <span className="absolute top-[293px] text-[#d2d0cb]">12:30</span>
+              <span className="absolute top-[293px] text-ink-3">12:30</span>
               <span className="absolute top-[346px]">13:00</span>
             </div>
             <div className="relative h-[361px] bg-[linear-gradient(#ecebe8_1px,transparent_1px),linear-gradient(90deg,#f3f2ef_50%,transparent_50%)] bg-size-[100%_120px,6px_1px] bg-position-[0_0,0_60px] bg-repeat-y">
@@ -768,9 +769,9 @@ function Templates({ v }: { v: View }) {
           </div>
           <p className="m-0 max-w-[400px] text-[17px] leading-[1.65] text-ink-3">告诉 AI 你几点起床、什么时候最专注、容不容易分心。也可以从模板开始，切换看看同一天怎么排。</p>
         </div>
-        <div data-rv="1" role="tablist" aria-label="排程模板" className="flex max-w-full flex-wrap gap-1 self-start rounded-[20px] bg-muted p-1">
-          {v.tpls.map((t) => (
-            <button key={t.name} type="button" role="tab" aria-selected={t.sel === 'true'} onClick={t.pick} className="flex cursor-pointer items-center gap-3 rounded-[16px] border-0 py-[9px] pr-4 pl-3 text-left font-[inherit] select-none transition-[background-color,color,box-shadow,transform] duration-[220ms] ease-out hover:text-foreground active:scale-[0.97]" style={{ background: t.bg, boxShadow: t.sh, color: t.fg }}>
+        <div data-rv="1" role="tablist" onKeyDown={handleTabKeyDown} aria-label="排程模板" className="flex max-w-full flex-wrap gap-1 self-start rounded-[20px] bg-muted p-1">
+          {v.tpls.map((t, index) => (
+            <button key={t.name} type="button" {...tabProps('schedule-style', index, t.sel === 'true')} onClick={t.pick} className="flex cursor-pointer items-center gap-3 rounded-[16px] border-0 py-[9px] pr-4 pl-3 text-left font-[inherit] select-none transition-[background-color,color,box-shadow,transform] duration-[220ms] ease-out hover:text-foreground active:scale-[0.97]" style={{ background: t.bg, boxShadow: t.sh, color: t.sel === 'true' ? 'var(--foreground)' : 'var(--ink-3)' }}>
               <svg width="34" height="20" viewBox="0 0 34 20" aria-hidden="true" className="shrink-0">
                 {t.rects.map((rect, i) => (
                   <rect key={i} x={rect.x} y={rect.y} width={rect.w} height={rect.h} rx="1.8" fill="currentColor" opacity={rect.o} />
@@ -783,7 +784,7 @@ function Templates({ v }: { v: View }) {
             </button>
           ))}
         </div>
-        <div data-rv="2" className="flex flex-col gap-[18px]">
+        <div {...panelProps('schedule-style', v.tpls.findIndex((t) => t.sel === 'true'))} data-rv="2" className="flex flex-col gap-[18px]">
           <div className="flex flex-wrap items-end justify-between gap-x-10 gap-y-3.5">
             <p className="m-0 max-w-[520px] text-base text-ink-2">{v.tplDesc}</p>
             <div className="flex gap-7">
@@ -807,7 +808,7 @@ function Templates({ v }: { v: View }) {
                   </motion.div>
                 ))}
               </div>
-              <div className="relative mt-2 h-5 text-[11px] text-ink-4 tabular-nums">
+              <div className="relative mt-2 h-5 text-[11px] text-ink-3 tabular-nums">
                 {['08:00', '10:00', '12:00', '14:00', '16:00', '18:00', '20:00', '22:00', '24:00'].map((t, i) => (
                   <span key={t} className="absolute -translate-x-1/2" style={{ left: `${(5.556 + i * 11.111).toFixed(3)}%` }}>{t}</span>
                 ))}
@@ -898,15 +899,15 @@ function Plugins({ v }: { v: View }) {
         </div>
         <div id="plugin-list" className="flex flex-wrap items-center justify-between gap-4 border-t border-black/10 pt-[clamp(16px,2.4vw,32px)]">
           <div className="text-[21px] font-semibold tracking-[-0.015em]">全部插件</div>
-          <div role="tablist" aria-label="插件分类" className="flex max-w-full shrink-0 gap-1 overflow-x-auto rounded-full bg-muted p-1">
-            {v.pcats.map((c) => (
-              <button key={c.label} type="button" role="tab" aria-selected={c.bg !== 'transparent'} onClick={c.pick} className="h-9 cursor-pointer rounded-full border-0 px-4 font-[inherit] text-[13.5px] font-medium select-none transition-[background-color,color,transform] duration-150 ease-out hover:text-foreground active:scale-[0.97]" style={{ background: c.bg, color: c.fg, boxShadow: c.sh }}>
+          <div role="tablist" onKeyDown={handleTabKeyDown} aria-label="插件分类" className="flex max-w-full shrink-0 gap-1 overflow-x-auto rounded-full bg-muted p-1">
+            {v.pcats.map((c, index) => (
+              <button key={c.label} type="button" {...tabProps('plugin-category', index, c.bg !== 'transparent')} onClick={c.pick} className="h-9 cursor-pointer rounded-full border-0 px-4 font-[inherit] text-[13.5px] font-medium select-none transition-[background-color,color,transform] duration-150 ease-out hover:text-foreground active:scale-[0.97]" style={{ background: c.bg, color: c.fg, boxShadow: c.sh }}>
                 {c.label}
               </button>
             ))}
           </div>
         </div>
-        <div data-rv="1" className="flex w-full min-w-0 flex-col items-center gap-7">
+        <div {...panelProps('plugin-category', v.pcats.findIndex((c) => c.bg !== 'transparent'))} data-rv="1" className="flex w-full min-w-0 flex-col items-center gap-7">
           <MobilePluginList v={v} />
           <div ref={r.hiveRef} className="relative mx-auto hidden w-full max-w-[900px] transition-[height] duration-[480ms] sm:block" style={{ height: v.hiveH, transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}>
             <div aria-live="polite" className="absolute top-0 left-0 z-2 transition-transform duration-[520ms]" style={{ width: v.hexW, height: v.hexH, transform: `translate3d(${v.detX}px,${v.detY}px,0)`, filter: 'drop-shadow(0 10px 24px rgba(28,28,30,.08))', transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}>

@@ -1,6 +1,7 @@
 import release from './desktop-release.json'
 
-export const githubReleaseDownloadBase = 'https://github.com/void-vision/void-calendar-website/releases/download'
+export const githubRepoUrl = 'https://github.com/void-vision/void-calendar-website'
+export const githubReleaseDownloadBase = `${githubRepoUrl}/releases/download`
 export const desktopReleaseBase = `${githubReleaseDownloadBase}/v${release.version}`
 const releasePath = 'https://github.com/void-vision/void-calendar-website/releases/download/v0.1.0-beta.6/Void.Calendar_0.1.0-beta.6_aarch64.dmg'
 export type MacArchitecture = 'aarch64' | 'x64'

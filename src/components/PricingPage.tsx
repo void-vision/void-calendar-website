@@ -44,13 +44,13 @@ function PlanCards({ en, yearly }: { en: boolean; yearly: boolean }) {
       <Card className="relative gap-0 rounded-[28px] border-brand/25 bg-background p-7 shadow-[0_8px_40px_rgb(0_113_227/.06)] ring-1 ring-brand/15 sm:p-10">
         <div className="flex min-h-7 flex-wrap items-center justify-between gap-2">
           <h2 className="text-[24px] font-semibold tracking-tight">Pro</h2>
-          <Badge className="rounded-full border-0 bg-brand/8 px-3 py-1 text-brand">{yearly ? (en ? `Save ~${savingsPercent}%` : `年付省约 ${savingsPercent}%`) : (en ? 'Early-bird price' : '早鸟价')}</Badge>
+          <Badge className="rounded-full border-0 bg-brand/8 px-3 py-1 text-link">{yearly ? (en ? `Save ~${savingsPercent}%` : `年付省约 ${savingsPercent}%`) : (en ? 'Early-bird price' : '早鸟价')}</Badge>
         </div>
         <p className="mt-3 min-h-12 max-w-[360px] text-[15px] leading-relaxed text-ink-3">{en ? 'Keep your work in sync. Pick up where you left off on another device.' : '让工作跨设备接续。换一台设备，也能从刚才的地方继续。'}</p>
         <div aria-live="polite" aria-atomic="true" className="mt-8 min-h-[126px]">
-          <p className="text-[12px] text-ink-3">{yearly ? (en ? 'Monthly equivalent, billed yearly' : '折合月价，按年计费') : (en ? 'Early-bird monthly price' : '早鸟月付价')}</p>
+          <p className="text-[12px] text-ink-3">{yearly ? (en ? 'Early-bird yearly price, per month' : '早鸟年付价，折合每月') : (en ? 'Early-bird monthly price' : '早鸟月付价')}</p>
           <p className="mt-2 flex flex-wrap items-baseline gap-2"><span className="text-[56px] leading-[1.1] font-semibold tracking-[-0.04em] tabular-nums">{usd(yearly ? annualCents / 12 : monthlyCents)}</span><span className="text-[14px] text-ink-3">{en ? '/ month' : '/ 月'}</span></p>
-          <p className="mt-3 text-[13px] text-ink-3">{yearly ? (en ? `${usd(annualCents)} billed annually. Monthly equivalent rounded.` : `每年支付 ${usd(annualCents)}，折合月价已四舍五入。`) : (en ? `${usd(monthlyCents)} billed monthly.` : `每月支付 ${usd(monthlyCents)}。`)}</p>
+          <p className="mt-3 text-[13px] text-ink-3">{yearly ? (en ? `${usd(annualCents)} billed yearly · Save ${usd(yearlySavings)} a year` : `每年支付 ${usd(annualCents)} · 每年省 ${usd(yearlySavings)}`) : (en ? `${usd(monthlyCents)} billed monthly.` : `每月支付 ${usd(monthlyCents)}。`)}</p>
         </div>
         <Button disabled className="mt-7 h-12 w-full rounded-full bg-brand text-[15px] text-white disabled:opacity-55">{en ? 'Purchases not open yet' : '购买暂未开放'}</Button>
         <div className="mt-8 border-t border-border pt-7">
@@ -100,7 +100,7 @@ export function PricingPage() {
         <Tabs defaultValue="yearly" className="gap-0">
           <TabsList aria-label={en ? 'Billing cycle' : '付费周期'} className="mx-auto mb-4 h-auto! rounded-full p-1.5">
             <TabsTrigger value="monthly" className="min-h-11 rounded-full px-5 sm:px-7">{en ? 'Monthly' : '月付'}</TabsTrigger>
-            <TabsTrigger value="yearly" className="min-h-11 rounded-full px-5 sm:px-7">{en ? 'Yearly' : '年付'}<span className="ml-1 text-[11px] font-semibold text-brand">{en ? `Save ~${savingsPercent}%` : `省约 ${savingsPercent}%`}</span></TabsTrigger>
+            <TabsTrigger value="yearly" className="min-h-11 rounded-full px-5 sm:px-7">{en ? 'Yearly' : '年付'}<span className="ml-1 text-[11px] font-semibold text-link">{en ? `Save ~${savingsPercent}%` : `省约 ${savingsPercent}%`}</span></TabsTrigger>
           </TabsList>
           <p className="mb-9 text-center text-[13px] text-ink-3">{en ? 'Same Pro features. A better price when billed yearly.' : '同样的 Pro 权益，年付享更优惠的价格。'}</p>
           {(['monthly', 'yearly'] as const).map((cycle) => <TabsContent key={cycle} value={cycle} className="m-0"><PlanCards en={en} yearly={cycle === 'yearly'} /></TabsContent>)}

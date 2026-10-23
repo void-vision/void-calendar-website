@@ -29,10 +29,14 @@ import { Route as EnPricingRouteImport } from './routes/en/pricing'
 import { Route as EnPrivacyRouteImport } from './routes/en/privacy'
 import { Route as EnReviewRouteImport } from './routes/en/review'
 import { Route as EnTermsRouteImport } from './routes/en/terms'
+import { Route as ProductIndexRouteImport } from './routes/product/index'
+import { Route as ProductIslandRouteImport } from './routes/product/island'
 import { Route as UpdatesStableDotjsonRouteImport } from './routes/updates.stable[.]json'
 import { Route as DownloadReviewMacRouteImport } from './routes/download/review/mac'
 import { Route as EnBlogIndexRouteImport } from './routes/en/blog/index'
 import { Route as EnBlogSlugRouteImport } from './routes/en/blog/$slug'
+import { Route as EnProductIndexRouteImport } from './routes/en/product/index'
+import { Route as EnProductIslandRouteImport } from './routes/en/product/island'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -134,6 +138,16 @@ const EnTermsRoute = EnTermsRouteImport.update({
   path: '/en/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ProductIndexRoute = ProductIndexRouteImport.update({
+  id: '/product/',
+  path: '/product/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProductIslandRoute = ProductIslandRouteImport.update({
+  id: '/product/island',
+  path: '/product/island',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const UpdatesStableDotjsonRoute = UpdatesStableDotjsonRouteImport.update({
   id: '/updates/stable.json',
   path: '/updates/stable.json',
@@ -152,6 +166,16 @@ const EnBlogIndexRoute = EnBlogIndexRouteImport.update({
 const EnBlogSlugRoute = EnBlogSlugRouteImport.update({
   id: '/en/blog/$slug',
   path: '/en/blog/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnProductIndexRoute = EnProductIndexRouteImport.update({
+  id: '/en/product/',
+  path: '/en/product/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EnProductIslandRoute = EnProductIslandRouteImport.update({
+  id: '/en/product/island',
+  path: '/en/product/island',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -173,13 +197,17 @@ export interface FileRoutesByFullPath {
   '/en/privacy': typeof EnPrivacyRoute
   '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
+  '/product/island': typeof ProductIslandRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog/': typeof BlogIndexRoute
   '/download/': typeof DownloadIndexRoute
   '/en/': typeof EnIndexRoute
+  '/product/': typeof ProductIndexRoute
   '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
+  '/en/product/island': typeof EnProductIslandRoute
   '/en/blog/': typeof EnBlogIndexRoute
+  '/en/product/': typeof EnProductIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -199,13 +227,17 @@ export interface FileRoutesByTo {
   '/en/privacy': typeof EnPrivacyRoute
   '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
+  '/product/island': typeof ProductIslandRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog': typeof BlogIndexRoute
   '/download': typeof DownloadIndexRoute
   '/en': typeof EnIndexRoute
+  '/product': typeof ProductIndexRoute
   '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
+  '/en/product/island': typeof EnProductIslandRoute
   '/en/blog': typeof EnBlogIndexRoute
+  '/en/product': typeof EnProductIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -226,13 +258,17 @@ export interface FileRoutesById {
   '/en/privacy': typeof EnPrivacyRoute
   '/en/review': typeof EnReviewRoute
   '/en/terms': typeof EnTermsRoute
+  '/product/island': typeof ProductIslandRoute
   '/updates/stable.json': typeof UpdatesStableDotjsonRoute
   '/blog/': typeof BlogIndexRoute
   '/download/': typeof DownloadIndexRoute
   '/en/': typeof EnIndexRoute
+  '/product/': typeof ProductIndexRoute
   '/download/review/mac': typeof DownloadReviewMacRoute
   '/en/blog/$slug': typeof EnBlogSlugRoute
+  '/en/product/island': typeof EnProductIslandRoute
   '/en/blog/': typeof EnBlogIndexRoute
+  '/en/product/': typeof EnProductIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -254,13 +290,17 @@ export interface FileRouteTypes {
     | '/en/privacy'
     | '/en/review'
     | '/en/terms'
+    | '/product/island'
     | '/updates/stable.json'
     | '/blog/'
     | '/download/'
     | '/en/'
+    | '/product/'
     | '/download/review/mac'
     | '/en/blog/$slug'
+    | '/en/product/island'
     | '/en/blog/'
+    | '/en/product/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -280,13 +320,17 @@ export interface FileRouteTypes {
     | '/en/privacy'
     | '/en/review'
     | '/en/terms'
+    | '/product/island'
     | '/updates/stable.json'
     | '/blog'
     | '/download'
     | '/en'
+    | '/product'
     | '/download/review/mac'
     | '/en/blog/$slug'
+    | '/en/product/island'
     | '/en/blog'
+    | '/en/product'
   id:
     | '__root__'
     | '/'
@@ -306,13 +350,17 @@ export interface FileRouteTypes {
     | '/en/privacy'
     | '/en/review'
     | '/en/terms'
+    | '/product/island'
     | '/updates/stable.json'
     | '/blog/'
     | '/download/'
     | '/en/'
+    | '/product/'
     | '/download/review/mac'
     | '/en/blog/$slug'
+    | '/en/product/island'
     | '/en/blog/'
+    | '/en/product/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -333,13 +381,17 @@ export interface RootRouteChildren {
   EnPrivacyRoute: typeof EnPrivacyRoute
   EnReviewRoute: typeof EnReviewRoute
   EnTermsRoute: typeof EnTermsRoute
+  ProductIslandRoute: typeof ProductIslandRoute
   UpdatesStableDotjsonRoute: typeof UpdatesStableDotjsonRoute
   BlogIndexRoute: typeof BlogIndexRoute
   DownloadIndexRoute: typeof DownloadIndexRoute
   EnIndexRoute: typeof EnIndexRoute
+  ProductIndexRoute: typeof ProductIndexRoute
   DownloadReviewMacRoute: typeof DownloadReviewMacRoute
   EnBlogSlugRoute: typeof EnBlogSlugRoute
+  EnProductIslandRoute: typeof EnProductIslandRoute
   EnBlogIndexRoute: typeof EnBlogIndexRoute
+  EnProductIndexRoute: typeof EnProductIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -484,6 +536,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/product/': {
+      id: '/product/'
+      path: '/product'
+      fullPath: '/product/'
+      preLoaderRoute: typeof ProductIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/product/island': {
+      id: '/product/island'
+      path: '/product/island'
+      fullPath: '/product/island'
+      preLoaderRoute: typeof ProductIslandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/updates/stable.json': {
       id: '/updates/stable.json'
       path: '/updates/stable.json'
@@ -512,6 +578,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EnBlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/en/product/': {
+      id: '/en/product/'
+      path: '/en/product'
+      fullPath: '/en/product/'
+      preLoaderRoute: typeof EnProductIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/en/product/island': {
+      id: '/en/product/island'
+      path: '/en/product/island'
+      fullPath: '/en/product/island'
+      preLoaderRoute: typeof EnProductIslandRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -533,13 +613,17 @@ const rootRouteChildren: RootRouteChildren = {
   EnPrivacyRoute: EnPrivacyRoute,
   EnReviewRoute: EnReviewRoute,
   EnTermsRoute: EnTermsRoute,
+  ProductIslandRoute: ProductIslandRoute,
   UpdatesStableDotjsonRoute: UpdatesStableDotjsonRoute,
   BlogIndexRoute: BlogIndexRoute,
   DownloadIndexRoute: DownloadIndexRoute,
   EnIndexRoute: EnIndexRoute,
+  ProductIndexRoute: ProductIndexRoute,
   DownloadReviewMacRoute: DownloadReviewMacRoute,
   EnBlogSlugRoute: EnBlogSlugRoute,
+  EnProductIslandRoute: EnProductIslandRoute,
   EnBlogIndexRoute: EnBlogIndexRoute,
+  EnProductIndexRoute: EnProductIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

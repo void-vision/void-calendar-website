@@ -10,6 +10,9 @@ dist
 # oh-my-claudecode 的本地状态文件（任意目录），不进仓库也不进网站构建
 .omc/
 .claude/
-docs/
+docs/*
+!docs/ui-audit.md
 REVIEW-RELEASE.md
 .codex/
+.agents/
+scripts/ui-audit/

@@ -70,17 +70,17 @@ export function FlowSection({ en }: { en: boolean }) {
           lede={en ? 'Five steps, one app. Capture, plan, schedule, focus and reflect without switching tools.' : '五个步骤，一个应用。捕获、拆解、排程、专注、记录，不必在工具之间来回切换。'}
         />
 
-        <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-16">
+        <div className="grid min-w-0 grid-cols-1 items-start gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] lg:gap-16">
           {/* 窄屏逐条平铺：手风琴收起上一项会让页面跳动，平铺后自然向下滚动即可。 */}
-          <ol className="m-0 flex list-none flex-col gap-14 p-0 lg:hidden">
+          <ol className="m-0 flex min-w-0 list-none flex-col gap-14 p-0 lg:hidden">
             {steps.map((step) => (
-              <li key={step.id} className="flex flex-col gap-4 border-t border-black/10 pt-6">
+              <li key={step.id} className="flex min-w-0 flex-col gap-4 border-t border-black/10 pt-6">
                 <h3 className="m-0 flex items-baseline gap-3 text-[21px] font-semibold tracking-[-0.01em]">
                   <span className="text-[13px] font-normal text-ink-3 tabular-nums">{step.n}</span>
-                  {step.title}
+                  <span className="min-w-0">{step.title}</span>
                 </h3>
                 <p className="m-0 text-[16px] leading-[1.7] text-ink-3">{step.body}</p>
-                <div aria-hidden="true" className="mt-2 flex justify-center rounded-3xl bg-muted px-5 py-10">{step.visual}</div>
+                <div aria-hidden="true" className="mt-2 flex min-w-0 justify-center overflow-hidden rounded-3xl bg-muted px-5 py-10">{step.visual}</div>
               </li>
             ))}
           </ol>

@@ -68,7 +68,7 @@ export function LegalLayout({ en, eyebrow, title, intro, sections }: { en: boole
                 {section.title}
               </h2>
               {section.body.map((paragraph) => (
-                <p key={paragraph} className="m-0 text-[17px] leading-[1.75] [overflow-wrap:anywhere] text-ink-2">
+                <p key={paragraph} className="prose-measure m-0 text-[17px] leading-[1.75] [overflow-wrap:anywhere] text-ink-2">
                   {paragraph}
                 </p>
               ))}

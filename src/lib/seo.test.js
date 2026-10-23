@@ -20,6 +20,7 @@ test('both home languages connect the same website, app and publisher identities
     expect(app.publisher['@id']).toBe('https://voidvision.ai/#organization')
     expect(app.publisher.url).toBe('https://voidvision.ai/en')
     expect(app.publisher.sameAs).toEqual(['https://www.linkedin.com/company/voidvision/'])
+    expect(app.sameAs).toEqual(['https://github.com/void-vision/void-calendar-website'])
     expect(app.image).toBe(absoluteUrl('/logo.png'))
     expect(app.aggregateRating).toBeUndefined()
     expect(app.review).toBeUndefined()

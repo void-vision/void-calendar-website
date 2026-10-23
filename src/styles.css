@@ -4,6 +4,7 @@
 /* 设计基调：Apple 式中性灰阶 + 单一强调蓝。组件只用这些语义变量，不写零散色值。 */
 :root {
   --radius: 18px;
+  --prose-measure: 60ch;
   --background: #ffffff;
   --foreground: #1d1d1f;
   --card: #ffffff;
@@ -33,6 +34,8 @@
   --night-fg: #f5f5f7;
   --night-muted: #a1a1a6;
   --ease-apple: cubic-bezier(0.28, 0.11, 0.32, 1);
+  /* 浮层进出与界面反馈：强 ease-out，起步快、收尾稳。 */
+  --ease-ui: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 @theme inline {
@@ -71,6 +74,7 @@
   --radius-2xl: calc(var(--radius) + 6px);
   --radius-3xl: calc(var(--radius) + 14px);
   --ease-apple: var(--ease-apple);
+  --ease-ui: var(--ease-ui);
 }
 
 html,
@@ -115,6 +119,48 @@ html {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+}
+
+/* 产品页滚动入场：只有视口下方、等待入场的内容才隐藏；进入视口后播放一次。 */
+.reveal[data-reveal='pending'] {
+  opacity: 0;
+  transform: translateY(24px);
+}
+
+.reveal[data-reveal='shown'] {
+  transition:
+    opacity 700ms var(--ease-apple),
+    transform 700ms var(--ease-apple);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+/* Island 从刘海处落下：从上沿略微缩放展开，像真实的展开动作。 */
+@keyframes island-drop {
+  from {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.96);
+  }
+}
+
+.island-drop {
+  transform-origin: 50% 0;
+  animation: island-drop 900ms var(--ease-apple) 200ms both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal[data-reveal='pending'] {
+    transform: none;
+  }
+
+  .island-drop {
+    animation-name: hero-fade;
+  }
+}
+
+@keyframes hero-fade {
+  from {
+    opacity: 0;
   }
 }
 
@@ -215,6 +261,15 @@ a {
   color: var(--ink-2);
   font-size: 1.0625rem;
   line-height: 1.8;
+}
+
+/* §4.3.1：正文独立限宽，图片和表格保留文章的完整内容宽度。 */
+@utility prose-measure {
+  max-width: var(--prose-measure);
+}
+
+.md :where(p:not(:has(img)), ul, ol, blockquote) {
+  max-width: var(--prose-measure);
 }
 
 .md > * + * {

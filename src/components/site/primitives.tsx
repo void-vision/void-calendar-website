@@ -9,7 +9,7 @@ export function Container({ className, children }: { className?: string; childre
 }
 
 export function Eyebrow({ className, children }: { className?: string; children: ReactNode }) {
-  return <p className={cn('t-eyebrow m-0 text-brand', className)}>{children}</p>
+  return <p className={cn('t-eyebrow m-0 text-link', className)}>{children}</p>
 }
 
 type IntroProps = {
