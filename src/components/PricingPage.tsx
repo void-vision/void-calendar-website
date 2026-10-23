@@ -6,7 +6,6 @@ import { ArrowLink, DownloadButton } from './site/primitives'
 
 const monthlyCents = 499
 const annualCents = 2999
-const lifetimeCents = 8999
 const yearlySavings = monthlyCents * 12 - annualCents
 const savingsPercent = Math.round(yearlySavings / (monthlyCents * 12) * 100)
 const usd = (cents: number) => `US$${(cents / 100).toFixed(2)}`
@@ -17,11 +16,11 @@ export function PricingPage() {
   const en = useEn()
   const plans = [
     {
-      name: en ? 'Monthly' : '月付',
+      name: en ? 'Early-bird monthly' : '早鸟月付',
       price: usd(monthlyCents),
       period: en ? '/ month' : '/ 月',
-      description: en ? 'Add sync with a monthly Pro plan.' : '需要同步时，按月使用 Pro。',
-      detail: en ? 'A month at a time.' : '按月付费。',
+      description: en ? 'Add Pro sync at the early-bird monthly price.' : '以早鸟月付价，使用 Pro 同步。',
+      detail: en ? 'Early-bird price, billed monthly.' : '早鸟价，按月付费。',
       featured: false,
     },
     {
@@ -31,14 +30,6 @@ export function PricingPage() {
       description: en ? 'Keep sync with annual billing.' : '持续使用同步，按年付费更省。',
       detail: en ? `About ${usd(annualCents / 12)} / month.` : `折合约 ${usd(annualCents / 12)} / 月。`,
       featured: true,
-    },
-    {
-      name: en ? 'Lifetime' : '终生',
-      price: usd(lifetimeCents),
-      period: en ? 'one-time' : '一次付费',
-      description: en ? 'One purchase for Pro sync.' : '一次购买，使用 Pro 同步。',
-      detail: en ? 'A single payment.' : '无需按月或按年付款。',
-      featured: false,
     },
   ]
   // 免费版包含的功能，与下方说明文字同源，只是拆成标签展示。
@@ -56,7 +47,7 @@ export function PricingPage() {
     },
     {
       question: en ? 'How is the annual saving calculated?' : '年付能省多少？',
-      answer: en ? `Twelve monthly payments total ${usd(monthlyCents * 12)}. Annual billing is ${usd(annualCents)}, saving ${usd(yearlySavings)} — about ${savingsPercent}%. The monthly equivalent is rounded; annual billing is charged by the year.` : `连续月付 12 个月共 ${usd(monthlyCents * 12)}，年付为 ${usd(annualCents)}，少 ${usd(yearlySavings)}，约省 ${savingsPercent}%。折合月价是四舍五入后的参考，年付按整年计费。`,
+      answer: en ? `Twelve payments at the early-bird monthly price total ${usd(monthlyCents * 12)}. Annual billing is ${usd(annualCents)}, saving ${usd(yearlySavings)} — about ${savingsPercent}%. The monthly equivalent is rounded; annual billing is charged by the year.` : `按早鸟月付价连续付费 12 个月共 ${usd(monthlyCents * 12)}，年付为 ${usd(annualCents)}，少 ${usd(yearlySavings)}，约省 ${savingsPercent}%。折合月价是四舍五入后的参考，年付按整年计费。`,
     },
     {
       question: en ? 'Does AI cost extra?' : 'AI 需要另外付费吗？',
@@ -64,7 +55,7 @@ export function PricingPage() {
     },
     {
       question: en ? 'What currency are these prices in?' : '价格是什么币种？',
-      answer: en ? 'All three prices are in US dollars (USD).' : '三种方案均以美元（USD）标价。',
+      answer: en ? 'Both plans are priced in US dollars (USD).' : '两种方案均以美元（USD）标价。',
     },
   ]
 
@@ -99,17 +90,17 @@ export function PricingPage() {
           </div>
         </section>
 
-        {/* Pro：三种付费方式。购买尚未开放，按钮如实显示为不可用。 */}
+        {/* Pro：早鸟月付与年付。购买尚未开放，按钮如实显示为不可用。 */}
         <section aria-labelledby="pro-plan-heading" className="flex flex-col gap-8 pt-[clamp(40px,6vw,72px)]">
           <div className="flex flex-col items-center gap-3 text-center">
             <span className="inline-flex min-h-7 items-center rounded-full border border-border px-3 text-[12px] font-medium text-ink-3">
               {en ? 'Not available yet' : '暂不可用'}
             </span>
             <h2 id="pro-plan-heading" className="t-title m-0">{en ? 'Pro · Sync' : 'Pro · 同步'}</h2>
-            <p className="m-0 max-w-[520px] text-[17px] leading-[1.6] text-ink-3">{en ? 'Three ways to pay for Pro. Choose the one that fits your routine.' : '三种付费方式，按自己的使用节奏来选。'}</p>
+            <p className="m-0 max-w-[520px] text-[17px] leading-[1.6] text-ink-3">{en ? 'Choose early-bird monthly or annual billing for Pro.' : '早鸟月付或年付，按自己的使用节奏来选。'}</p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-5">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-5">
             {plans.map((plan) => (
               <article
                 key={plan.name}

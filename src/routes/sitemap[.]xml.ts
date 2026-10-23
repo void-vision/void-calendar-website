@@ -10,7 +10,7 @@ const latestPost = posts.map((post) => post.updated ?? post.published).sort().at
 const entries: { path: string; lastmod?: string }[] = [
   { path: '/', lastmod: '2026-10-22' },
   { path: '/download', lastmod: '2026-10-22' },
-  { path: '/pricing', lastmod: '2026-10-08' },
+  { path: '/pricing', lastmod: '2026-10-23' },
   { path: '/blog', lastmod: latestPost },
   { path: '/changelog', lastmod: releases[0].published },
   ...posts.map((post) => ({ path: `/blog/${post.slug}`, lastmod: post.updated ?? post.published })),
