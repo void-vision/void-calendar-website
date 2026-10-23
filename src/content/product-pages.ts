@@ -25,6 +25,7 @@ export const shots = {
     'island-ai': { width: 1340, height: 592 },
     'island-journal': { width: 1340, height: 780 },
     'island-cat': { width: 1340, height: 328 },
+    'island-git': { width: 1340, height: 858 },
   },
   // 英文本机规划器只识别中文关键词，示例场景也只有中文，这几张英文没有截图，页面用文字说明。
   en: {
@@ -32,6 +33,7 @@ export const shots = {
     project: { width: 1620, height: 1200 },
     'island-focus': { width: 1340, height: 486 },
     'island-ai': { width: 1340, height: 326 },
+    'island-git': { width: 1340, height: 858 },
   },
 } satisfies Record<SiteLang, Record<string, Size>>
 
@@ -291,7 +293,8 @@ const islandZh = {
       title: 'AI 写完，在刘海里提交。',
       body: 'AI 会话在哪个仓库干活，Git 标签页就列出哪个仓库，并标出哪些会话做完了、还有几个文件没提交。点一下文件就能暂存，写好说明直接提交；也可以让 AI 根据改动写提交说明。',
       points: ['右侧是分支图谱和储藏列表，当前分支和领先、落后的提交数一目了然。', '只做不会丢数据的操作：不丢弃改动，不推送也不拉取。需要先安装 Xcode 命令行工具。'],
-      alt: '',
+      shot: 'island-git',
+      alt: 'Island Git 标签页：示例仓库 snake-game 有 4 个改动和 1 个已暂存文件，右侧是带 feature/levels 分支的提交图谱',
       featured: true,
     },
     {
@@ -395,7 +398,8 @@ const islandEn: typeof islandZh = {
       title: 'When AI is done, commit from the notch.',
       body: 'The Git tab lists the repositories your AI sessions work in, and shows which sessions have finished and how many files are left to commit. Click a file to stage it, write a message and commit, or let AI write the message from your changes.',
       points: ['A branch graph and your stashes sit alongside, with the current branch and how far it is ahead or behind.', 'Only safe operations: it never discards changes, pushes or pulls. Requires the Xcode command line tools.'],
-      alt: '',
+      shot: 'island-git',
+      alt: 'The Island Git tab: the sample repository snake-game with four changes and one staged file, next to a commit graph with a feature/levels branch',
       featured: true,
     },
     {
