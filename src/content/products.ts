@@ -24,8 +24,8 @@ export const productEntries: ProductEntry[] = [
     path: '/product/island',
     name: 'Void Calendar for Island',
     summary: {
-      zh: '刘海里的任务地图、专注计时与 AI 会话，悬停即开。',
-      en: 'Turns your notch into a workspace for your task map, focus timer and AI sessions. Hover to open.',
+      zh: '随心而行：AI 编程会话的状态在刘海一眼看清，还有任务地图与专注计时。',
+      en: 'Follow your heart: your AI coding sessions, task map and focus timer, right in the notch.',
     },
   },
 ]

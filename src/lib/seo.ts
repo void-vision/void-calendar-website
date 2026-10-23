@@ -43,12 +43,12 @@ export const pages = {
   island: {
     path: '/product/island',
     zh: {
-      title: 'Void Calendar for Island · 刘海里的工作台',
-      description: 'Island 集成在 Void Calendar 中：悬停刘海即可打开任务地图、专注计时、日记和 AI 编程会话，并能保持 Mac 唤醒。',
+      title: 'Void Calendar for Island · 随心而行，AI 会话在刘海',
+      description: 'Island 集成在 Void Calendar 中：在刘海查看 Claude Code、Codex 等 AI 编程会话的状态并直接回应审批，还有任务地图、专注计时和日记。',
     },
     en: {
-      title: 'Void Calendar for Island · A Workspace in Your Notch',
-      description: 'Island comes with Void Calendar. Hover the notch for your task map, focus timer, journal and AI coding sessions, and keep your Mac awake.',
+      title: 'Void Calendar for Island · Follow Your Heart',
+      description: 'Island comes with Void Calendar. See every Claude Code and Codex session in your notch and answer approvals right there, alongside your task map, focus timer and journal.',
     },
   },
   pricing: {

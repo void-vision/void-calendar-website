@@ -20,8 +20,9 @@ const openIcons: Record<IslandOpen['id'], LucideIcon> = { hover: MousePointer2, 
 export function IslandProductPage() {
   const lang = useSiteLang()
   const t = islandPage[lang]
-  const withShot = t.chapters.filter((chapter) => chapter.shot && hasShot(lang, chapter.shot))
-  const textOnly = t.chapters.filter((chapter) => !(chapter.shot && hasShot(lang, chapter.shot)))
+  const isFull = (chapter: Chapter) => chapter.featured || (chapter.shot && hasShot(lang, chapter.shot))
+  const withShot = t.chapters.filter(isFull)
+  const textOnly = t.chapters.filter((chapter) => !isFull(chapter))
   return (
     <div className="min-h-svh bg-background text-[17px] leading-[1.6] text-foreground">
       <SiteHeader lang={lang} />
@@ -63,7 +64,7 @@ function Hero({ lang }: { lang: SiteLang }) {
         <div className="mt-[clamp(48px,7vw,88px)] w-full max-w-[980px]">
           <IslandStage className="rounded-b-none">
             <div className="island-drop">
-              <Shot name="island-map" lang={lang} variant="island" priority alt={t.alt} sizes="(min-width: 760px) 670px, 520px" />
+              <Shot name="island-ai" lang={lang} variant="island" priority alt={t.alt} sizes="(min-width: 760px) 670px, 520px" />
             </div>
           </IslandStage>
         </div>
@@ -119,15 +120,17 @@ function ChapterSection({ chapter, lang }: { chapter: Chapter; lang: SiteLang })
             {chapter.points.length ? <Points items={chapter.points} /> : null}
           </div>
         </Reveal>
-        <Reveal delay={80} className="mt-[clamp(32px,4vw,56px)]">
-          <div data-header-tone="dark" className="rounded-[28px] bg-night p-[clamp(8px,2vw,24px)]">
-            <IslandStage>
-              <div tabIndex={0} role="region" aria-label={chapter.alt} className="outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2997ff]">
-                <Shot name={chapter.shot!} lang={lang} variant="island" alt={chapter.alt} sizes="(min-width: 760px) 670px, 520px" />
-              </div>
-            </IslandStage>
-          </div>
-        </Reveal>
+        {chapter.shot && hasShot(lang, chapter.shot) ? (
+          <Reveal delay={80} className="mt-[clamp(32px,4vw,56px)]">
+            <div data-header-tone="dark" className="rounded-[28px] bg-night p-[clamp(8px,2vw,24px)]">
+              <IslandStage>
+                <div tabIndex={0} role="region" aria-label={chapter.alt} className="outline-none focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#2997ff]">
+                  <Shot name={chapter.shot} lang={lang} variant="island" alt={chapter.alt} sizes="(min-width: 760px) 670px, 520px" />
+                </div>
+              </IslandStage>
+            </div>
+          </Reveal>
+        ) : null}
       </Container>
     </section>
   )

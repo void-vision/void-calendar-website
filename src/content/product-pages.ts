@@ -42,7 +42,8 @@ export function hasShot(lang: SiteLang, name: ShotName) {
 }
 
 export type Basic = { id: 'calendar' | 'idea' | 'tasks' | 'projects' | 'notes' | 'focus'; title: string; body: string; keys: string[][] }
-export type Chapter = { id: string; eyebrow: string; title: string; body: string; points: string[]; shot?: ShotName; alt: string }
+// featured：没有截图时也作为完整章节展示，而不是收进「更多」。
+export type Chapter = { id: string; eyebrow: string; title: string; body: string; points: string[]; shot?: ShotName; alt: string; featured?: boolean }
 export type ShortcutGroup = { title: string; items: { label: string; keys: string[][] }[] }
 
 const calendarZh = {
@@ -136,10 +137,10 @@ const calendarZh = {
   },
   island: {
     eyebrow: 'Void Calendar for Island',
-    title: '刘海，也是工作台。',
-    body: 'Island 集成在 Void Calendar 里。把指针移到刘海，任务地图、专注计时和 AI 会话就展开在眼前。',
+    title: '随心而行，AI 会话交给刘海。',
+    body: 'Island 集成在 Void Calendar 里。Claude Code、Codex 等 AI 编程会话的状态都显示在刘海：哪个在等审批、哪个还在处理，一眼看清，审批和提问直接在这里回应。',
     link: '了解 Island',
-    alt: 'Island 展开后的任务地图：像素风格的任务星图，下方是当前任务「整理设计走查问题清单」',
+    alt: 'Island AI 会话列表：一个会话等待审批，一个处理中，一个等待输入，一个闲置，并标出所在的终端',
   },
   cta: { title: '先免费用起来。', lede: '公开测试版免费，本地工作区无需订阅。需要跨设备同步时再选择 Pro。' },
 }
@@ -235,10 +236,10 @@ const calendarEn: typeof calendarZh = {
   },
   island: {
     eyebrow: 'Void Calendar for Island',
-    title: 'Your notch is a workspace, too.',
-    body: 'Island comes with Void Calendar. Move the pointer to the notch and your task map, focus timer and AI sessions open right there.',
+    title: 'Follow your heart. Your AI sessions live in the notch.',
+    body: 'Island comes with Void Calendar. Connect Claude Code, Codex and other AI coding agents, and the notch shows which session needs approval and which is still working. Answer approvals and questions right there.',
     link: 'Meet Island',
-    alt: 'Island open on the task map: a pixel-style map of tasks, with the current task Core gameplay below',
+    alt: 'The Island AI tab inviting you to connect your AI coding agents, with a Connect button',
   },
   cta: { title: 'Start for free.', lede: 'The public beta is free, and your local workspace needs no subscription. Choose Pro later if you want sync across devices.' },
 }
@@ -250,10 +251,10 @@ export type IslandOpen = { id: 'hover' | 'click' | 'key'; title: string; body: s
 const islandZh = {
   hero: {
     eyebrow: 'Void Calendar for Island',
-    title: '刘海里的工作台。',
-    lede: 'Island 集成在 Void Calendar 里，装好就有。把指针移到刘海，任务、专注计时、日记和 AI 会话都在那里，不用切换窗口。',
+    title: '随心而行。',
+    lede: '代码交给 AI，你去做想做的事。Island 集成在 Void Calendar 里：AI 编程会话的状态在刘海一眼看清、直接回应；AI 在跑时让 Mac 保持唤醒；做完的改动直接在 Git 标签页提交；被刘海挡住的菜单栏图标也能在这里找回。',
     note: '随 Void Calendar 免费提供 · 可在设置 → Island 中关闭',
-    alt: 'Island 从刘海展开，显示任务地图和当前任务',
+    alt: 'Island 从刘海展开，显示 AI 会话列表：一个等待审批，一个处理中，一个等待输入',
   },
   open: {
     eyebrow: '打开方式',
@@ -266,24 +267,6 @@ const islandZh = {
     note: '外接显示器没有刘海时，Island 显示在屏幕顶部中央。',
   },
   chapters: [
-    {
-      id: 'map',
-      eyebrow: '任务地图',
-      title: '今天要做的事，一张地图看完。',
-      body: '今天、计划中和过期的任务排成一张像素星图，可以缩放、拖动。选中一项，点「就做这件」直接开始。',
-      points: ['下方显示当前任务的下一步和预估时间。', '定位按钮一键回到正在做的任务。'],
-      shot: 'island-map',
-      alt: 'Island 任务地图：像素星图上标着多个任务，选中「整理设计走查问题清单」，下一步是先列出三个问题',
-    },
-    {
-      id: 'focus',
-      eyebrow: '专注计时',
-      title: '计时就在眼前，不占桌面。',
-      body: '选 5、15、25、45 分钟或自定义时长开始一轮专注。做不下去时可以标记卡住，提前结束也会记录下这一轮。',
-      points: ['进度条显示这一轮已经过去多少。', '一句话就能新建任务，或把想法记下来。'],
-      shot: 'island-focus',
-      alt: 'Island 专注计时：剩余 18:31，当前任务「整理设计走查问题清单」，下方有暂停和提前结束按钮',
-    },
     {
       id: 'ai',
       eyebrow: 'AI 会话',
@@ -301,6 +284,42 @@ const islandZh = {
       points: ['电量低于 10% 时自动停止。', '可选择手动开启时保持屏幕常亮。'],
       shot: 'island-coffee',
       alt: 'Island 保持唤醒设置：时长选项、直到某件事结束，以及自动保持唤醒的条件',
+    },
+    {
+      id: 'git',
+      eyebrow: 'Git',
+      title: 'AI 写完，在刘海里提交。',
+      body: 'AI 会话在哪个仓库干活，Git 标签页就列出哪个仓库，并标出哪些会话做完了、还有几个文件没提交。点一下文件就能暂存，写好说明直接提交；也可以让 AI 根据改动写提交说明。',
+      points: ['右侧是分支图谱和储藏列表，当前分支和领先、落后的提交数一目了然。', '只做不会丢数据的操作：不丢弃改动，不推送也不拉取。需要先安装 Xcode 命令行工具。'],
+      alt: '',
+      featured: true,
+    },
+    {
+      id: 'menubar',
+      eyebrow: '菜单栏',
+      title: '被刘海挡住的图标，找回来。',
+      body: '菜单栏图标一多，就会被刘海挡住。Island 把所有图标分成「被挡住的」和「菜单栏里」两排，点一下打开它的菜单，按住 ⌘ 拖动就能调整位置，把常用的挪回菜单栏。',
+      points: ['把不常用的拖进「被挡住的」，给常用图标腾出位置。', '打开菜单和移动图标需要允许「辅助功能」，显示图标需要允许「屏幕录制」。'],
+      alt: '',
+      featured: true,
+    },
+    {
+      id: 'map',
+      eyebrow: '任务地图',
+      title: '今天要做的事，一张地图看完。',
+      body: '今天、计划中和过期的任务排成一张像素星图，可以缩放、拖动。选中一项，点「就做这件」直接开始。',
+      points: ['下方显示当前任务的下一步和预估时间。', '定位按钮一键回到正在做的任务。'],
+      shot: 'island-map',
+      alt: 'Island 任务地图：像素星图上标着多个任务，选中「整理设计走查问题清单」，下一步是先列出三个问题',
+    },
+    {
+      id: 'focus',
+      eyebrow: '专注计时',
+      title: '计时就在眼前，不占桌面。',
+      body: '选 5、15、25、45 分钟或自定义时长开始一轮专注。做不下去时可以标记卡住，提前结束也会记录下这一轮。',
+      points: ['进度条显示这一轮已经过去多少。', '一句话就能新建任务，或把想法记下来。'],
+      shot: 'island-focus',
+      alt: 'Island 专注计时：剩余 18:31，当前任务「整理设计走查问题清单」，下方有暂停和提前结束按钮',
     },
     {
       id: 'journal',
@@ -325,7 +344,6 @@ const islandZh = {
     eyebrow: '更多',
     title: '按你的习惯调整。',
     items: [
-      { title: '菜单栏图标', body: '被刘海挡住的菜单栏图标，可以在 Island 里找回，⌘ 拖动重新排列。' },
       { title: '尺寸与延迟', body: '宽度、悬停延迟和音量都能精确调整。' },
       { title: '外观与布局', body: '浅色或深色本体；每个标签页可以单独显示或隐藏，布局可以调整。' },
       { title: '提示音', body: '展开时播放简短的像素音效，可以调小或关闭。' },
@@ -337,10 +355,10 @@ const islandZh = {
 const islandEn: typeof islandZh = {
   hero: {
     eyebrow: 'Void Calendar for Island',
-    title: 'A workspace in your notch.',
-    lede: 'Island is built into Void Calendar, so it is there as soon as you install. Move the pointer to the notch and your tasks, focus timer, journal and AI sessions are right there, without switching windows.',
+    title: 'Follow your heart.',
+    lede: 'Let AI do the coding while you do what you love. Island is built into Void Calendar: see every AI coding session in your notch and answer right there, keep your Mac awake while AI runs, commit finished work from the Git tab, and find the menu bar icons hidden behind the notch.',
     note: 'Included free with Void Calendar · Turn it off in Settings → Island',
-    alt: 'Island opening from the notch, showing the task map and the current task',
+    alt: 'Island opening from the notch, inviting you to connect your AI coding agents',
   },
   open: {
     eyebrow: 'Opening it',
@@ -353,24 +371,6 @@ const islandEn: typeof islandZh = {
     note: 'On an external display without a notch, Island sits at the top centre of the screen.',
   },
   chapters: [
-    {
-      id: 'map',
-      eyebrow: 'Task map',
-      title: 'Your day on one map.',
-      body: 'Today’s, planned and overdue tasks become a pixel map you can zoom and pan. Pick one and choose Do this one to start.',
-      points: ['The next step and estimate for the current task sit underneath.', 'One button brings you back to what you are working on.'],
-      shot: 'island-map',
-      alt: 'The Island task map, a pixel-style map of tasks with Core gameplay selected and its next step below',
-    },
-    {
-      id: 'focus',
-      eyebrow: 'Focus timer',
-      title: 'A timer in view, not on your desktop.',
-      body: 'Start a focus round of 5, 15, 25 or 45 minutes, or a custom length. If you get stuck, say so; ending early still records the round.',
-      points: ['The current task and its next step stay in view.', 'Jot down an idea and press Return to save it to Ideas.'],
-      shot: 'island-focus',
-      alt: 'The Island focus timer at 25:00 with the current task Core gameplay and an idea field below',
-    },
     {
       id: 'ai',
       eyebrow: 'AI sessions',
@@ -388,6 +388,42 @@ const islandEn: typeof islandZh = {
       points: ['Stops below 10% battery.', 'Optionally keep the display on when you start it by hand.'],
       shot: 'island-coffee',
       alt: 'Island keep-awake settings with duration options, until-this-ends options and automatic conditions',
+    },
+    {
+      id: 'git',
+      eyebrow: 'Git',
+      title: 'When AI is done, commit from the notch.',
+      body: 'The Git tab lists the repositories your AI sessions work in, and shows which sessions have finished and how many files are left to commit. Click a file to stage it, write a message and commit, or let AI write the message from your changes.',
+      points: ['A branch graph and your stashes sit alongside, with the current branch and how far it is ahead or behind.', 'Only safe operations: it never discards changes, pushes or pulls. Requires the Xcode command line tools.'],
+      alt: '',
+      featured: true,
+    },
+    {
+      id: 'menubar',
+      eyebrow: 'Menu bar',
+      title: 'Get back the icons behind the notch.',
+      body: 'With enough menu bar icons, some end up hidden behind the notch. Island lists every icon in two rows, Hidden and In the menu bar. Click one to open its menu, or ⌘-drag it to move the ones you use back into view.',
+      points: ['Drag icons you rarely use into Hidden to make room.', 'Opening menus and moving icons needs Accessibility; showing the icons needs Screen Recording.'],
+      alt: '',
+      featured: true,
+    },
+    {
+      id: 'map',
+      eyebrow: 'Task map',
+      title: 'Your day on one map.',
+      body: 'Today’s, planned and overdue tasks become a pixel map you can zoom and pan. Pick one and choose Do this one to start.',
+      points: ['The next step and estimate for the current task sit underneath.', 'One button brings you back to what you are working on.'],
+      shot: 'island-map',
+      alt: 'The Island task map, a pixel-style map of tasks with Core gameplay selected and its next step below',
+    },
+    {
+      id: 'focus',
+      eyebrow: 'Focus timer',
+      title: 'A timer in view, not on your desktop.',
+      body: 'Start a focus round of 5, 15, 25 or 45 minutes, or a custom length. If you get stuck, say so; ending early still records the round.',
+      points: ['The current task and its next step stay in view.', 'Jot down an idea and press Return to save it to Ideas.'],
+      shot: 'island-focus',
+      alt: 'The Island focus timer at 25:00 with the current task Core gameplay and an idea field below',
     },
     {
       id: 'journal',
@@ -410,7 +446,6 @@ const islandEn: typeof islandZh = {
     eyebrow: 'More',
     title: 'Make it yours.',
     items: [
-      { title: 'Menu bar icons', body: 'Find the menu bar icons hidden behind the notch in Island, and ⌘-drag to rearrange them.' },
       { title: 'Size and timing', body: 'Fine-tune the width, hover delay and volume.' },
       { title: 'Look and layout', body: 'A light or dark body; show or hide each tab, and adjust the layout.' },
       { title: 'Sounds', body: 'A short pixel jingle plays when it opens. Turn it down or off.' },

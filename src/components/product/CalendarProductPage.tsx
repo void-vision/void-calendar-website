@@ -237,7 +237,7 @@ function IslandTeaser({ lang }: { lang: SiteLang }) {
             </LangLink>
           </div>
           <IslandStage>
-            <Shot name="island-map" lang={lang} variant="island" alt={t.alt} sizes="(min-width: 1180px) 600px, 92vw" />
+            <Shot name="island-ai" lang={lang} variant="island" alt={t.alt} sizes="(min-width: 1180px) 600px, 92vw" />
           </IslandStage>
         </div>
       </Reveal>
