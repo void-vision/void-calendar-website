@@ -1,4 +1,11 @@
 export const parityTranslations: Record<string, string> = {
+  '思考中': 'Thinking', '完成思考': 'Finished thinking', '思考了 1 秒': 'Thought for 1s', '思考了 2 秒': 'Thought for 2s', '思考了 3 秒': 'Thought for 3s',
+  '2 步': '2 steps', '3 步': '3 steps', '4 步': '4 steps',
+  '正在读取日程': 'Reading the calendar', '读取了日程': 'Read the calendar', '正在起草新日程': 'Drafting new events', '起草了新日程': 'Drafted new events',
+  '正在起草修改': 'Drafting changes', '起草了修改': 'Drafted changes', '本周日程': 'This week', '临时会议 10:00–11:00': 'Ad-hoc meeting 10:00–11:00',
+  '周五 14:00 要分享，演示稿得放在周三下午': 'The talk is Friday at 14:00, so the slides go on Wednesday afternoon',
+  '健身放在 18:00，避开所有会议': 'Gym at 18:00, clear of every meeting',
+  '和 PRD 时间盒撞了，往后挪到午前最省事': 'It clashes with the PRD block; moving that before lunch is simplest',
   '顺延到空档': 'Move to a free slot', '比较新时间': 'Compare times', '拆分时间盒': 'Split the time box',
   '让 AI 找到下一个空档，预览后确认写入': 'Ask AI for the next free slot, then review and confirm',
   '比较几个新时间，选好后确认写入': 'Compare new times, then select and confirm',

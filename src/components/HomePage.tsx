@@ -2,6 +2,8 @@ import { motion } from 'motion/react'
 import { memo, useEffect, useRef } from 'react'
 import { useDemo } from '../demo/useDemo'
 import { useTranslate } from '../demo/i18n'
+import { DemoThinking } from './DemoThinking'
+import { DemoLockScreen, useLockIntro } from './DemoLockScreen'
 import { useSiteLang } from '../lib/lang'
 import { MobilePluginList } from './MobilePluginList'
 import { DemoNotes, DemoProjects, DemoSamplePlan } from './DemoWorkspace'
@@ -48,6 +50,7 @@ export function HomePage() {
   const v = useDemo(lang)
   const r = v.refs
   const tr = useTranslate()
+  const lock = useLockIntro(r.mockRef, v.pauseIntro)
 
   return tr(
     <div ref={r.rootRef} className="min-h-svh bg-background text-[15px] leading-[1.6] text-foreground">
@@ -70,9 +73,11 @@ export function HomePage() {
           <div ref={r.stageRef} className="w-full max-w-[1360px] origin-[50%_40%] md:will-change-transform [transform:translate3d(0,24px,0)_scale(.84)]">
             <div ref={r.mockRef} {...panelProps('demo-scene', v.tabs.findIndex((tb) => tb.fg === '#1c1c1e'))} className="relative w-full overflow-hidden rounded-[22px] border border-black/[0.08] bg-linear-to-b from-[#eef2f8] to-[#e4e9f1] text-foreground shadow-[0_30px_80px_rgba(0,0,0,.12)]">
               <ShowcaseProgress />
-              <MenuBar v={v} />
-              <MemoVoidIslandDemo lang={lang} onExpandedChange={v.holdIsland} seconds={v.islandSeconds} duration={v.islandDuration} running={v.fRunning} started={v.islandStarted} focusTitle={v.fUserTitle} focusMinutes={v.islandMinutes} focusRounds={v.fRecs.length} onStartFocus={v.islandStartFocus} onToggleFocus={v.islandToggleFocus} onDuration={v.islandSetDuration} />
-              <div className="demo-window-padding px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)]">
+              <MenuBar />
+              <MemoVoidIslandDemo lang={lang} peek={lock.peek} onExpandedChange={v.holdIsland} scriptedClock={v.islandClock} seconds={v.islandSeconds} duration={v.islandDuration} running={v.fRunning} started={v.islandStarted} focusTitle={v.fUserTitle} focusMinutes={v.islandMinutes} focusRounds={v.fRecs.length} onStartFocus={v.islandStartFocus} onToggleFocus={v.islandToggleFocus} onDuration={v.islandSetDuration} />
+              <DemoLockScreen en={en} phase={lock.phase} onUnlock={lock.unlock} />
+              {/* 解锁前日历窗口藏着；解锁后 Island 先弹出，窗口再从下方浮上来。 */}
+              <div inert={lock.phase !== 'open'} className="demo-window-padding px-[clamp(14px,2.6vw,40px)] pt-[clamp(14px,2vw,26px)] pb-[clamp(16px,2.2vw,30px)] transition-[opacity,translate,scale] duration-700 ease-apple" style={lock.phase === 'open' ? undefined : { opacity: 0, translate: '0 18px', scale: '.97' }}>
                 <div className="w-full overflow-hidden rounded-xl border border-[rgba(28,28,30,.1)] bg-white text-[#1c1c1e] shadow-[0_18px_50px_rgba(28,28,30,.12),0_2px_6px_rgba(28,28,30,.05)]">
                   <DemoChrome v={v} />
                 </div>
@@ -80,14 +85,15 @@ export function HomePage() {
             </div>
           </div>
           <div className="flex w-full max-w-[1360px] flex-wrap items-start gap-x-10 gap-y-4">
-            <div role="tablist" onKeyDown={handleTabKeyDown} aria-label={en ? 'Demo scenes' : '演示场景'} className="flex min-w-[min(100%,420px)] flex-[1_1_420px] gap-1 rounded-full bg-muted p-1">
+            <div role="tablist" onKeyDown={handleTabKeyDown} aria-label={en ? 'Demo scenes' : '演示场景'} className="flex min-w-[min(100%,420px)] flex-[1_1_420px] overflow-hidden rounded-lg bg-[#141416] shadow-[0_10px_30px_rgba(28,28,30,.18)]">
               {v.tabs.map((tb, index) => {
-                // 当前场景用白色胶囊标出，底部细线表示自动播放进度。
+                // 像电视节目条那样分栏：黑底、细分隔线。当前这一栏从左往右亮一档（16% 白）表示播放进度，字始终是白色。
                 const on = tb.fg === '#1c1c1e'
                 return (
-                  <button key={tb.n} type="button" {...tabProps('demo-scene', index, on)} onClick={tb.go} className="relative flex min-h-10 flex-1 cursor-pointer items-center justify-center overflow-hidden rounded-full px-2 font-[inherit] text-[13px] font-medium text-ink-3 select-none transition-[color,background-color,box-shadow,transform] duration-300 ease-apple active:scale-[0.97] hover:text-foreground aria-selected:bg-white aria-selected:text-foreground aria-selected:shadow-[0_1px_3px_rgba(0,0,0,.08),0_0_0_.5px_rgba(0,0,0,.04)] max-sm:text-[11.5px]">
+                  <button key={tb.n} type="button" {...tabProps('demo-scene', index, on)} onClick={tb.go} className="relative flex min-h-11 flex-1 cursor-pointer items-center justify-center gap-1.5 overflow-hidden border-0 border-l border-white/12 bg-transparent px-2 font-[inherit] text-[14px] font-semibold text-white/60 select-none transition-[color,background-color] duration-200 first:border-l-0 hover:bg-white/6 hover:text-white aria-selected:text-white max-sm:px-1 max-sm:text-[12px]">
+                    {on ? <span aria-hidden="true" className="absolute inset-y-0 left-0 bg-white/16 transition-[width] duration-200 ease-linear" style={{ width: `${tb.pct}%` }} /> : null}
+                    <span className="relative font-mono text-[11px] tabular-nums opacity-60 max-sm:hidden">{`0${tb.n}`}</span>
                     <span className="relative">{tb.label}</span>
-                    {on ? <span aria-hidden="true" className="absolute bottom-[5px] left-1/2 h-[2px] w-8 -translate-x-1/2 overflow-hidden rounded-full bg-black/8"><span className="block h-full bg-brand" style={{ width: `${tb.pct}%` }} /></span> : null}
                   </button>
                 )
               })}
@@ -171,8 +177,7 @@ function ShowcaseProgress() {
   )
 }
 
-function MenuBar({ v }: { v: View }) {
-  const r = v.refs
+function MenuBar() {
   const tr = useTranslate()
   return tr(
     <div className="demo-menubar relative z-20 flex h-[26px] items-center gap-4 bg-[#0a0a0c] px-3.5 text-[12.5px] whitespace-nowrap text-[#f5f5f7]">
@@ -182,56 +187,6 @@ function MenuBar({ v }: { v: View }) {
       <b className="font-semibold">Void Calendar</b>
       <span className="demo-menu-extra">文件</span><span className="demo-menu-extra">编辑</span><span className="demo-menu-extra">显示</span><span className="demo-menu-extra">前往</span><span className="demo-menu-extra">窗口</span><span className="demo-menu-extra">帮助</span>
       <span className="flex-1" />
-      <span className="relative flex">
-        <button
-          data-mb="1"
-          ref={r.mbBtnRef}
-          type="button"
-          onClick={v.toggleMb}
-          aria-expanded={v.mbExpanded === 'true'}
-          aria-label="当前时间盒"
-          className="flex h-[22px] cursor-pointer items-center gap-1.5 rounded-[5px] border-0 px-2 font-[inherit] text-[12.5px] text-[#f5f5f7] tabular-nums transition-colors hover:bg-white/12"
-          style={{ background: v.mbPillBg }}
-        >
-          <svg width="13" height="13" viewBox="0 0 20 20" fill="none" strokeWidth="1.8" strokeLinejoin="round" className="shrink-0" style={{ stroke: v.mbDot }} aria-hidden="true"><path d="M10 2.5l1.6 4.4 4.4 1.6-4.4 1.6L10 14.5l-1.6-4.4L4 8.5l4.4-1.6z" /></svg>
-          <span data-no-translate={v.mbUserText ? true : undefined} className="min-w-0 truncate">{v.mbUserText ?? v.mbText}</span>
-        </button>
-        <div
-          ref={r.popRef}
-          role="dialog"
-          aria-label="当前时间盒"
-          aria-hidden={v.popPE === 'none'}
-          inert={v.popPE === 'none'}
-          className="demo-timebox absolute top-[calc(100%+6px)] -right-2 z-21 flex w-[clamp(300px,26vw,340px)] origin-[90%_0] flex-col rounded-[14px] border border-[rgba(28,28,30,.08)] bg-[rgba(252,252,251,.985)] text-[12.5px] leading-[1.45] whitespace-normal text-[#1c1c1e] shadow-[0_1px_2px_rgba(28,28,30,.04),0_16px_40px_rgba(28,28,30,.12)] transition-[opacity,transform] duration-180"
-          style={{ opacity: v.popOp, transform: `translateY(${v.popY}px)`, pointerEvents: v.popPE as 'auto' | 'none', transitionTimingFunction: 'cubic-bezier(.22,.61,.36,1)' }}
-        >
-          <div className="flex flex-col gap-2.5 px-[18px] pt-4 pb-3.5">
-            <div className="flex items-center gap-2 text-[11.5px] text-ink-3">
-              <span>{v.popTag}</span><span className="flex-1" /><span className="tabular-nums">{v.focusWhen}</span>
-            </div>
-            <div className="flex items-baseline gap-3">
-              <span data-no-translate={v.focusUserTitle ? true : undefined} className="min-w-0 flex-1 text-[14.5px] font-medium tracking-[-0.005em]">{v.focusUserTitle ?? v.focusTitle}</span>
-              <span className="text-[13px] whitespace-nowrap text-[#48484a] tabular-nums">{v.popLeft}</span>
-            </div>
-            <div className="h-0.5 overflow-hidden rounded-sm bg-[#ecebe8]">
-              <div className="h-full bg-[#8e86a3] transition-[width] duration-100" style={{ width: `${v.mbPct}%` }} />
-            </div>
-            <div className="mt-1 flex items-center gap-3.5">
-              <button type="button" onClick={v.startFocus} disabled={v.fDone} className="h-[30px] cursor-pointer rounded-lg border-0 px-3.5 font-[inherit] text-[12.5px] font-medium text-white tabular-nums transition-[background,transform] duration-180 hover:bg-[#3a3a3c]" style={{ background: v.focusBg, transform: `scale(${v.focusSc})` }}>
-                {v.focusLabel}
-              </button>
-              <button type="button" onClick={v.askShift} className="h-[30px] cursor-pointer border-0 bg-transparent px-0.5 font-[inherit] text-[12.5px] text-[#48484a] transition-colors hover:text-[#1c1c1e]">
-                {v.shiftLabel}
-              </button>
-            </div>
-          </div>
-          <div className="border-t border-[#efeeeb] px-[18px] pt-2.5 pb-3">
-            <div className="py-0.5 text-[11.5px] text-ink-3">接下来</div>
-            <NextRow time="14:00" color="#e0782f" title="周五分享：做演示稿" />
-            <NextRow time="18:00" color="#3a9a5b" title="健身" />
-          </div>
-        </div>
-      </span>
       <svg width="15" height="11" viewBox="0 0 15 11" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" className="demo-menu-extra shrink-0">
         <path d="M1 3.8a9 9 0 0 1 13 0M3.3 6.2a5.6 5.6 0 0 1 8.4 0M5.6 8.5a2.3 2.3 0 0 1 3.8 0" />
       </svg>
@@ -243,17 +198,6 @@ function MenuBar({ v }: { v: View }) {
       </svg>
       <svg width="15" height="14" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" className="demo-menu-extra shrink-0" aria-hidden="true"><rect x="3" y="4" width="14" height="5" rx="2.5" /><circle cx="6.5" cy="6.5" r="1.4" fill="currentColor" stroke="none" /><rect x="3" y="11" width="14" height="5" rx="2.5" /><circle cx="13.5" cy="13.5" r="1.4" fill="currentColor" stroke="none" /></svg>
       <span className="demo-menu-extra tabular-nums">9月30日 周三 11:20</span>
-    </div>
-  )
-}
-
-function NextRow({ time, color, title }: { time: string; color: string; title: string }) {
-  const tr = useTranslate()
-  return tr(
-    <div className="grid grid-cols-[44px_8px_minmax(0,1fr)] items-center gap-x-2.5 py-[7px]">
-      <span className="text-ink-3 tabular-nums">{time}</span>
-      <span className="size-1.5 rounded-full" style={{ background: color }} />
-      <span className="truncate">{title}</span>
     </div>
   )
 }
@@ -338,7 +282,7 @@ function DemoChrome({ v }: { v: View }) {
           <button key={item.id} type="button" {...tabProps('demo-workspace', index, item.active)} onClick={item.pick} className="min-h-8 shrink-0 cursor-pointer rounded-md px-2.5 font-[inherit] text-xs whitespace-nowrap" style={{ background: item.bg, color: item.fg }}>{item.label}</button>
         ))}
       </div>
-      <div data-workspace={v.navSel === 'proj' || v.navSel === 'memo' ? 'expanded' : undefined} className="demo-body relative flex h-[clamp(200px,calc(100svh-400px),600px)] text-xs">
+      <div data-workspace={v.navSel === 'proj' || v.navSel === 'memo' ? 'expanded' : undefined} className="demo-body relative flex h-[clamp(320px,calc(100svh-290px),820px)] text-xs">
         <DemoSidebar v={v} />
         <div {...panelProps('demo-workspace', v.navWork.findIndex((item) => item.active))} className="demo-calendar relative flex min-w-0 flex-1 flex-col">
           {v.navSel === 'pomo' ? <DemoFocusPanel v={v} /> : v.navSel === 'capture-result' ? <DemoCaptureResult v={v} /> : v.navSel === 'proj' ? <DemoProjects v={v} /> : v.navSel === 'memo' ? <DemoNotes v={v} /> : v.navSel === 'inbox' || v.navSel === 'tasks' ? <DemoCollection v={v} /> : (
@@ -425,7 +369,8 @@ function DemoChrome({ v }: { v: View }) {
           <div ref={messagesRef} className="demo-messages flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto">
             {v.msgs.map((m, i) => (
               <div key={i} className="vc-in shrink-0 flex flex-col gap-1.5" style={{ alignSelf: m.as, maxWidth: m.mw, background: m.bg, borderRadius: m.rad, padding: m.pad, color: m.fg, lineHeight: 1.6 }}>
-                <span data-no-translate={m.userText ? true : undefined}>{m.userText ?? m.text}</span>
+                {m.think ? <DemoThinking think={m.think} /> : null}
+                {m.userText ?? m.text ? <span data-no-translate={m.userText ? true : undefined}>{m.userText ?? m.text}</span> : null}
                 {(!v.showSamplePlan || !m.hasActs) && m.bullets.map((b) => (
                   <div key={b.text} className="flex items-center gap-1.5">
                     <span className="size-1.5 shrink-0 rounded-full" style={{ background: b.dot }} />
