@@ -104,6 +104,46 @@ html {
   animation-delay: var(--rise-delay, 0s);
 }
 
+/* 演示开场的 Mac 锁屏：壁纸、刘海里带锁的岛（和收起的 Island 同宽同高）、日期和大号时间。 */
+.demo-lock {
+  background:
+    radial-gradient(120% 90% at 18% 112%, #f39a6b 0%, transparent 52%),
+    radial-gradient(90% 80% at 88% -4%, #7b6cff 0%, transparent 58%),
+    radial-gradient(70% 60% at 60% 70%, #c0539a66 0%, transparent 70%),
+    linear-gradient(162deg, #16245e 0%, #33238a 46%, #8c3f86 100%);
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.18);
+}
+
+.demo-lock-island {
+  width: min(380px, calc(100% - 28px));
+  height: 26px;
+  border-radius: 0 0 9px 9px;
+  background: #000;
+}
+
+.demo-lock-clock {
+  font-family: 'SF Pro Rounded', ui-rounded, -apple-system, system-ui, sans-serif;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* 演示 AI 思维链进行中的文字：一道亮光从左往右扫过（照应用里的 ShimmerLabel）。 */
+.demo-shimmer {
+  background: linear-gradient(90deg, rgba(28, 28, 30, 0.45) 0%, rgba(28, 28, 30, 0.45) 40%, #1c1c1e 50%, rgba(28, 28, 30, 0.45) 60%, rgba(28, 28, 30, 0.45) 100%) 0 0 / 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: demo-shimmer 1.6s linear infinite;
+}
+
+@keyframes demo-shimmer {
+  from { background-position: 100% 0; }
+  to { background-position: -150% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-shimmer { animation: none; color: rgba(28, 28, 30, 0.8); background: none; }
+}
+
 /* 触屏上输入框不足 16px 时 iOS 会放大页面。 */
 @media (pointer: coarse) {
   .demo-capture input,
@@ -465,6 +505,15 @@ section[id],
     padding: 10px;
   }
 
+  .demo-lock-bar,
+  .demo-lock-island {
+    height: 40px;
+  }
+
+  .demo-lock-island {
+    width: min(300px, calc(100% - 28px));
+  }
+
   .demo-menubar {
     height: 40px;
     gap: 8px;
@@ -479,26 +528,6 @@ section[id],
   .demo-toolbar-extra,
   .demo-sidebar {
     display: none;
-  }
-
-  .demo-menubar button[data-mb] {
-    height: 32px;
-    max-width: clamp(130px, 42vw, 190px);
-    padding: 0 6px;
-    font-size: 10.5px;
-  }
-
-  .demo-menubar button[data-mb] > span:first-child {
-    flex-shrink: 0;
-  }
-
-  .demo-timebox {
-    right: 0;
-    width: min(300px, calc(100vw - 72px));
-  }
-
-  .demo-timebox button {
-    min-height: 40px;
   }
 
   .demo-toolbar {
@@ -776,11 +805,6 @@ button[data-hex]:focus-visible [data-hex-ring] {
 
 button[data-hex]:focus-visible [data-hex-face] {
   inset: 2px !important;
-}
-
-button[data-mb]:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 2px rgba(20, 99, 217, 0.45);
 }
 
 nav::-webkit-scrollbar {

@@ -18,6 +18,10 @@ export type CapturedItem = { id: string; title: string; type: CapType; hours?: n
 
 export type Bullet = { dot: string; text: string }
 export type Act = { label: string; bg: string; fg: string; bd: string; sc: number; pick?: () => void; disabled?: boolean }
+/** AI 回复前的思维链，照应用里的 ThinkingTimeline：每步一行，读取类带标签，推理只写小标题。 */
+export type ThinkRow = { kind: 'tool' | 'reasoning'; label: string; running?: boolean; tags?: { icon: 'calendar' | 'note' | 'search'; text: string }[] }
+export type Think = { active: boolean; seconds: number; rows: ThinkRow[] }
+
 export type Msg = {
   as: string
   mw: string
@@ -30,6 +34,7 @@ export type Msg = {
   bullets: Bullet[]
   hasActs: boolean
   acts: Act[]
+  think?: Think
 }
 
 export type Rec = { ms: number; text: string; userTitle?: string | null }

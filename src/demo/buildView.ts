@@ -11,7 +11,7 @@ import {
   TCOL,
   TPLS,
 } from './catalog'
-import { type DemoEvent, type DemoState, type Msg } from './types'
+import { type DemoEvent, type DemoState, type Msg, type ThinkRow } from './types'
 import { dayLabels, demoEvents, eventTime } from './events'
 import { trEN } from './i18n'
 import { buildWorkspaceView } from './workspaceView'
@@ -77,6 +77,27 @@ const A = (text: string, bullets: Msg['bullets'] = [], acts: Msg['acts'] = []): 
   acts,
 })
 const N = (text: string): Msg => ({ ...A(text), bg: '#f6f5f3', rad: '8px', pad: '8px 10px', fg: '#6b6b70' })
+// 排程的思维链：读日程 → 两段推理 → 起草新日程。at 是从开始思考算起的毫秒数，省略表示已经想完。
+const planSteps: { at: number; done: number; row: (running: boolean) => ThinkRow }[] = [
+  { at: 100, done: 800, row: (running) => ({ kind: 'tool', label: running ? '正在读取日程' : '读取了日程', running, tags: [{ icon: 'calendar', text: '本周日程' }, { icon: 'note', text: 'PRD v2' }] }) },
+  { at: 800, done: 1600, row: (running) => ({ kind: 'reasoning', label: '周五 14:00 要分享，演示稿得放在周三下午', running }) },
+  { at: 1600, done: 2200, row: (running) => ({ kind: 'reasoning', label: '健身放在 18:00，避开所有会议', running }) },
+  { at: 2200, done: 2800, row: (running) => ({ kind: 'tool', label: running ? '正在起草新日程' : '起草了新日程', running }) },
+]
+const planThink = (at?: number): Msg['think'] => at === undefined
+  ? { active: false, seconds: 3, rows: planSteps.map((step) => step.row(false)) }
+  : { active: true, seconds: Math.floor(at / 1000), rows: planSteps.filter((step) => at >= step.at).map((step) => step.row(at < step.done)) }
+const shiftThink = (at?: number): Msg['think'] => {
+  const steps = [
+    { at: 0, done: 400, row: (running: boolean): ThinkRow => ({ kind: 'tool', label: running ? '正在读取日程' : '读取了日程', running, tags: [{ icon: 'calendar', text: '临时会议 10:00–11:00' }] }) },
+    { at: 400, done: 800, row: (running: boolean): ThinkRow => ({ kind: 'reasoning', label: '和 PRD 时间盒撞了，往后挪到午前最省事', running }) },
+    { at: 800, done: 1100, row: (running: boolean): ThinkRow => ({ kind: 'tool', label: running ? '正在起草修改' : '起草了修改', running }) },
+  ]
+  return at === undefined
+    ? { active: false, seconds: 2, rows: steps.map((step) => step.row(false)) }
+    : { active: true, seconds: Math.floor(at / 1000), rows: steps.filter((step) => at >= step.at).map((step) => step.row(at < step.done)) }
+}
+const captureThink: Msg['think'] = { active: false, seconds: 1, rows: [{ kind: 'tool', label: '读取了日程', tags: [{ icon: 'calendar', text: '周四' }] }, { kind: 'tool', label: '起草了新日程' }] }
 const act = (label: string, on?: boolean, pri?: boolean) => ({
   label,
   bg: pri ? (on ? '#0d4fb3' : '#1463d9') : '#fff',
@@ -202,34 +223,37 @@ function heroVals(s: DemoState, api: DemoApi) {
   let toast = ''
   if (sc === 0) {
     if (t >= 1800) msgs.push(U(Q))
-    if (t >= 2200 && t < 5200) msgs.push(A('正在查看这周的空档…'))
+    if (t >= 2200 && t < 5200) msgs.push({ ...A(''), think: planThink(Math.min(t - 2200, 2999)) })
     if (t >= 5200)
-      msgs.push(
-        A('已排好 9 个时间盒：', BUL, [
+      msgs.push({
+        ...A('已排好 9 个时间盒：', BUL, [
           act(t >= 6200 ? '已应用' : '应用', t >= 6200 && t < 6400, true),
           act('再调整'),
         ]),
-      )
+        think: planThink(),
+      })
     if (t >= 6300) toast = '已写入 9 个时间盒'
   }
   if (sc === 1) {
-    msgs.push(U(Q), A('已排好 9 个时间盒，已应用。'))
+    msgs.push(U(Q), { ...A('已排好 9 个时间盒，已应用。'), think: planThink() })
     if (t >= 1000) msgs.push(N('日历更新 · 新日程「临时会议」10:00 – 11:00'))
     if (t >= 1500) msgs.push(U('临时会议占了 10:00–11:00，把冲突的 PRD 时间盒顺延到空档。'))
+    if (t >= 1600 && t < 2600) msgs.push({ ...A(''), think: shiftThink(t - 1600) })
     if (t >= 2600) {
-      msgs.push(A(t < 5800 ? '建议将 PRD 时间盒改到 11:00–13:00，时长保持 2 小时。确认后写入。' : '已顺延到 11:00–13:00，时长保持 2 小时。', [], [act(t < 5800 ? '确认调整' : '撤销', false, true)]))
+      msgs.push({ ...A(t < 5800 ? '建议将 PRD 时间盒改到 11:00–13:00，时长保持 2 小时。确认后写入。' : '已顺延到 11:00–13:00，时长保持 2 小时。', [], [act(t < 5800 ? '确认调整' : '撤销', false, true)]), think: shiftThink() })
       if (t >= 5800) toast = '已顺延 1 个时间盒'
     }
   }
   if (sc === 2) {
     if (t >= 3400 && t < 4400) toast = '已添加到任务列表'
     if (t >= 4400)
-      msgs.push(
-        A(`任务「${IDEA}」已保存。周四 11:30 有空档，排进去？`, [], [
+      msgs.push({
+        ...A(`任务「${IDEA}」已保存。周四 11:30 有空档，排进去？`, [], [
           act(t >= 5800 ? '已排入' : '排到周四 11:30', t >= 5800 && t < 6000, true),
           act('稍后'),
         ]),
-      )
+        think: captureThink,
+      })
     if (t >= 5900) toast = '已排到 周四 11:30'
   }
   const focus = sc === 3 && t >= 2800
@@ -267,6 +291,8 @@ function heroVals(s: DemoState, api: DemoApi) {
     focusBg: '#1c1c1e',
     focusSc: sc === 3 && t >= 2700 && t < 2950 ? 0.95 : 1,
     mbText: focus ? `专注中 ${clock}` : 'PRD v2 · 收尾 · 40 分钟',
+    // 「专注」场景自动播放时，收起的 Island 右翼显示这段倒计时。
+    islandClock: focus ? clock : null,
     mbPillBg: sc === 3 && t >= 500 ? 'rgba(28,28,30,.07)' : 'transparent',
     tabs: TABS.map((x, i) => {
       const on = i === sc

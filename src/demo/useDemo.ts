@@ -66,6 +66,11 @@ export function useDemo(lang: SiteLang) {
   const holdIsland = useCallback((expanded: boolean) => {
     islandExpanded.current = expanded
   }, [])
+  // 开场锁屏还没解开时暂停自动播放；和 Island 展开各用各的标记，互不覆盖。
+  const introLocked = useRef(false)
+  const pauseIntro = useCallback((locked: boolean) => {
+    introLocked.current = locked
+  }, [])
 
   const islandStartFocus = useCallback((title: string, minutes: number) => {
     set((s) => s.fStarted && !s.fDone
@@ -169,8 +174,15 @@ export function useDemo(lang: SiteLang) {
       acts,
     })
     const base = [...(cur.uChat || []), user]
-    set({ uChat: [...base, reply('正在查看空档…')], aiVal: '', aiPending: true, suggestions: [], planSourceProject: null, heroManual: true, navSel: 'cal', evSel: null })
+    // 和应用里一样，先显示思维链：读日程 → 起草新日程，想完再给结论。
+    const read = (running: boolean) => ({ kind: 'tool' as const, label: running ? '正在读取日程' : '读取了日程', running, tags: [{ icon: 'calendar' as const, text: '本周日程' }] })
+    const draft = (running: boolean) => ({ kind: 'tool' as const, label: running ? '正在起草新日程' : '起草了新日程', running })
+    set({ uChat: [...base, { ...reply(''), think: { active: true, seconds: 0, rows: [read(true)] } }], aiVal: '', aiPending: true, suggestions: [], planSourceProject: null, heroManual: true, navSel: 'cal', evSel: null })
     fitAi()
+    window.setTimeout(() => {
+      if (request !== aiRequest.current) return
+      set({ uChat: [...base, { ...reply(''), think: { active: true, seconds: 0, rows: [read(false), draft(true)] } }] })
+    }, 700)
     window.setTimeout(() => {
       if (request !== aiRequest.current) return
       const hours = v.match(/(\d+(?:\.5)?)\s*(?:小时|hours?\b|h\b)/i)
@@ -181,10 +193,10 @@ export function useDemo(lang: SiteLang) {
         suggestions: event ? [event] : [],
         uChat: [
           ...base,
-          reply(event ? '已找到空档，确认后加入日历。' : '本周没有合适空档，请换成更短的时间盒。'),
+          { ...reply(event ? '已找到空档，确认后加入日历。' : '本周没有合适空档，请换成更短的时间盒。'), think: { active: false, seconds: 1, rows: [read(false), draft(false)] } },
         ],
       })
-    }, 900)
+    }, 1400)
   }, [fitAi, set])
 
   const prepareProjectPlan = useCallback((id: string, title: string, tasks: { id: string; title: string; hours: number }[]) => {
@@ -519,7 +531,7 @@ export function useDemo(lang: SiteLang) {
       const dt = Math.min(200, now - last)
       last = now
       const s = stateRef.current
-      if (islandExpanded.current || s.heroManual || s.capUser || s.searchOpen || (s.mbCtl && s.mbOpen) || s.aiFocus || s.aiVal || s.uChat) return
+      if (islandExpanded.current || introLocked.current || s.heroManual || s.capUser || s.searchOpen || (s.mbCtl && s.mbOpen) || s.aiFocus || s.aiVal || s.uChat) return
       if (document.hidden || reduced.current) return
       const el = mockRef.current
       if (el) {
@@ -606,11 +618,11 @@ export function useDemo(lang: SiteLang) {
   })
 
   const view = buildView(state, api)
-  if (state.lang !== 'en') return { ...view, holdIsland, islandStartFocus, islandToggleFocus, islandSetDuration, refs: refsOf() }
+  if (state.lang !== 'en') return { ...view, holdIsland, pauseIntro, islandStartFocus, islandToggleFocus, islandSetDuration, refs: refsOf() }
   const ai = view.aiValue
   const translated = trDeep(view) as typeof view
   translated.aiValue = state.aiUser ? ai : trEN(ai)
-  return { ...translated, holdIsland, islandStartFocus, islandToggleFocus, islandSetDuration, refs: refsOf() }
+  return { ...translated, holdIsland, pauseIntro, islandStartFocus, islandToggleFocus, islandSetDuration, refs: refsOf() }
 
   function refsOf() {
     return { rootRef, stageRef, mockRef, aiRef, hiveRef, detRef, noteRef, lnkRef, lnkBtnRef, mbBtnRef, popRef, searchRef, capRef, captureDialogRef, eventRef }

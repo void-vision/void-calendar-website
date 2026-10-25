@@ -1,190 +1,296 @@
 .vi-island-host { position: absolute; z-index: 50; inset: 0; pointer-events: none; }
 
+/* 外壳：展开 640 宽、底部 27 圆角；收起时和演示菜单栏一样高（26），底边只有 9 圆角，不往下凸。 */
 .vi-island {
   position: absolute;
   z-index: 5;
   top: 0;
   left: 50%;
-  width: min(540px, calc(100% - 24px));
-  height: 330px;
+  width: min(640px, calc(100% - 24px));
+  height: auto;
   transform: translateX(-50%);
   overflow: hidden;
   border-radius: 0 0 27px 27px;
-  background: #030304;
+  background: #000;
   box-shadow: 0 22px 48px rgba(0, 0, 0, .38);
   color: #f5f5f7;
   font-size: 12px;
   pointer-events: auto;
+  interpolate-size: allow-keywords;
   transition: width .42s cubic-bezier(.2,.8,.2,1), height .42s cubic-bezier(.2,.8,.2,1), border-radius .42s cubic-bezier(.2,.8,.2,1), box-shadow .42s ease;
 }
-.vi-island-tab-focus { height: 205px; }
-.vi-island-tab-journal { height: 238px; }
-.vi-island-tab-cat { height: 220px; }
-.vi-island:not(.vi-island-compact) > :not(.vi-island-collapsed) { animation: vi-content-in .28s .12s both; }
+.vi-island-open > * { animation: vi-content-in .28s .12s both; }
 @keyframes vi-content-in { from { opacity: 0; } to { opacity: 1; } }
 
 .vi-island button { cursor: pointer; font: inherit; }
-.vi-island button:focus-visible { outline: 2px solid #7cafff; outline-offset: 2px; }
-.vi-island-menu { display: flex; height: 26px; align-items: center; justify-content: space-between; gap: 8px; padding: 0 11px; }
-.vi-island-tabs, .vi-island-tools { display: flex; align-items: center; gap: 2px; }
-.vi-island-tabs button { display: flex; height: 25px; align-items: center; gap: 5px; border: 0; border-radius: 7px; background: transparent; padding: 0 9px; color: #8e8e93; white-space: nowrap; }
-.vi-island-tabs button:hover, .vi-island-tools button:hover { background: #222225; color: white; }
-.vi-island-tabs .vi-tab-active { background: #252527; color: #f5f5f7; font-weight: 600; }
-.vi-island-tabs svg { width: 14px; height: 14px; }
-.vi-island-tools button { display: grid; width: 28px; height: 26px; place-items: center; border: 0; border-radius: 7px; background: transparent; color: #a1a1a6; }
-.vi-island-tools svg { width: 16px; height: 16px; }
-.vi-settings { position: absolute; z-index: 10; top: 34px; right: 8px; display: flex; min-width: 154px; flex-direction: column; gap: 8px; border: 1px solid #333338; border-radius: 9px; background: #1c1c1f; padding: 10px; box-shadow: 0 12px 30px #0008; }
+:where(.vi-island button) { color: inherit; }
+.vi-island button:disabled { cursor: default; }
+.vi-island button:focus-visible, .vi-island input:focus-visible, .vi-island textarea:focus-visible { outline: 2px solid #4a8dff; outline-offset: 1px; }
+.vi-glyph { display: block; width: 15px; height: 15px; flex: none; }
+.vi-label { display: block; color: #8e8e93; font-size: 11.5px; }
+.vi-foot { display: block; color: #8e8e93; font-size: 11px; }
+
+/* 标签栏：32 高，两头离边 20；图标 15、按钮 22 高、圆角 7，选中垫一块 #2c2c2e。 */
+.vi-island-menu { display: flex; height: 32px; align-items: center; justify-content: space-between; gap: 8px; padding: 0 14px 0 16px; }
+.vi-wing { display: flex; min-width: 0; align-items: center; gap: 6px; }
+.vi-wing-right { flex: 1; justify-content: flex-end; }
+.vi-tabs, .vi-island-tools, .vi-ai-tools { display: flex; align-items: center; gap: 4px; }
+.vi-tab, .vi-island-tools button, .vi-ai-tools button { display: grid; width: 30px; height: 22px; flex: none; place-items: center; border: 0; border-radius: 7px; background: transparent; padding: 0; color: #8e8e93; }
+.vi-tab-cat { width: 38px; }
+.vi-tab:hover, .vi-island-tools button:hover, .vi-ai-tools button:hover { color: #f5f5f7; }
+.vi-tab-active, .vi-tab-active:hover { background: #2c2c2e; color: #f5f5f7; }
+.vi-tab-lit { color: #ff9233; }
+.vi-ai-tools { gap: 2px; margin-left: 2px; }
+.vi-meters { display: flex; align-items: center; gap: 4px; margin-left: 6px; }
+.vi-meter { display: flex; height: 22px; align-items: center; gap: 3px; border: 0; border-radius: 6px; background: transparent; padding: 0 4px; }
+.vi-meter > span { display: flex; align-items: flex-end; gap: 2px; }
+.vi-meter:hover { background: rgba(255,255,255,.06); }
+.vi-meter-on, .vi-meter-on:hover { background: #2c2c2e; }
+.vi-agent-logo { display: block; flex: none; }
+.vi-battery { display: block; flex: none; }
+.vi-quota { display: flex; min-width: 0; height: 22px; align-items: center; gap: 8px; border: 0; background: transparent; padding: 0; color: #a1a1a6; font-size: 11.5px; animation: vi-content-in .2s both; }
+.vi-quota b { flex: none; color: #f5f5f7; font-weight: 600; }
+.vi-quota span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vi-settings { position: absolute; z-index: 10; top: 36px; right: 12px; display: flex; min-width: 154px; flex-direction: column; gap: 8px; border: 1px solid #333338; border-radius: 9px; background: #1c1c1f; padding: 10px; box-shadow: 0 12px 30px #0008; }
 .vi-settings span { color: #8e8e93; }
 .vi-settings button { border: 0; border-radius: 5px; background: #303035; padding: 6px 8px; color: white; text-align: left; }
 
-.vi-map-panel { padding: 0 17px 15px; }
-.vi-map { position: relative; height: 225px; overflow: hidden; border: 1px solid #172629; border-radius: 13px; background: repeating-linear-gradient(160deg,rgba(120,200,190,.04) 0 2px,transparent 2px 9px),#0b1517; }
-.vi-map::after { position: absolute; z-index: 3; inset: 0; border-radius: inherit; background: linear-gradient(transparent 70%,rgba(0,0,0,.34)),radial-gradient(ellipse at center,transparent 50%,rgba(0,0,0,.28)); box-shadow: inset 0 0 28px 8px #020606aa; content: ''; pointer-events: none; }
-.vi-map-world { position: absolute; inset: 0; transform-origin: center; transition: transform .25s ease; }
-.vi-zone { position: absolute; display: flex; align-items: flex-end; border-radius: 3px; padding: 8px; font-family: 'Songti SC','STSong','Noto Serif SC',serif; font-size: 11px; font-weight: 700; letter-spacing: .18em; box-sizing: border-box; }
-.vi-zone-today { top: 6%; left: 9%; width: 50%; height: 63%; border: 1px solid #aa7254; background: radial-gradient(circle at 42% 42%,rgba(255,170,100,.22),transparent 62%),repeating-linear-gradient(0deg,rgba(255,215,180,.06) 0 1px,transparent 1px 12px),repeating-linear-gradient(90deg,rgba(255,215,180,.06) 0 1px,transparent 1px 24px),rgba(84,46,36,.62); color: #e4a77c; box-shadow: inset 0 0 0 1px #bd806144,0 0 24px #ff9d5e33; }
-.vi-zone-week { top: 28%; left: 66%; width: 31%; height: 68%; border: 1px solid #477e92; background: radial-gradient(circle at 55% 35%,rgba(110,220,255,.2),transparent 62%),repeating-linear-gradient(45deg,rgba(150,230,255,.06) 0 1px,transparent 1px 9px),rgba(22,68,82,.62); color: #83b2bf; box-shadow: inset 0 0 25px #50bcd933; }
-.vi-zone-due { top: 76%; left: 14%; width: 49%; height: 42%; border: 1px solid #a74531; background: radial-gradient(circle at 50% 45%,#73201855,transparent 64%),repeating-linear-gradient(0deg,rgba(255,80,50,.07) 0 1px,transparent 1px 16px),rgba(40,14,14,.9); color: #d76b51; box-shadow: inset 0 0 20px #ed4b2d44, 0 0 18px #ed4b2d44; }
-.vi-zone-due::before { position: absolute; inset: 7px; border: 1px solid #c64c3433; content: ''; }
-.vi-zone-due::after { position: absolute; top: 17%; left: 19%; width: 62%; height: 72%; border: 2px dashed #ff5a3c55; border-radius: 50%; box-shadow: inset 0 0 25px #f43b2422; content: ''; }
-.vi-zone-due > span:not(.vi-due-skull) { position: absolute; z-index: 1; top: 38px; left: 12px; font-family: Didot,'Times New Roman',serif; letter-spacing: .45em; }
-.vi-due-skull { position: absolute; top: 4px; left: 50%; transform: translateX(-50%); color: #ff8a6a; }
-.vi-zone-due i { position: absolute; width: 4px; height: 4px; background: #ffd27a; box-shadow: 0 0 0 2px #ff6a2a,0 0 10px 4px #ff6e2888; animation: vi-torch 1s steps(3) infinite; }
-.vi-zone-due i:nth-of-type(1) { top: 10px; left: 10px; }
-.vi-zone-due i:nth-of-type(2) { top: 10px; right: 10px; animation-delay: -.3s; }
-.vi-zone-due i:nth-of-type(3) { bottom: 10px; left: 10px; animation-delay: -.6s; }
-.vi-zone-due i:nth-of-type(4) { bottom: 10px; right: 10px; animation-delay: -.9s; }
-@keyframes vi-torch { 0%,100% { opacity: 1; scale: 1; } 45% { opacity: .7; scale: .8; } 70% { opacity: .9; scale: 1.1; } }
-.vi-map-lines { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
-.vi-map-lines path { fill: none; stroke: #c7c6c677; stroke-width: .35; stroke-dasharray: .8 1; }
-.vi-map-dust { position: absolute; z-index: 1; width: 2px; height: 2px; background: #8598a1; opacity: .45; animation: vi-dust 3s ease-in-out infinite; }
-@keyframes vi-dust { 0%,100% { opacity: .25; } 50% { opacity: .8; } }
-.vi-map-node { position: absolute; z-index: 2; display: grid; width: 40px; height: 40px; transform: translate(-50%, -50%); place-items: center; border: 0; background: transparent; padding: 0; color: #a58bf7; filter: drop-shadow(0 0 5px currentColor) drop-shadow(0 0 8px currentColor); transition: scale .18s ease; }
-.vi-map-node::before { position: absolute; z-index: -1; inset: -22%; border-radius: 50%; background: radial-gradient(circle,currentColor 0,transparent 62%); opacity: .24; content: ''; animation: vi-star-glow 2.1s ease-in-out infinite; }
-@keyframes vi-star-glow { 0%,100% { opacity: .18; scale: .92; } 50% { opacity: .43; scale: 1.12; } }
-.vi-pixel-star { position: absolute; top: -7.5%; left: -7.5%; width: 115%; height: 115%; overflow: visible; image-rendering: pixelated; pointer-events: none; }
-.vi-star-frame-0 { animation: vi-star-first 1.5s step-end infinite; }
-.vi-star-frame-1 { animation: vi-star-second 1.5s step-end infinite; }
-@keyframes vi-star-first { 0%,49.99% { opacity: 1; } 50%,100% { opacity: 0; } }
-@keyframes vi-star-second { 0%,49.99% { opacity: 0; } 50%,100% { opacity: 1; } }
-.vi-map-node:hover { scale: 1.1; }
-.vi-map-reticle { position: absolute; inset: -1px; animation: vi-reticle 1.6s ease-in-out infinite; }
-.vi-map-reticle i { position: absolute; width: 7px; height: 7px; border-color: #f5f5f7; border-style: solid; }
-.vi-map-reticle i:nth-child(1) { top: 0; left: 0; border-width: 2px 0 0 2px; }
-.vi-map-reticle i:nth-child(2) { top: 0; right: 0; border-width: 2px 2px 0 0; }
-.vi-map-reticle i:nth-child(3) { bottom: 0; left: 0; border-width: 0 0 2px 2px; }
-.vi-map-reticle i:nth-child(4) { bottom: 0; right: 0; border-width: 0 2px 2px 0; }
-@keyframes vi-reticle { 0%,100% { scale: 1; } 50% { scale: 1.08; } }
-.vi-map-selected-label { position: absolute; z-index: 2; max-width: 90px; transform: translateX(-50%); overflow: hidden; color: #f5f5f7; font-size: 9px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; text-shadow: 0 1px 3px #000; pointer-events: none; }
-.vi-node-done { width: 18px; height: 22px; filter: none; }
-.vi-node-done::before { display: none; }
-.vi-done-marker { width: 18px; height: 22px; }
-.vi-node-blue { width: 34px; height: 34px; color: #56a0f3; }
-.vi-node-green { width: 32px; height: 32px; color: #49d078; }
-.vi-node-orange { width: 32px; height: 32px; color: #e07a47; }
-.vi-node-small { width: 20px; height: 20px; opacity: .8; }
-.vi-map-caption { position: absolute; z-index: 3; top: 12px; left: 12px; color: #a1a1a6; font-family: ui-monospace, Menlo, monospace; font-size: 11px; }
-.vi-map-zoom { position: absolute; z-index: 3; top: 10px; right: 10px; display: flex; flex-direction: column; overflow: hidden; border: 1px solid #273033; border-radius: 9px; background: #030809dd; }
-.vi-map-zoom button { width: 25px; height: 25px; border: 0; border-bottom: 1px solid #273033; background: transparent; color: #d1d1d6; font-size: 17px; }
-.vi-map-zoom svg { display: block; margin: auto; }
-.vi-map-zoom button:last-child { border-bottom: 0; }
-.vi-map-zoom button:hover { background: #1e2c2e; }
-.vi-task-action { display: flex; min-height: 62px; align-items: center; gap: 9px; padding-top: 8px; }
-.vi-task-action > div { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 1px; }
-.vi-task-action strong { overflow: hidden; font-size: 14px; text-overflow: ellipsis; white-space: nowrap; }
-.vi-task-action span { overflow: hidden; color: #8e8e93; text-overflow: ellipsis; white-space: nowrap; }
-.vi-switch { display: grid; width: 34px; height: 34px; flex: none; place-items: center; border: 0; border-radius: 9px; background: #202023; color: #d1d1d6; }
-.vi-switch svg { width: 18px; height: 18px; }
-.vi-primary { height: 36px; flex: none; border: 0; border-radius: 10px; background: #f5f5f7; padding: 0 15px; color: #161618; font-size: 13px; font-weight: 700; }
-.vi-primary:hover { background: white; }
+/* 像素小猫：等你时「!」一闪、小猫一跳；处理中右边冒泡泡（照 agentCatFrame 的节奏）。 */
+.vi-cat-glyph { display: block; overflow: visible; }
+.vi-cat-waiting .vi-cat-mark { animation: vi-blink .9s step-end infinite; }
+.vi-cat-waiting .vi-cat-body { animation: vi-cat-hop .9s step-end infinite; }
+.vi-cat-think rect { opacity: 0; animation: vi-think .66s step-end infinite; }
+@keyframes vi-blink { 50% { opacity: 0; } }
+@keyframes vi-cat-hop { 0% { transform: translateY(-2px); } 16% { transform: none; } }
+@keyframes vi-think { 0%, 33% { opacity: 1; } 34%, 100% { opacity: 0; } }
 
-.vi-focus-panel { display: grid; min-height: 166px; grid-template-columns: 175px 1fr; gap: 18px; padding: 10px 20px 22px; }
-.vi-clock { font-family: ui-monospace, Menlo, monospace; font-size: 44px; line-height: 1.1; letter-spacing: -.055em; }
-.vi-durations { display: flex; gap: 3px; margin-top: 10px; }
-.vi-durations button { min-width: 25px; height: 23px; border: 0; border-radius: 5px; background: transparent; color: #8e8e93; font-size: 11px; }
-.vi-durations .vi-duration-active { background: #2a2a2d; color: white; }
-.vi-focus-panel small { display: block; margin-top: 9px; color: #8e8e93; }
-.vi-focus-task { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; border-left: 1px solid #262629; padding: 2px 0 0 20px; }
-.vi-focus-task span { color: #8e8e93; }
-.vi-focus-task strong { font-size: 14px; }
-.vi-focus-task button { margin-top: 7px; border: 0; border-radius: 7px; background: #f5f5f7; padding: 6px 11px; color: #161618; font-weight: 700; }
-.vi-journal-panel { min-height: 210px; padding: 0 20px 20px; }
-.vi-note-entry { display: flex; align-items: flex-start; gap: 8px; border-radius: 8px; background: #202023; padding: 8px; }
-.vi-note-entry textarea { min-height: 36px; flex: 1; resize: vertical; border: 0; outline: 0; background: transparent; color: white; font: inherit; line-height: 1.5; }
+.vi-island-body { max-height: min(440px, 64vh); overflow-y: auto; padding: 6px 20px 20px; outline: none; scrollbar-width: none; }
+.vi-island-body::-webkit-scrollbar { display: none; }
+.vi-message { margin: 10px 0 0; color: #8e8e93; font-size: 11px; }
+.vi-empty { margin: 0; padding: 18px 0; color: #8e8e93; }
+
+.vi-primary { height: 32px; flex: none; border: 0; border-radius: 9px; background: #f5f5f7; padding: 0 15px; color: #161618; font-size: 13px; font-weight: 600; }
+.vi-primary:hover { background: white; }
+.vi-secondary { height: 32px; flex: none; border: 0; border-radius: 9px; background: #1c1c1e; padding: 0 14px; color: #f5f5f7; font-size: 13px; }
+.vi-secondary:hover:not(:disabled) { background: #2c2c2e; }
+.vi-secondary:disabled { color: #48484a; }
+
+/* AI 会话：logo（18×1.5 的格子）、6pt 后状态光标、再 6pt 后正文；右边所在应用和时间两个灰胶囊。 */
+.vi-agent-list { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.vi-agent-row { display: grid; grid-template-columns: 27px 16px minmax(0,1fr); align-items: start; column-gap: 8px; border-radius: 10px; margin: 0 -8px; padding: 8px; }
+.vi-agent-row:hover { background: rgba(255,255,255,.04); }
+.vi-agent-avatar { display: grid; width: 27px; height: 27px; place-items: center; }
+.vi-agent-cursor { display: block; margin-top: 5.5px; overflow: visible; }
+.vi-agent-blink { animation: vi-blink 1.2s step-end infinite; }
+.vi-agent-spinner { animation: vi-spin 1.76s linear infinite; }
+.vi-agent-logo-busy-claude { animation: vi-breathe 1.44s ease-in-out infinite; }
+.vi-agent-logo-busy-codex { animation: vi-spin 3s linear infinite; }
+@keyframes vi-spin { to { rotate: 360deg; } }
+@keyframes vi-breathe { 50% { scale: .86; } }
+.vi-agent-body { display: flex; min-width: 0; flex-direction: column; gap: 4px; padding-top: 3px; }
+.vi-agent-head { display: flex; min-width: 0; align-items: baseline; gap: 7px; }
+.vi-agent-head strong { overflow: hidden; font-size: 14px; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.vi-agent-status { flex: none; color: #8e8e93; font-size: 13.5px; }
+.vi-agent-meta { display: flex; flex: none; gap: 5px; margin-left: auto; }
+.vi-agent-meta em { border-radius: 6px; background: #1c1c1e; padding: 2px 7px; color: #8e8e93; font-size: 11.5px; font-style: normal; }
+.vi-agent-body p { overflow: hidden; margin: 0; color: #8e8e93; font-size: 13px; line-height: 1.45; text-overflow: ellipsis; white-space: nowrap; }
+.vi-agent-body .vi-agent-reply { color: #c7c7cc; white-space: normal; }
+.vi-agent-tool { display: flex; gap: 8px; }
+.vi-agent-tool b { flex: none; color: #f5f5f7; font-weight: 400; }
+.vi-agent-tool code { overflow: hidden; color: #8e8e93; font-family: inherit; text-overflow: ellipsis; }
+.vi-agent-actions { display: flex; gap: 6px; margin-top: 4px; }
+.vi-agent-actions button { height: 26px; border: 0; border-radius: 7px; background: #1c1c1e; padding: 0 12px; color: #f5f5f7; font-size: 12.5px; }
+.vi-agent-actions button:hover { background: #2c2c2e; }
+.vi-agent-actions .vi-agent-allow { background: #ff9233; color: #1c1205; font-weight: 600; }
+.vi-agent-actions .vi-agent-allow:hover { background: #ffa552; }
+
+/* 专注：大号倒计时、当前任务和下一步、30 格进度。 */
+.vi-focus { display: flex; flex-direction: column; gap: 14px; padding-top: 4px; }
+.vi-focus-top { display: flex; align-items: flex-start; gap: 22px; }
+.vi-focus-clock { flex: none; }
+.vi-clock { font-size: 46px; font-weight: 500; font-variant-numeric: tabular-nums; letter-spacing: -.02em; line-height: 1; }
+.vi-clock span { color: #8e8e93; }
+.vi-clock-running span { color: #ff9233; }
+.vi-focus-clock small { display: block; margin-top: 6px; color: #8e8e93; }
+.vi-focus-task { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 4px; padding-top: 2px; }
+.vi-focus-task strong { overflow: hidden; font-size: 15px; text-overflow: ellipsis; white-space: nowrap; }
+.vi-focus-task > span { color: #d1d1d6; font-size: 13px; }
+.vi-focus-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 4px; }
+.vi-focus-meta small { color: #8e8e93; font-size: 12px; }
+.vi-durations { display: flex; gap: 2px; border-radius: 8px; background: #111113; padding: 2px; }
+.vi-durations button { min-width: 32px; height: 24px; border: 0; border-radius: 6px; background: transparent; color: #d1d1d6; font-size: 12px; font-variant-numeric: tabular-nums; }
+.vi-durations button:disabled { color: #48484a; }
+.vi-durations .vi-duration-active, .vi-durations .vi-duration-active:disabled { background: #2c2c2e; color: #f5f5f7; }
+.vi-focus-cells { display: grid; grid-template-columns: repeat(30, 1fr); gap: 3px; }
+.vi-focus-cells i { height: 6px; border-radius: 1px; background: #1c1c1e; }
+.vi-focus-cells .vi-cell-on { background: #34d158; }
+.vi-focus-actions { display: flex; gap: 8px; }
+
+/* 随手记 */
+.vi-journal { display: flex; flex-direction: column; gap: 12px; }
+.vi-note-list { display: flex; flex-direction: column; }
+.vi-note-list p { display: grid; grid-template-columns: 52px minmax(0,1fr); margin: 0; border-bottom: 1px solid #1c1c1e; padding: 10px 0; font-size: 13px; line-height: 1.6; white-space: pre-wrap; }
+.vi-note-list time { color: #8e8e93; }
+.vi-note-list mark { border-radius: 3px; background: #1c1c1e; padding: 0 3px; color: #f5f5f7; }
+.vi-note-entry { display: flex; align-items: flex-end; gap: 8px; border-radius: 12px; background: #1c1c1e; padding: 10px; }
+.vi-note-entry textarea { min-height: 42px; flex: 1; resize: none; border: 0; outline: 0; background: transparent; color: white; font: inherit; font-size: 13px; line-height: 1.5; }
 .vi-note-entry textarea::placeholder { color: #8e8e93; }
-.vi-note-entry button { border: 0; border-radius: 5px; background: #f5f5f7; padding: 5px 9px; color: #1c1c1e; }
-.vi-note-entry button:disabled { opacity: .4; cursor: default; }
-.vi-note-list { max-height: 165px; overflow-y: auto; }
-.vi-note-list p { display: flex; gap: 12px; margin: 0; border-bottom: 1px solid #202023; padding: 10px 0; white-space: pre-wrap; }
-.vi-note-list time { flex: none; color: #8e8e93; font-family: ui-monospace, Menlo, monospace; }
-.vi-cat-panel { display: grid; min-height: 188px; grid-template-columns: 72px minmax(0,1fr); grid-template-rows: 94px 52px; gap: 8px 16px; padding: 6px 20px 18px; }
-.vi-pixel-cat { position: relative; display: flex; width: 64px; height: 64px; align-items: flex-start; justify-content: flex-start; margin-top: 8px; transform-origin: 50% 100%; animation: vi-cat-breathe 4.8s ease-in-out infinite; }
-.vi-pixel-cat img { width: 64px; height: 64px; object-fit: contain; image-rendering: pixelated; }
-.vi-cat-body { clip-path: inset(28% 0 0); }
-.vi-cat-ear { position: absolute; inset: 0; display: block; pointer-events: none; }
-.vi-cat-ear-left { clip-path: inset(0 50% 66% 0); transform-origin: 36% 33%; animation: vi-cat-left-ear 4.8s ease-in-out infinite; }
-.vi-cat-ear-right { clip-path: inset(0 0 66% 50%); transform-origin: 64% 33%; animation: vi-cat-right-ear 4.8s ease-in-out infinite; }
-@keyframes vi-cat-left-ear { 0%,69%,78%,100% { transform: rotate(0); } 72% { transform: rotate(-5deg); } 75% { transform: rotate(2deg); } }
-@keyframes vi-cat-right-ear { 0%,78%,88%,100% { transform: rotate(0); } 81% { transform: rotate(5deg); } 84% { transform: rotate(-2deg); } }
-.vi-cat-eye { position: absolute; z-index: 1; top: 41.5%; width: 18%; height: 12%; background: #e5e5e5; opacity: 0; pointer-events: none; animation: vi-cat-blink 5.4s steps(1,end) infinite; }
-.vi-cat-eye::after { position: absolute; top: 52%; right: 9%; left: 9%; height: 2px; background: #676767; content: ''; }
-.vi-cat-eye-left { left: 26%; }
-.vi-cat-eye-right { left: 56%; }
-@keyframes vi-cat-breathe { 0%,68%,80%,100% { transform: translateY(0) rotate(0); } 35% { transform: translateY(-1px) rotate(0); } 72% { transform: translateY(-1px) rotate(-1deg); } 76% { transform: translateY(0) rotate(1deg); } }
-@keyframes vi-cat-blink { 0%,90%,95%,100% { opacity: 0; } 91%,94% { opacity: 1; } }
-.vi-cat-message { min-height: 94px; border: 1px solid #27272b; border-radius: 2px; background: #151517; padding: 9px 11px; }
-.vi-cat-message > div { display: flex; justify-content: space-between; color: #8e8e93; font-size: 11px; }
-.vi-cat-message > div span { display: flex; align-items: center; gap: 6px; }
-.vi-cat-status { display: inline-block; width: 5px; height: 5px; flex: none; background: #ff9233; }
-.vi-cat-message button { border: 0; background: transparent; color: #8e8e93; }
-.vi-cat-message p { margin: 10px 0 0; font-size: 13px; line-height: 1.5; }
-.vi-cat-prompts { display: grid; min-width: 0; grid-column: 2; grid-row: 2; grid-template-columns: repeat(3,max-content); grid-template-rows: repeat(2,22px); align-content: center; gap: 4px 8px; overflow: hidden; padding-right: 95px; }
-.vi-cat-prompts button { height: 22px; border: 0; background: transparent; color: #a1a1a6; font-size: 11px; white-space: nowrap; }
-.vi-cat-prompts button:hover { color: white; }
-.vi-persona { position: relative; grid-column: 2; grid-row: 2; justify-self: end; align-self: center; }
-.vi-persona > button { display: flex; height: 22px; align-items: center; gap: 5px; border: 0; border-radius: 6px; background: #ffffff0f; padding: 0 6px 0 8px; color: #d1d1d6; font-size: 11px; white-space: nowrap; }
-.vi-persona > button:hover, .vi-persona > button[aria-expanded='true'] { background: #ffffff1a; }
-.vi-persona-dot { display: inline-block; width: 4px; height: 4px; flex: none; }
-.vi-persona-chevron { width: 8px; height: 8px; flex: none; opacity: .6; }
-.vi-persona-list { position: absolute; z-index: 12; right: 0; bottom: 26px; display: flex; width: 180px; flex-direction: column; border: 1px solid #ffffff1a; border-radius: 9px; background: #1c1c1e; padding: 4px; box-shadow: 0 10px 28px #0008; }
-.vi-persona-list button { display: grid; width: 100%; grid-template-columns: 8px minmax(0,1fr) 12px; align-items: center; column-gap: 8px; border: 0; border-radius: 6px; background: transparent; padding: 6px 8px; color: #f5f5f7; text-align: left; }
-.vi-persona-list button:hover, .vi-persona-list button[aria-selected='true'] { background: #ffffff14; }
-.vi-persona-list button svg { width: 11px; height: 11px; }
-.vi-persona-option-text { display: flex; min-width: 0; flex-direction: column; gap: 1px; font-size: 12px; }
-.vi-persona-option-text small { overflow: hidden; color: #8e8e93; font-size: 10.5px; text-overflow: ellipsis; white-space: nowrap; }
-.vi-island-compact { width: min(350px, calc(100% - 28px)); height: 26px; border-radius: 0 0 6px 6px; box-shadow: none; }
-.vi-island-collapsed { display: flex; width: 100%; height: 26px; align-items: center; gap: 8px; overflow: hidden; border: 0; background: transparent; padding: 0 9px; color: white; text-align: left; font-size: 11.5px; }
-.vi-island-collapsed svg { width: 14px; height: 14px; flex: none; }
-.vi-island-collapsed span { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.vi-island-collapsed b { font-family: ui-monospace, Menlo, monospace; font-weight: 500; }
+.vi-note-entry button { height: 28px; border: 0; border-radius: 7px; background: #f5f5f7; padding: 0 11px; color: #1c1c1e; font-weight: 600; }
+.vi-note-entry button:disabled { opacity: .35; }
+
+/* 保持唤醒 */
+.vi-coffee { display: flex; flex-direction: column; gap: 8px; }
+.vi-coffee-head { display: flex; align-items: center; gap: 14px; margin-bottom: 6px; }
+.vi-coffee-head > div { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.vi-coffee-head strong { font-size: 15px; }
+.vi-coffee-head span { color: #8e8e93; font-size: 12.5px; }
+.vi-coffee-cup { width: 30px; height: 30px; flex: none; }
+.vi-steam { animation: vi-blink 1.2s step-end infinite; }
+.vi-coffee-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.vi-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
+.vi-chip { height: 30px; border: 0; border-radius: 8px; background: #1c1c1e; padding: 0 12px; color: #f5f5f7; font-size: 12.5px; }
+.vi-chip:hover { background: #2c2c2e; }
+.vi-chip:disabled, .vi-chip:disabled:hover { background: #111113; color: #48484a; }
+.vi-chip-on, .vi-chip-on:hover { background: #ff9233; color: #1c1205; font-weight: 600; }
+.vi-checks { display: flex; flex-wrap: wrap; gap: 6px 18px; }
+.vi-check { display: flex; align-items: center; gap: 7px; color: #f5f5f7; font-size: 12.5px; cursor: pointer; }
+.vi-check input { width: 14px; height: 14px; margin: 0; accent-color: #ff9233; }
+.vi-coffee-screen { flex: none; }
+
+/* 日程：左边今天（大号日期 + 今天的日程），右边之后几天按天分组（IslandCalendarPanel）。 */
+.vi-agenda { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 18px; }
+.vi-agenda ul { display: flex; flex-direction: column; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.vi-agenda-today, .vi-agenda-later, .vi-agenda-later > div { display: flex; min-width: 0; flex-direction: column; gap: 6px; }
+.vi-agenda-date { display: flex; align-items: baseline; gap: 8px; margin-bottom: 2px; }
+.vi-agenda-date b { font-size: 34px; font-variant-numeric: tabular-nums; font-weight: 600; line-height: 1.1; }
+.vi-agenda-date span { display: flex; flex-direction: column; gap: 1px; }
+.vi-agenda-date em { color: #ff6246; font-size: 12.5px; font-style: normal; font-weight: 600; }
+.vi-agenda-date small, .vi-agenda-row time { color: #8e8e93; font-family: ui-monospace, 'SF Mono', Menlo, monospace; }
+.vi-agenda-date small { font-size: 10.5px; }
+.vi-agenda-day { display: flex; height: 18px; align-items: flex-end; color: #8e8e93; font-size: 11px; font-weight: 500; }
+.vi-agenda-row { position: relative; display: flex; height: 24px; align-items: center; gap: 7px; overflow: hidden; border-radius: 7px; padding: 0 8px; font-size: 12px; font-weight: 500; }
+.vi-agenda-row::before { position: absolute; inset: 0; background: var(--vi-agenda); opacity: .15; content: ''; }
+.vi-agenda-row:hover::before { opacity: .24; }
+.vi-agenda-current::before { opacity: .3; }
+.vi-agenda-row > * { position: relative; }
+.vi-agenda-row i { width: 3px; height: 12px; flex: none; border-radius: 1.5px; background: var(--vi-agenda); }
+.vi-agenda-row span { min-width: 0; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.vi-agenda-row time { flex: none; font-size: 11px; font-weight: 400; }
+.vi-agenda-past { opacity: .45; }
+
+/* Git：照 GitTab.swift 的源代码管理侧边栏。 */
+.vi-git { display: flex; flex-direction: column; gap: 8px; }
+.vi-git-repos { display: flex; height: 24px; align-items: center; gap: 8px; }
+.vi-git-chips { display: flex; min-width: 0; gap: 4px; overflow-x: auto; scrollbar-width: none; }
+.vi-git-chips::-webkit-scrollbar { display: none; }
+.vi-git-chip { display: flex; height: 24px; flex: none; align-items: center; gap: 6px; border-radius: 7px; padding: 0 9px; color: #8e8e93; font-size: 12.5px; }
+.vi-git-chip i { width: 6px; height: 6px; border-radius: 50%; }
+.vi-git-chip em { min-width: 18px; border-radius: 9px; background: #2c2c2e; padding: 0 5px; color: #a1a1a6; font-size: 11px; font-style: normal; text-align: center; }
+.vi-git-chip-on { background: #1c1c1e; color: #f5f5f7; font-weight: 600; }
+.vi-git-tool { display: grid; width: 22px; height: 22px; flex: none; place-items: center; border: 0; background: transparent; padding: 0; color: #8e8e93; }
+.vi-git-tool:hover { color: #f5f5f7; }
+.vi-git-tool .vi-glyph { width: 14px; height: 14px; }
+.vi-git-branch { display: flex; min-width: 0; flex: none; align-items: center; gap: 4px; margin-left: auto; color: #8e8e93; font-size: 11.5px; font-weight: 500; }
+.vi-git-branch .vi-glyph { width: 11px; height: 11px; }
+.vi-git-section { display: flex; height: 20px; align-items: center; justify-content: space-between; }
+.vi-git-section-head, .vi-git-group-head, .vi-git-history { display: flex; align-items: center; gap: 5px; border: 0; background: transparent; padding: 0; font-size: 11.5px; }
+.vi-git-section-head b, .vi-git-history b { font-weight: 600; }
+.vi-git-section-head .vi-glyph, .vi-git-group-head .vi-glyph, .vi-git-history .vi-glyph { width: 11px; height: 11px; }
+.vi-git-actions { display: flex; gap: 10px; }
+.vi-git-actions button { display: grid; width: 16px; height: 16px; place-items: center; border: 0; background: transparent; padding: 0; }
+.vi-git-actions button:disabled { color: #48484a; }
+.vi-git-actions .vi-glyph { width: 14px; height: 14px; }
+.vi-git-message { display: flex; height: 32px; align-items: center; gap: 4px; border-radius: 5px; background: rgba(255,255,255,.08); padding: 0 5px 0 10px; }
+.vi-git-message input { min-width: 0; height: 100%; flex: 1; border: 0; outline: 0; background: transparent; color: #f5f5f7; font: inherit; font-size: 12px; }
+.vi-git-message input::placeholder { color: #8e8e93; }
+.vi-git-message button { display: grid; width: 22px; height: 22px; place-items: center; border: 0; background: transparent; padding: 0; color: rgba(245,245,247,.75); }
+.vi-git-message .vi-glyph { width: 13px; height: 13px; }
+.vi-git-commit { display: flex; height: 27px; align-items: center; border-radius: 5px; background: rgba(74,141,255,.35); color: rgba(255,255,255,.6); }
+.vi-git-commit-on { background: rgba(74,141,255,.85); color: #fff; }
+.vi-git-commit > button { display: flex; height: 100%; align-items: center; justify-content: center; gap: 5px; border: 0; background: transparent; padding: 0; color: inherit; font-weight: 600; }
+.vi-git-commit > button:first-child { flex: 1; }
+.vi-git-commit > button .vi-glyph { width: 12px; height: 12px; }
+.vi-git-commit > i { width: .5px; height: 17px; background: rgba(255,255,255,.3); }
+.vi-git-commit .vi-git-more { width: 25px; }
+.vi-git-commit .vi-git-more .vi-glyph { width: 10px; height: 10px; }
+.vi-git-note { margin: 0; color: #8e8e93; font-size: 10.5px; }
+.vi-git-group { display: flex; flex-direction: column; padding-left: 10px; }
+.vi-git-group-head { height: 22px; font-size: 12.5px; }
+.vi-git-group-head b { font-weight: 600; }
+.vi-git-group-head em { margin-left: auto; min-width: 20px; border-radius: 10px; background: #2c2c2e; padding: 1px 6px; color: #d1d1d6; font-size: 11px; font-style: normal; font-weight: 600; text-align: center; }
+.vi-git-group ul { margin: 0; padding: 0; list-style: none; }
+.vi-git-group li button { display: flex; width: 100%; height: 22px; align-items: center; gap: 7px; border: 0; border-radius: 5px; background: transparent; padding: 0 2px 0 28px; font-size: 12.5px; text-align: left; }
+.vi-git-group li button:hover { background: rgba(255,255,255,.05); }
+.vi-git-icon { display: grid; width: 15px; place-items: center; color: #8e8e93; }
+.vi-git-icon .vi-glyph { width: 14px; height: 14px; }
+.vi-git-swift { color: #ff9f0a; }
+.vi-git-md { color: #5ac8fa; }
+.vi-git-name { flex: none; }
+.vi-git-group small { min-width: 0; flex: 1; overflow: hidden; color: #8e8e93; font-size: 11.5px; text-overflow: ellipsis; white-space: nowrap; }
+.vi-git-group li i { color: #8e8e93; font-style: normal; opacity: 0; }
+.vi-git-group li button:hover i { opacity: 1; }
+.vi-git-kind { width: 14px; flex: none; font-size: 11.5px; font-weight: 700; text-align: center; }
+.vi-git-M { color: #ff9f0a; }
+.vi-git-U, .vi-git-A { color: #34d158; }
+.vi-git-history { height: 22px; font-size: 12.5px; }
+.vi-git-history small { color: #8e8e93; font-size: 11.5px; }
+.vi-git-graph { position: relative; margin: 0; padding: 0; list-style: none; }
+.vi-git-graph::before { position: absolute; top: 11px; bottom: 11px; left: 5px; width: 2px; background: #64d2ff; content: ''; }
+.vi-git-graph li { position: relative; display: flex; min-height: 22px; align-items: center; gap: 8px; padding-left: 20px; font-size: 12px; }
+.vi-git-dot { position: absolute; top: 50%; left: 1px; width: 10px; height: 10px; border-radius: 50%; background: #64d2ff; transform: translateY(-50%); }
+.vi-git-head-dot { border: 2px solid #64d2ff; background: #000; }
+.vi-git-graph .vi-git-lane { padding-left: 34px; }
+.vi-git-lane::before { position: absolute; top: 0; bottom: 0; left: 19px; width: 2px; background: #34d158; content: ''; }
+.vi-git-lane .vi-git-dot { left: 15px; background: #34d158; }
+.vi-git-msg { display: flex; min-width: 0; flex: 1; align-items: center; gap: 6px; overflow: hidden; white-space: nowrap; }
+.vi-git-ref { flex: none; border-radius: 4px; padding: 0 5px; font-size: 11px; font-style: normal; font-weight: 600; line-height: 18px; }
+.vi-git-ref-branch { background: #12351f; color: #34d158; }
+.vi-git-ref-tag { background: #3a2a14; color: #ffb340; }
+.vi-git-ref-side { background: #0f2f3d; color: #64d2ff; }
+.vi-git-meta { flex: none; color: #8e8e93; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-size: 10.5px; }
+
+/* 收起态：和演示菜单栏同高 26，左翼小猫 + 会话数 + 状态，右翼计时或标签图标；中间留给刘海。 */
+.vi-island-compact { width: min(380px, calc(100% - 28px)); border-radius: 0 0 9px 9px; box-shadow: none; }
+.vi-island-collapsed { display: flex; width: 100%; height: 26px; align-items: center; justify-content: space-between; gap: 12px; border: 0; background: transparent; padding: 0 12px; color: #f5f5f7; text-align: left; font-size: 11.5px; }
+.vi-compact-left, .vi-compact-right { display: flex; min-width: 0; align-items: center; gap: 8px; }
+.vi-compact-cat { position: relative; display: flex; flex: none; }
+.vi-compact-cat .vi-cat-glyph { width: 16.5px; height: 12px; }
+.vi-compact-count { position: absolute; top: -3px; left: 12px; color: #34d158; font-size: 9px; font-weight: 700; line-height: 1; }
+.vi-compact-status { overflow: hidden; margin-left: 6px; text-overflow: ellipsis; white-space: nowrap; }
+.vi-compact-right { flex: none; gap: 14px; color: #8e8e93; }
+.vi-compact-right .vi-glyph { width: 13px; height: 13px; }
+.vi-compact-right b { margin-left: -8px; color: #f5f5f7; font-family: ui-monospace, 'SF Mono', Menlo, monospace; font-weight: 500; }
 
 @media (max-width: 767px) {
-  .vi-island-menu { padding: 0 5px; }
-  .vi-island-tabs { gap: 0; }
-  .vi-island-tabs button { gap: 2px; padding: 0 5px; font-size: 10px; }
-  .vi-island-tabs svg { width: 11px; height: 11px; }
-  .vi-island-tools { gap: 0; }
-  .vi-island-tools button { width: 23px; }
-  .vi-map-panel { padding: 0 7px 9px; }
-  .vi-map { height: 220px; }
-  .vi-task-action strong { font-size: 12px; }
-  .vi-task-action span { font-size: 10px; }
-  .vi-primary { height: 32px; padding: 0 8px; font-size: 11px; }
-  .vi-focus-panel { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px 12px 18px; }
-  .vi-clock { font-size: 32px; }
-  .vi-focus-task { padding-left: 9px; }
-  .vi-focus-task strong { font-size: 11px; }
-  .vi-island-tab-cat { height: 230px; }
-  .vi-cat-panel { grid-template-columns: 45px minmax(0,1fr); grid-template-rows: 94px 52px 26px; gap: 6px; padding: 5px 9px 12px; }
-  .vi-pixel-cat { width: 40px; height: 40px; }
-  .vi-pixel-cat img { width: 40px; height: 40px; }
-  .vi-cat-message p { font-size: 11px; }
-  .vi-cat-prompts { grid-template-columns: repeat(2,max-content); padding-right: 0; }
-  .vi-persona { grid-row: 3; }
+  .vi-island-menu { gap: 2px; padding: 0 8px; }
+  .vi-meters { display: none; }
+  .vi-tab, .vi-island-tools button, .vi-ai-tools button { width: 26px; }
+  .vi-tab-cat { width: 34px; }
+  .vi-island-body { padding: 4px 12px 14px; }
+  .vi-agent-row { grid-template-columns: 22px 16px minmax(0,1fr); column-gap: 6px; }
+  .vi-agent-avatar { width: 22px; height: 22px; }
+  .vi-agent-avatar .vi-agent-logo { width: 20px; height: 20px; }
+  .vi-agent-head { flex-wrap: wrap; row-gap: 0; }
+  .vi-agent-head strong { font-size: 13px; }
+  .vi-agent-status { font-size: 12.5px; }
+  .vi-agent-meta { display: none; }
+  .vi-agent-body p { font-size: 12px; }
+  .vi-primary { height: 32px; padding: 0 12px; font-size: 12.5px; }
+  .vi-focus-top { gap: 12px; }
+  .vi-clock { font-size: 34px; }
+  .vi-focus-task strong { font-size: 13px; }
+  .vi-focus-cells { gap: 2px; }
+  .vi-coffee-row { flex-direction: column; align-items: flex-start; }
+  .vi-agenda { grid-template-columns: minmax(0,1fr); gap: 12px; }
+  .vi-git-chip:not(.vi-git-chip-on) { display: none; }
+  /* 手机上演示菜单栏是 40 高（触控目标），收起的岛跟着一样高。 */
+  .vi-island-compact { width: min(300px, calc(100% - 28px)); }
+  .vi-island-collapsed { height: 40px; }
+  .vi-compact-status { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .vi-island, .vi-map-world, .vi-map-node { transition: none; }
-  .vi-pixel-cat, .vi-cat-ear, .vi-cat-eye, .vi-star-frame, .vi-map-node::before, .vi-map-reticle, .vi-map-dust, .vi-zone-due i { animation: none; }
-  .vi-star-frame-1 { opacity: 0; }
+  .vi-island { transition: none; }
+  .vi-island :is(.vi-cat-mark, .vi-cat-body, .vi-cat-think rect, .vi-agent-blink, .vi-agent-spinner, .vi-agent-logo, .vi-steam) { animation: none; }
+  .vi-island .vi-cat-think rect:first-child { opacity: 1; }
 }
